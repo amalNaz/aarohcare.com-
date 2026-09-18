@@ -1,6 +1,7 @@
 import React from 'react'
 import Hero from './components/Hero'
 import ZeroWaitSection from './components/ZeroWaitSection'
+import JourneySection from './components/JourneySection'
 
 export default function App() {
   return (
@@ -8,8 +9,11 @@ export default function App() {
       {/* Hero Section */}
       <Hero />
 
-      {/* Zero Wait Section */}
+      {/* Zero Wait Section with 3 Cards */}
       <ZeroWaitSection />
+
+      {/* Journey Section with 4 Steps */}
+      <JourneySection />
     </div>
   )
 }
