@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
@@ -6,17 +6,13 @@ gsap.registerPlugin(ScrollTrigger)
 
 // ============================================================================
 // CENTRALIZED TUNING CONFIGURATION
-// Adjust scroll distance, orbit radii, and visual scales in one clean block.
+// All animation parameters, scroll distances, and timings are controlled here.
 // ============================================================================
 const CONFIG = {
-  scrollDistance: 2600, // Total vertical scroll px while pinned
-  scrubAmount: 0.8, // GSAP scrub smoothing factor
-  stepAngle: 36, // Angular spacing between consecutive points (degrees)
+  scrollDistance: 3000, // Total vertical scroll distance (px) while pinned
+  scrubSpeed: 0.6, // Scrub response (smooth interpolation factor)
   totalRotation: 144, // 4 steps * 36 deg = 144 deg total rotation from 01 to 05
-  activeHighlightColor: 'rgba(251, 191, 36, 0.9)', // Warm golden/amber accent
-  inactiveOpacity: 0.35, // Inactive node opacity
-  activeScale: 1.25, // Active node scale
-  inactiveScale: 0.85, // Inactive node scale
+  stepAngle: 36, // Angular offset between consecutive nodes
 }
 
 // Exactly 5 states matching the reference sequence
@@ -51,12 +47,14 @@ const STATES = [
 export default function WhatIfHealthSection() {
   const containerRef = useRef(null)
   const wheelRef = useRef(null)
-  const nodeRefs = useRef([])
-  const contentRef = useRef(null)
-  const [activeIndex, setActiveIndex] = useState(0)
+  const nodeBadgeRefs = useRef([])
+  const nodeTitleRefs = useRef([])
+  const nodeWrapperRefs = useRef([])
+  const stateCardRefs = useRef([])
+  const progressNumRef = useRef(null)
 
   // Base angles for the 5 points around the circumference
-  // 01 at 0° (apex), 02 at +36°, 03 at +72°, 04 at -72°, 05 at -36°
+  // 01 starts at 0° (apex), 02 at +36°, 03 at +72°, 04 at -72°, 05 at -36°
   const nodeBaseAngles = [0, 36, 72, -72, -36]
 
   useEffect(() => {
@@ -68,40 +66,84 @@ export default function WhatIfHealthSection() {
     if (!container || !wheel) return
 
     const ctx = gsap.context(() => {
-      // Initialize wheel at 0 deg (node 01 is at top-center apex)
-      gsap.set(wheel, { rotation: 0 })
-
-      nodeRefs.current.forEach((node) => {
-        if (node) gsap.set(node, { rotation: 0 })
+      // ========================================================================
+      // 1. MASTER TIMELINE SYNCHRONIZED BY SCROLLTRIGGER
+      // ONE single source of truth for the entire sequence (01 -> 05).
+      // ========================================================================
+      const masterTL = gsap.timeline({
+        scrollTrigger: {
+          trigger: container,
+          start: 'top top',
+          end: `+=${CONFIG.scrollDistance}`,
+          pin: true,
+          scrub: CONFIG.scrubSpeed,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+        },
       })
 
-      ScrollTrigger.create({
-        trigger: container,
-        start: 'top top',
-        end: `+=${CONFIG.scrollDistance}`,
-        pin: true,
-        scrub: CONFIG.scrubAmount,
-        onUpdate: (self) => {
-          const progress = self.progress // 0.0 to 1.0
+      // 1. Smoothly rotate the orbital wheel from 0° to -144° over timeline duration (0 to 1)
+      masterTL.to(wheel, { rotation: -CONFIG.totalRotation, ease: 'none', duration: 1 }, 0)
 
-          // Smoothly rotate the orbital wheel from 0° to -144°
-          const currentRotation = -progress * CONFIG.totalRotation
-          gsap.set(wheel, { rotation: currentRotation })
+      // 2. Counter-rotate node wrappers so badges remain horizontally upright
+      nodeWrapperRefs.current.forEach((wrapper) => {
+        if (wrapper) {
+          masterTL.to(wrapper, { rotation: CONFIG.totalRotation, ease: 'none', duration: 1 }, 0)
+        }
+      })
 
-          // Counter-rotate each node so numbers stay horizontally upright
-          nodeRefs.current.forEach((node) => {
-            if (node) gsap.set(node, { rotation: -currentRotation })
-          })
+      // 3. Smooth deterministic text cross-fades between the 5 states
+      // State 0: 0.00 -> 0.20
+      // State 1: 0.20 -> 0.40
+      // State 2: 0.40 -> 0.60
+      // State 3: 0.60 -> 0.80
+      // State 4: 0.80 -> 1.00 (holds until pin release)
 
-          // Calculate which state is currently closest to the top-center apex
-          const rawIndex = progress * (STATES.length - 1)
-          const index = Math.min(
-            STATES.length - 1,
-            Math.max(0, Math.round(rawIndex))
-          )
+      // Transition 0 -> 1 (Instant -> Predictive)
+      masterTL.to(stateCardRefs.current[0], { opacity: 0, y: -12, duration: 0.05, ease: 'power1.inOut' }, 0.17)
+      masterTL.fromTo(stateCardRefs.current[1], { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.05, ease: 'power1.inOut' }, 0.20)
 
-          setActiveIndex(index)
-        },
+      // Transition 1 -> 2 (Predictive -> Accessible)
+      masterTL.to(stateCardRefs.current[1], { opacity: 0, y: -12, duration: 0.05, ease: 'power1.inOut' }, 0.37)
+      masterTL.fromTo(stateCardRefs.current[2], { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.05, ease: 'power1.inOut' }, 0.40)
+
+      // Transition 2 -> 3 (Accessible -> Intelligent)
+      masterTL.to(stateCardRefs.current[2], { opacity: 0, y: -12, duration: 0.05, ease: 'power1.inOut' }, 0.57)
+      masterTL.fromTo(stateCardRefs.current[3], { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.05, ease: 'power1.inOut' }, 0.60)
+
+      // Transition 3 -> 4 (Intelligent -> Designed for you)
+      masterTL.to(stateCardRefs.current[3], { opacity: 0, y: -12, duration: 0.05, ease: 'power1.inOut' }, 0.77)
+      masterTL.fromTo(stateCardRefs.current[4], { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.05, ease: 'power1.inOut' }, 0.80)
+
+      // 4. Synchronized Node Active Highlighting on the Orbit
+      nodeBadgeRefs.current.forEach((badge, index) => {
+        if (!badge) return
+        const titleEl = nodeTitleRefs.current[index]
+        const targetT = index * 0.25 // 0.00, 0.25, 0.50, 0.75, 1.00
+
+        // Set initial states
+        if (index === 0) {
+          gsap.set(badge, { opacity: 1, scale: 1.15, borderColor: '#fbbf24', color: '#fef08a' })
+          if (titleEl) gsap.set(titleEl, { opacity: 1, color: '#fef08a' })
+          masterTL.to(badge, { opacity: 0.35, scale: 0.85, borderColor: '#262626', color: '#737373', duration: 0.05 }, 0.17)
+          if (titleEl) masterTL.to(titleEl, { opacity: 0.4, color: '#525252', duration: 0.05 }, 0.17)
+        } else if (index === 4) {
+          gsap.set(badge, { opacity: 0.35, scale: 0.85, borderColor: '#262626', color: '#737373' })
+          if (titleEl) gsap.set(titleEl, { opacity: 0.4, color: '#525252' })
+          masterTL.to(badge, { opacity: 1, scale: 1.15, borderColor: '#fbbf24', color: '#fef08a', duration: 0.05 }, 0.77)
+          if (titleEl) masterTL.to(titleEl, { opacity: 1, color: '#fef08a', duration: 0.05 }, 0.77)
+        } else {
+          gsap.set(badge, { opacity: 0.35, scale: 0.85, borderColor: '#262626', color: '#737373' })
+          if (titleEl) gsap.set(titleEl, { opacity: 0.4, color: '#525252' })
+
+          // Activate when arriving at top apex
+          masterTL.to(badge, { opacity: 1, scale: 1.15, borderColor: '#fbbf24', color: '#fef08a', duration: 0.05 }, targetT - 0.04)
+          if (titleEl) masterTL.to(titleEl, { opacity: 1, color: '#fef08a', duration: 0.05 }, targetT - 0.04)
+
+          // Deactivate when rotating away
+          masterTL.to(badge, { opacity: 0.35, scale: 0.85, borderColor: '#262626', color: '#737373', duration: 0.05 }, targetT + 0.12)
+          if (titleEl) masterTL.to(titleEl, { opacity: 0.4, color: '#525252', duration: 0.05 }, targetT + 0.12)
+        }
       })
     }, containerRef)
 
@@ -111,56 +153,64 @@ export default function WhatIfHealthSection() {
   return (
     <section
       ref={containerRef}
-      className="relative w-full bg-black text-white overflow-hidden selection:bg-amber-400 selection:text-black"
+      className="relative w-full bg-black text-white overflow-hidden selection:bg-amber-400 selection:text-black z-10"
     >
       {/* Pinned Viewport Container */}
-      <div className="relative h-screen w-full flex flex-col justify-between py-10 sm:py-14 px-6 sm:px-12 lg:px-20 z-10">
+      <div className="relative h-screen w-full flex flex-col justify-between py-10 sm:py-14 px-6 sm:px-12 lg:px-20 z-10 overflow-hidden">
         
         {/* Top Header — Fixed Storytelling Anchor at Upper-Left */}
-        <div className="w-full flex items-start justify-between">
-          <div>
+        <div className="w-full flex items-start justify-between z-30 pointer-events-none">
+          <div className="max-w-md">
             <h2 className="text-3xl sm:text-5xl lg:text-[3.5rem] font-bold tracking-tight text-white leading-[1.08]">
               What If <br />
               Health Was ...
             </h2>
           </div>
-
-          {/* Clean Progress Indicator */}
-          <div className="hidden sm:flex items-center gap-2 font-mono text-xs text-slate-500 bg-neutral-950/80 border border-neutral-800/80 px-3 py-1.5 rounded-full">
-            <span className="text-amber-400 font-bold">{STATES[activeIndex].num}</span>
-            <span>/</span>
-            <span>05</span>
-          </div>
         </div>
 
-        {/* Active Point Content Center Block (Above the Arc Apex) */}
-        <div
-          ref={contentRef}
-          className="w-full max-w-xl mx-auto text-center px-4 my-auto flex flex-col items-center z-20 transition-all duration-300 ease-out"
-        >
-          {/* Active Concept Title */}
-          <h3 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-3 tracking-tight transition-all duration-300">
-            {STATES[activeIndex].title}
-          </h3>
+        {/* Center Active Story Card Container (All 5 states stacked deterministically) */}
+        <div className="relative w-full max-w-xl mx-auto h-48 sm:h-52 my-auto flex items-center justify-center z-20">
+          {STATES.map((state, index) => (
+            <div
+              key={state.num}
+              ref={(el) => (stateCardRefs.current[index] = el)}
+              className="absolute inset-0 flex flex-col items-center justify-center text-center px-4"
+              style={{
+                opacity: index === 0 ? 1 : 0,
+                transform: index === 0 ? 'translateY(0px)' : 'translateY(12px)',
+                willChange: 'opacity, transform',
+              }}
+            >
+              {/* Active State Number Badge */}
+              <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-full border border-amber-400/80 bg-neutral-950 text-amber-300 font-mono text-xs sm:text-sm flex items-center justify-center font-bold shadow-[0_0_15px_rgba(251,191,36,0.35)] mb-3 sm:mb-4">
+                {state.num}
+              </div>
 
-          {/* Active Concept Description */}
-          <p className="text-sm sm:text-base text-slate-300/90 font-light max-w-md mx-auto leading-relaxed transition-all duration-300">
-            {STATES[activeIndex].description}
-          </p>
+              {/* Active Concept Title */}
+              <h3 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-2.5 sm:mb-3 tracking-tight">
+                {state.title}
+              </h3>
 
-          {/* Vertical Connector Line Extending from Content down to the Arc Apex Dot */}
-          <div className="mt-6 flex flex-col items-center">
-            <div className="w-[1px] h-10 sm:h-12 bg-gradient-to-b from-transparent via-amber-400/60 to-amber-400" />
+              {/* Active Concept Description */}
+              <p className="text-sm sm:text-base text-slate-300/90 font-light max-w-md mx-auto leading-relaxed">
+                {state.description}
+              </p>
+            </div>
+          ))}
+
+          {/* Vertical Connector Line Extending from Content Down to the Arc Apex Dot */}
+          <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center pointer-events-none z-20">
+            <div className="w-[1px] h-8 sm:h-10 bg-gradient-to-b from-transparent via-amber-400/60 to-amber-400" />
             <div className="w-2.5 h-2.5 rounded-full bg-amber-400 shadow-[0_0_12px_rgba(251,191,36,0.9)] -mt-1" />
           </div>
         </div>
 
-        {/* Large Orbital Semicircular System (Extends beyond viewport boundaries) */}
-        <div className="relative w-full h-36 sm:h-48 lg:h-56 flex items-center justify-center overflow-visible">
+        {/* Large Semicircular Orbital Wheel System */}
+        <div className="relative w-full h-36 sm:h-48 lg:h-56 flex items-center justify-center overflow-visible z-10 pointer-events-none">
           {/* Giant Rotating Orbital Wheel */}
           <div
             ref={wheelRef}
-            className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[900px] sm:w-[1300px] sm:h-[1300px] lg:w-[1700px] lg:h-[1700px] rounded-full border border-slate-800/60 pointer-events-none select-none"
+            className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[900px] sm:w-[1300px] sm:h-[1300px] lg:w-[1700px] lg:h-[1700px] rounded-full border border-slate-800/80 select-none"
             style={{ willChange: 'transform' }}
           >
             {/* Subtle Arc Border Guide */}
@@ -170,48 +220,41 @@ export default function WhatIfHealthSection() {
             {STATES.map((state, index) => {
               const angleDeg = nodeBaseAngles[index]
               const angleRad = (angleDeg - 90) * (Math.PI / 180) // 0deg corresponds to the top apex
-              const radiusPercent = 50 // Placed on the 50% outer radius
+              const radiusPercent = 50 // Placed on the outer circumference
 
               // Parametric positioning
               const leftPercent = 50 + radiusPercent * Math.cos(angleRad)
               const topPercent = 50 + radiusPercent * Math.sin(angleRad)
 
-              const isActive = index === activeIndex
-
               return (
                 <div
                   key={state.num}
-                  className="absolute -translate-x-1/2 -translate-y-1/2 transition-all duration-300"
+                  className="absolute -translate-x-1/2 -translate-y-1/2"
                   style={{
                     left: `${leftPercent}%`,
                     top: `${topPercent}%`,
                   }}
                 >
-                  {/* Upright Counter-Rotating Node Badge */}
+                  {/* Upright Counter-Rotating Node Wrapper */}
                   <div
-                    ref={(el) => (nodeRefs.current[index] = el)}
-                    className={`flex flex-col items-center justify-center transition-all duration-300 ${
-                      isActive
-                        ? 'scale-110 opacity-100 z-30'
-                        : 'scale-90 opacity-40 hover:opacity-70 z-10'
-                    }`}
+                    ref={(el) => (nodeWrapperRefs.current[index] = el)}
+                    className="flex flex-col items-center justify-center"
+                    style={{ willChange: 'transform' }}
                   >
-                    {/* Number Badge */}
+                    {/* Node Badge */}
                     <div
-                      className={`w-9 h-9 sm:w-11 sm:h-11 rounded-full flex items-center justify-center font-mono font-bold text-xs sm:text-sm transition-all duration-300 ${
-                        isActive
-                          ? 'bg-neutral-950 border border-amber-400 text-amber-300 shadow-[0_0_15px_rgba(251,191,36,0.35)]'
-                          : 'bg-neutral-950 border border-slate-800 text-slate-500'
-                      }`}
+                      ref={(el) => (nodeBadgeRefs.current[index] = el)}
+                      className="w-9 h-9 sm:w-11 sm:h-11 rounded-full flex items-center justify-center font-mono font-bold text-xs sm:text-sm bg-neutral-950 border border-slate-800 text-slate-500 shadow-md"
+                      style={{ willChange: 'opacity, transform, border-color, color' }}
                     >
                       {state.num}
                     </div>
 
                     {/* Node Title Label */}
                     <span
-                      className={`mt-1.5 text-[10px] sm:text-xs font-medium tracking-tight whitespace-nowrap transition-colors duration-300 ${
-                        isActive ? 'text-amber-300 font-semibold' : 'text-slate-600'
-                      }`}
+                      ref={(el) => (nodeTitleRefs.current[index] = el)}
+                      className="mt-1.5 text-[10px] sm:text-xs font-medium tracking-tight whitespace-nowrap text-slate-600"
+                      style={{ willChange: 'opacity, color' }}
                     >
                       {state.title}
                     </span>
@@ -222,11 +265,11 @@ export default function WhatIfHealthSection() {
           </div>
         </div>
 
-        {/* Bottom Scroll Guide */}
-        <div className="w-full flex items-center justify-between text-xs text-slate-600 pt-3 border-t border-neutral-900">
+        {/* Bottom Scroll Guide Bar */}
+        <div className="w-full flex items-center justify-between text-xs text-slate-600 pt-3 border-t border-neutral-900 z-20 pointer-events-none">
           <span>Scroll to travel the orbit</span>
           <span className="font-mono text-slate-500">
-            {STATES[activeIndex].num} — {STATES[activeIndex].title}
+            01 Instant → 05 Designed for you
           </span>
         </div>
       </div>
