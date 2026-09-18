@@ -34,3 +34,36 @@
   position: relative;
   overflow: hidden;
 }
+
+/* ==========================================================================
+   INFINITE SEAMLESS HORIZONTAL CARD TRACK
+   ========================================================================== */
+
+@keyframes marqueeInfinite {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-card-marquee {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  animation: marqueeInfinite 30s linear infinite;
+}
+
+@media (hover: hover) {
+  .animate-card-marquee:hover {
+    animation-play-state: paused;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-card-marquee {
+    animation: none !important;
+    transform: none !important;
+  }
+}
