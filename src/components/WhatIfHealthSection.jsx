@@ -45,6 +45,7 @@ const STATES = [
 export default function WhatIfHealthSection() {
   const containerRef = useRef(null)
   const wheelRef = useRef(null)
+  const connectorRef = useRef(null)
   const nodeBadgeRefs = useRef([])
   const nodeDotRefs = useRef([])
   const nodeWrapperRefs = useRef([])
@@ -60,10 +61,16 @@ export default function WhatIfHealthSection() {
 
     const container = containerRef.current
     const wheel = wheelRef.current
+    const connector = connectorRef.current
     if (!container || !wheel) return
 
     const ctx = gsap.context(() => {
-      // 1. Initialize all 5 cards
+      // 1. Initialize connector bar (visible at state 0)
+      if (connector) {
+        gsap.set(connector, { opacity: 1, scaleY: 1, transformOrigin: 'top center' })
+      }
+
+      // 2. Initialize all 5 cards
       stateCardRefs.current.forEach((card, idx) => {
         if (!card) return
         if (idx === 0) {
@@ -73,16 +80,16 @@ export default function WhatIfHealthSection() {
         }
       })
 
-      // 2. Initialize node badges and dots
+      // 3. Initialize node badges and dots (all identical size and distance)
       nodeBadgeRefs.current.forEach((badge, idx) => {
         if (!badge) return
         const dot = nodeDotRefs.current[idx]
         if (idx === 0) {
-          gsap.set(badge, { opacity: 1, scale: 1, borderColor: '#52525b', color: '#ffffff', backgroundColor: '#18181b' })
-          if (dot) gsap.set(dot, { opacity: 1, backgroundColor: '#f59e0b', scale: 1.2 })
+          gsap.set(badge, { opacity: 1, scale: 1, borderColor: '#71717a', color: '#ffffff', backgroundColor: '#18181b' })
+          if (dot) gsap.set(dot, { opacity: 1, backgroundColor: '#f59e0b', scale: 1.15 })
         } else {
-          gsap.set(badge, { opacity: 0.4, scale: 0.9, borderColor: '#27272a', color: '#71717a', backgroundColor: '#09090b' })
-          if (dot) gsap.set(dot, { opacity: 0.6, backgroundColor: '#ffffff', scale: 1 })
+          gsap.set(badge, { opacity: 0.45, scale: 0.95, borderColor: '#27272a', color: '#a1a1aa', backgroundColor: '#0e0e11' })
+          if (dot) gsap.set(dot, { opacity: 0.65, backgroundColor: '#ffffff', scale: 1 })
         }
       })
 
@@ -111,43 +118,62 @@ export default function WhatIfHealthSection() {
         }
       })
 
-      // 3. Sequential cross-fades across the 5 states
+      // 3. Yellow Connector Bar Animation (Hides during transitions, visible when reaching each number circle)
+      if (connector) {
+        // State 0 -> 1 transition
+        masterTL.to(connector, { opacity: 0, duration: 0.03, ease: 'power1.out' }, 0.15)
+        masterTL.to(connector, { opacity: 1, duration: 0.03, ease: 'power1.in' }, 0.22)
+
+        // State 1 -> 2 transition
+        masterTL.to(connector, { opacity: 0, duration: 0.03, ease: 'power1.out' }, 0.35)
+        masterTL.to(connector, { opacity: 1, duration: 0.03, ease: 'power1.in' }, 0.42)
+
+        // State 2 -> 3 transition
+        masterTL.to(connector, { opacity: 0, duration: 0.03, ease: 'power1.out' }, 0.55)
+        masterTL.to(connector, { opacity: 1, duration: 0.03, ease: 'power1.in' }, 0.62)
+
+        // State 3 -> 4 transition
+        masterTL.to(connector, { opacity: 0, duration: 0.03, ease: 'power1.out' }, 0.75)
+        masterTL.to(connector, { opacity: 1, duration: 0.03, ease: 'power1.in' }, 0.82)
+      }
+
+      // 4. Sequential cross-fades across the 5 states
       // State 0 (Instant) -> State 1 (Predictive)
-      masterTL.to(stateCardRefs.current[0], { opacity: 0, y: -12, duration: 0.04, ease: 'power1.inOut' }, 0.18)
+      masterTL.to(stateCardRefs.current[0], { opacity: 0, y: -12, duration: 0.04, ease: 'power1.inOut' }, 0.15)
       masterTL.to(stateCardRefs.current[1], { opacity: 1, y: 0, duration: 0.04, ease: 'power1.inOut' }, 0.22)
 
       // State 1 (Predictive) -> State 2 (Accessible)
-      masterTL.to(stateCardRefs.current[1], { opacity: 0, y: -12, duration: 0.04, ease: 'power1.inOut' }, 0.38)
+      masterTL.to(stateCardRefs.current[1], { opacity: 0, y: -12, duration: 0.04, ease: 'power1.inOut' }, 0.35)
       masterTL.to(stateCardRefs.current[2], { opacity: 1, y: 0, duration: 0.04, ease: 'power1.inOut' }, 0.42)
 
       // State 2 (Accessible) -> State 3 (Intelligent)
-      masterTL.to(stateCardRefs.current[2], { opacity: 0, y: -12, duration: 0.04, ease: 'power1.inOut' }, 0.58)
+      masterTL.to(stateCardRefs.current[2], { opacity: 0, y: -12, duration: 0.04, ease: 'power1.inOut' }, 0.55)
       masterTL.to(stateCardRefs.current[3], { opacity: 1, y: 0, duration: 0.04, ease: 'power1.inOut' }, 0.62)
 
       // State 3 (Intelligent) -> State 4 (Designed for you)
-      masterTL.to(stateCardRefs.current[3], { opacity: 0, y: -12, duration: 0.04, ease: 'power1.inOut' }, 0.78)
+      masterTL.to(stateCardRefs.current[3], { opacity: 0, y: -12, duration: 0.04, ease: 'power1.inOut' }, 0.75)
       masterTL.to(stateCardRefs.current[4], { opacity: 1, y: 0, duration: 0.04, ease: 'power1.inOut' }, 0.82)
 
-      // 4. Synchronized Node Active Badges on the Orbit Wheel
+      // 5. Synchronized Node Active Badges on the Orbit Wheel
       nodeBadgeRefs.current.forEach((badge, idx) => {
         if (!badge) return
         const dot = nodeDotRefs.current[idx]
 
         if (idx === 0) {
-          masterTL.to(badge, { opacity: 0.4, scale: 0.9, borderColor: '#27272a', color: '#71717a', backgroundColor: '#09090b', duration: 0.04 }, 0.18)
-          if (dot) masterTL.to(dot, { opacity: 0.6, backgroundColor: '#ffffff', scale: 1, duration: 0.04 }, 0.18)
+          masterTL.to(badge, { opacity: 0.45, scale: 0.95, borderColor: '#27272a', color: '#a1a1aa', backgroundColor: '#0e0e11', duration: 0.04 }, 0.15)
+          if (dot) masterTL.to(dot, { opacity: 0.65, backgroundColor: '#ffffff', scale: 1, duration: 0.04 }, 0.15)
         } else if (idx === 4) {
-          masterTL.to(badge, { opacity: 1, scale: 1, borderColor: '#52525b', color: '#ffffff', backgroundColor: '#18181b', duration: 0.04 }, 0.82)
-          if (dot) masterTL.to(dot, { opacity: 1, backgroundColor: '#f59e0b', scale: 1.2, duration: 0.04 }, 0.82)
+          masterTL.to(badge, { opacity: 1, scale: 1, borderColor: '#71717a', color: '#ffffff', backgroundColor: '#18181b', duration: 0.04 }, 0.82)
+          if (dot) masterTL.to(dot, { opacity: 1, backgroundColor: '#f59e0b', scale: 1.15, duration: 0.04 }, 0.82)
         } else {
           const inTime = idx * 0.20 + 0.02
-          const outTime = (idx + 1) * 0.20 - 0.02
+          const outTime = (idx + 1) * 0.20 - 0.05
 
-          masterTL.to(badge, { opacity: 1, scale: 1, borderColor: '#52525b', color: '#ffffff', backgroundColor: '#18181b', duration: 0.04 }, inTime)
-          if (dot) masterTL.to(dot, { opacity: 1, backgroundColor: '#f59e0b', scale: 1.2, duration: 0.04 }, inTime)
+          masterTL.to(badge, { opacity: 1, scale: 1, borderColor: '#71717a', color: '#ffffff', backgroundColor: '#18181b', duration: 0.04 }, inTime)
+          if (dot) masterTL.to(dot, { opacity: 1, backgroundColor: '#f59e0b', scale: 1.15, duration: 0.04 }, inTime)
 
-          masterTL.to(badge, { opacity: 0.4, scale: 0.9, borderColor: '#27272a', color: '#71717a', backgroundColor: '#09090b', duration: 0.04 }, outTime)
-          if (dot) masterTL.to(dot, { opacity: 0.6, backgroundColor: '#ffffff', scale: 1, duration: 0.04 }, outTime)
+          masterTL.to(badge, { opacity: 0.45, scale: 0.95, borderColor: '#27272a', color: '#a1a1aa', backgroundColor: '#0e0e11', duration: 0.04 }, outTime)
+          if (dot) masterTL.to(dot, { opacity: 0.65, backgroundColor: '#ffffff', scale: 1, duration: 0.04 }, outTime)
         }
       })
     }, containerRef)
@@ -176,9 +202,16 @@ export default function WhatIfHealthSection() {
         </h2>
       </div>
 
-      {/* Static Vertical Connector Line (Dropping from apex into the text) */}
-      <div className="absolute top-[42vh] left-1/2 -translate-x-1/2 flex flex-col items-center pointer-events-none z-20">
-        <div className="w-[1px] h-24 sm:h-28 bg-gradient-to-b from-[#f59e0b] via-neutral-700 to-transparent" />
+      {/* Yellow Vertical Connector Line (Only visible when scroll reaches a number circle) */}
+      <div
+        ref={connectorRef}
+        className="absolute top-[42vh] left-1/2 -translate-x-1/2 flex flex-col items-center pointer-events-none z-20"
+        style={{ willChange: 'opacity, transform' }}
+      >
+        {/* Glowing Amber Dot at Apex */}
+        <div className="w-2.5 h-2.5 rounded-full bg-[#f59e0b] shadow-[0_0_10px_rgba(245,158,11,0.9)] -translate-y-1/2" />
+        {/* Yellow Vertical Bar */}
+        <div className="w-[1.5px] h-24 sm:h-28 bg-gradient-to-b from-[#f59e0b] via-[#f59e0b]/50 to-transparent" />
       </div>
 
       {/* Center Active Story Card Container (Inside / below the arc apex) */}
@@ -230,22 +263,22 @@ export default function WhatIfHealthSection() {
                 top: `${topPercent}%`,
               }}
             >
-              {/* Upright Counter-Rotating Node Wrapper */}
+              {/* Upright Counter-Rotating Node Wrapper with Uniform Size, Distance, and Color */}
               <div
                 ref={(el) => (nodeWrapperRefs.current[index] = el)}
                 className="flex flex-col items-center justify-center -translate-y-[18px]"
                 style={{ willChange: 'transform' }}
               >
-                {/* Node Badge */}
+                {/* Number Circle Badge (Consistent size 32px, consistent offset, identical colors) */}
                 <div
                   ref={(el) => (nodeBadgeRefs.current[index] = el)}
-                  className="w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center font-mono font-medium text-xs bg-[#09090b] border border-neutral-800 text-neutral-400 mb-1.5 shadow-sm"
+                  className="w-8 h-8 rounded-full flex items-center justify-center font-mono font-medium text-xs bg-[#0e0e11] border border-neutral-800 text-neutral-300 mb-1.5 shadow-sm"
                   style={{ willChange: 'opacity, transform, border-color, color, background-color' }}
                 >
                   {state.num}
                 </div>
 
-                {/* Node Dot (Positioned exactly on the arc circumference) */}
+                {/* Orbit Arc Dot (Positioned exactly on the arc circumference) */}
                 <div
                   ref={(el) => (nodeDotRefs.current[index] = el)}
                   className="w-2 h-2 rounded-full bg-white shadow-[0_0_6px_rgba(255,255,255,0.4)]"
