@@ -9,10 +9,9 @@ gsap.registerPlugin(ScrollTrigger)
 // All animation parameters, scroll distances, and timings are controlled here.
 // ============================================================================
 const CONFIG = {
-  scrollDistance: 3000, // Total vertical scroll distance (px) while pinned
-  scrubSpeed: 0.6, // Scrub response (smooth interpolation factor)
-  totalRotation: 144, // 4 steps * 36 deg = 144 deg total rotation from 01 to 05
-  stepAngle: 36, // Angular offset between consecutive nodes
+  scrubSpeed: 0.5, // Scrub response (smooth interpolation factor)
+  stepAngle: 32, // Angular offset between consecutive nodes (32 deg)
+  totalRotation: 128, // 4 steps * 32 deg = 128 deg total rotation
 }
 
 // Exactly 5 states matching the reference sequence
@@ -51,11 +50,11 @@ export default function WhatIfHealthSection() {
   const nodeTitleRefs = useRef([])
   const nodeWrapperRefs = useRef([])
   const stateCardRefs = useRef([])
-  const progressNumRef = useRef(null)
 
-  // Base angles for the 5 points around the circumference
-  // 01 starts at 0° (apex), 02 at +36°, 03 at +72°, 04 at -72°, 05 at -36°
-  const nodeBaseAngles = [0, 36, 72, -72, -36]
+  // Base angles for the 5 points in initial rest position:
+  // Node 01 at 0° (apex), Node 02 at +32°, Node 03 at +64°, Node 04 at +96°, Node 05 at +128°
+  // As the wheel rotates by -128°, every node 01 -> 02 -> 03 -> 04 -> 05 reaches 0° (the apex) sequentially!
+  const nodeBaseAngles = [0, 32, 64, 96, 128]
 
   useEffect(() => {
     const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -66,15 +65,38 @@ export default function WhatIfHealthSection() {
     if (!container || !wheel) return
 
     const ctx = gsap.context(() => {
+      // 1. Initialize all 5 cards
+      stateCardRefs.current.forEach((card, idx) => {
+        if (!card) return
+        if (idx === 0) {
+          gsap.set(card, { opacity: 1, y: 0, pointerEvents: 'auto' })
+        } else {
+          gsap.set(card, { opacity: 0, y: 16, pointerEvents: 'none' })
+        }
+      })
+
+      // 2. Initialize node badges
+      nodeBadgeRefs.current.forEach((badge, idx) => {
+        if (!badge) return
+        const titleEl = nodeTitleRefs.current[idx]
+        if (idx === 0) {
+          gsap.set(badge, { opacity: 1, scale: 1.15, borderColor: '#fbbf24', color: '#fef08a' })
+          if (titleEl) gsap.set(titleEl, { opacity: 1, color: '#fef08a' })
+        } else {
+          gsap.set(badge, { opacity: 0.35, scale: 0.85, borderColor: '#262626', color: '#737373' })
+          if (titleEl) gsap.set(titleEl, { opacity: 0.4, color: '#525252' })
+        }
+      })
+
       // ========================================================================
-      // 1. MASTER TIMELINE SYNCHRONIZED BY SCROLLTRIGGER
-      // ONE single source of truth for the entire sequence (01 -> 05).
+      // MASTER TIMELINE SYNCHRONIZED BY SCROLLTRIGGER
+      // Uses 3.5 viewport heights of scroll distance for relaxed pacing.
       // ========================================================================
       const masterTL = gsap.timeline({
         scrollTrigger: {
           trigger: container,
           start: 'top top',
-          end: `+=${CONFIG.scrollDistance}`,
+          end: () => `+=${Math.max(2600, window.innerHeight * 3.5)}`,
           pin: true,
           scrub: CONFIG.scrubSpeed,
           anticipatePin: 1,
@@ -82,7 +104,7 @@ export default function WhatIfHealthSection() {
         },
       })
 
-      // 1. Smoothly rotate the orbital wheel from 0° to -144° over timeline duration (0 to 1)
+      // 1. Smoothly rotate the orbital wheel from 0° to -128° over timeline duration (0 to 1)
       masterTL.to(wheel, { rotation: -CONFIG.totalRotation, ease: 'none', duration: 1 }, 0)
 
       // 2. Counter-rotate node wrappers so badges remain horizontally upright
@@ -92,62 +114,57 @@ export default function WhatIfHealthSection() {
         }
       })
 
-      // 3. Smooth deterministic text cross-fades between the 5 states
-      // State 0: 0.00 -> 0.20
-      // State 1: 0.20 -> 0.40
-      // State 2: 0.40 -> 0.60
-      // State 3: 0.60 -> 0.80
-      // State 4: 0.80 -> 1.00 (holds until pin release)
+      // 3. Sequential cross-fades across the 5 states (0.00 -> 0.20 -> 0.40 -> 0.60 -> 0.80 -> 1.00)
+      // State 0 (Instant) -> State 1 (Predictive)
+      masterTL.to(stateCardRefs.current[0], { opacity: 0, y: -16, duration: 0.04, ease: 'power1.inOut' }, 0.18)
+      masterTL.to(stateCardRefs.current[1], { opacity: 1, y: 0, duration: 0.04, ease: 'power1.inOut' }, 0.22)
 
-      // Transition 0 -> 1 (Instant -> Predictive)
-      masterTL.to(stateCardRefs.current[0], { opacity: 0, y: -12, duration: 0.05, ease: 'power1.inOut' }, 0.17)
-      masterTL.fromTo(stateCardRefs.current[1], { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.05, ease: 'power1.inOut' }, 0.20)
+      // State 1 (Predictive) -> State 2 (Accessible)
+      masterTL.to(stateCardRefs.current[1], { opacity: 0, y: -16, duration: 0.04, ease: 'power1.inOut' }, 0.38)
+      masterTL.to(stateCardRefs.current[2], { opacity: 1, y: 0, duration: 0.04, ease: 'power1.inOut' }, 0.42)
 
-      // Transition 1 -> 2 (Predictive -> Accessible)
-      masterTL.to(stateCardRefs.current[1], { opacity: 0, y: -12, duration: 0.05, ease: 'power1.inOut' }, 0.37)
-      masterTL.fromTo(stateCardRefs.current[2], { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.05, ease: 'power1.inOut' }, 0.40)
+      // State 2 (Accessible) -> State 3 (Intelligent)
+      masterTL.to(stateCardRefs.current[2], { opacity: 0, y: -16, duration: 0.04, ease: 'power1.inOut' }, 0.58)
+      masterTL.to(stateCardRefs.current[3], { opacity: 1, y: 0, duration: 0.04, ease: 'power1.inOut' }, 0.62)
 
-      // Transition 2 -> 3 (Accessible -> Intelligent)
-      masterTL.to(stateCardRefs.current[2], { opacity: 0, y: -12, duration: 0.05, ease: 'power1.inOut' }, 0.57)
-      masterTL.fromTo(stateCardRefs.current[3], { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.05, ease: 'power1.inOut' }, 0.60)
+      // State 3 (Intelligent) -> State 4 (Designed for you)
+      masterTL.to(stateCardRefs.current[3], { opacity: 0, y: -16, duration: 0.04, ease: 'power1.inOut' }, 0.78)
+      masterTL.to(stateCardRefs.current[4], { opacity: 1, y: 0, duration: 0.04, ease: 'power1.inOut' }, 0.82)
+      // State 4 (Designed for you) holds cleanly until progress 1.00!
 
-      // Transition 3 -> 4 (Intelligent -> Designed for you)
-      masterTL.to(stateCardRefs.current[3], { opacity: 0, y: -12, duration: 0.05, ease: 'power1.inOut' }, 0.77)
-      masterTL.fromTo(stateCardRefs.current[4], { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.05, ease: 'power1.inOut' }, 0.80)
-
-      // 4. Synchronized Node Active Highlighting on the Orbit
-      nodeBadgeRefs.current.forEach((badge, index) => {
+      // 4. Synchronized Node Active Badges on the Orbit Wheel
+      nodeBadgeRefs.current.forEach((badge, idx) => {
         if (!badge) return
-        const titleEl = nodeTitleRefs.current[index]
-        const targetT = index * 0.25 // 0.00, 0.25, 0.50, 0.75, 1.00
+        const titleEl = nodeTitleRefs.current[idx]
 
-        // Set initial states
-        if (index === 0) {
-          gsap.set(badge, { opacity: 1, scale: 1.15, borderColor: '#fbbf24', color: '#fef08a' })
-          if (titleEl) gsap.set(titleEl, { opacity: 1, color: '#fef08a' })
-          masterTL.to(badge, { opacity: 0.35, scale: 0.85, borderColor: '#262626', color: '#737373', duration: 0.05 }, 0.17)
-          if (titleEl) masterTL.to(titleEl, { opacity: 0.4, color: '#525252', duration: 0.05 }, 0.17)
-        } else if (index === 4) {
-          gsap.set(badge, { opacity: 0.35, scale: 0.85, borderColor: '#262626', color: '#737373' })
-          if (titleEl) gsap.set(titleEl, { opacity: 0.4, color: '#525252' })
-          masterTL.to(badge, { opacity: 1, scale: 1.15, borderColor: '#fbbf24', color: '#fef08a', duration: 0.05 }, 0.77)
-          if (titleEl) masterTL.to(titleEl, { opacity: 1, color: '#fef08a', duration: 0.05 }, 0.77)
+        if (idx === 0) {
+          masterTL.to(badge, { opacity: 0.35, scale: 0.85, borderColor: '#262626', color: '#737373', duration: 0.04 }, 0.18)
+          if (titleEl) masterTL.to(titleEl, { opacity: 0.4, color: '#525252', duration: 0.04 }, 0.18)
+        } else if (idx === 4) {
+          masterTL.to(badge, { opacity: 1, scale: 1.15, borderColor: '#fbbf24', color: '#fef08a', duration: 0.04 }, 0.82)
+          if (titleEl) masterTL.to(titleEl, { opacity: 1, color: '#fef08a', duration: 0.04 }, 0.82)
         } else {
-          gsap.set(badge, { opacity: 0.35, scale: 0.85, borderColor: '#262626', color: '#737373' })
-          if (titleEl) gsap.set(titleEl, { opacity: 0.4, color: '#525252' })
+          const inTime = idx * 0.20 + 0.02
+          const outTime = (idx + 1) * 0.20 - 0.02
 
-          // Activate when arriving at top apex
-          masterTL.to(badge, { opacity: 1, scale: 1.15, borderColor: '#fbbf24', color: '#fef08a', duration: 0.05 }, targetT - 0.04)
-          if (titleEl) masterTL.to(titleEl, { opacity: 1, color: '#fef08a', duration: 0.05 }, targetT - 0.04)
+          masterTL.to(badge, { opacity: 1, scale: 1.15, borderColor: '#fbbf24', color: '#fef08a', duration: 0.04 }, inTime)
+          if (titleEl) masterTL.to(titleEl, { opacity: 1, color: '#fef08a', duration: 0.04 }, inTime)
 
-          // Deactivate when rotating away
-          masterTL.to(badge, { opacity: 0.35, scale: 0.85, borderColor: '#262626', color: '#737373', duration: 0.05 }, targetT + 0.12)
-          if (titleEl) masterTL.to(titleEl, { opacity: 0.4, color: '#525252', duration: 0.05 }, targetT + 0.12)
+          masterTL.to(badge, { opacity: 0.35, scale: 0.85, borderColor: '#262626', color: '#737373', duration: 0.04 }, outTime)
+          if (titleEl) masterTL.to(titleEl, { opacity: 0.4, color: '#525252', duration: 0.04 }, outTime)
         }
       })
     }, containerRef)
 
-    return () => ctx.revert()
+    // Ensure ScrollTrigger refreshes accurately after mounting
+    const timer = setTimeout(() => {
+      ScrollTrigger.refresh()
+    }, 250)
+
+    return () => {
+      clearTimeout(timer)
+      ctx.revert()
+    }
   }, [])
 
   return (
@@ -174,10 +191,8 @@ export default function WhatIfHealthSection() {
             <div
               key={state.num}
               ref={(el) => (stateCardRefs.current[index] = el)}
-              className="absolute inset-0 flex flex-col items-center justify-center text-center px-4"
+              className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 pointer-events-none"
               style={{
-                opacity: index === 0 ? 1 : 0,
-                transform: index === 0 ? 'translateY(0px)' : 'translateY(12px)',
                 willChange: 'opacity, transform',
               }}
             >

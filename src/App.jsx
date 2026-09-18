@@ -7,7 +7,7 @@ import EveryoneEverywhereSection from './components/EveryoneEverywhereSection'
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-white flex flex-col">
+    <div className="min-h-screen bg-white w-full">
       {/* Hero Section */}
       <Hero />
 
