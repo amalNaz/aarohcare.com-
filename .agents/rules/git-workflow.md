@@ -1,19 +1,18 @@
 # Git Workflow & Commit Guidelines
 
-## Push Strategy: Major Changes Only
-- **Push Criteria**: Only push to the remote repository for **major changes**, such as:
-  - Completed features and substantive component additions.
-  - Significant architectural updates or refactoring.
-  - Major bug fixes or core integration milestones.
-- **Do Not Push Trivial Tweaks**: Avoid separate commits/pushes for minor changes like small color tweaks, text size changes, minor spacing/padding adjustments, or micro-edits. Group them into meaningful milestone commits when appropriate.
+## Push Strategy: New Sections & Major Milestones
+- **Push Criteria**: Whenever a **new section** or **major feature** is completed:
+  - Commit and push to the remote repository.
+  - Examples: Hero section completed, Services/Features section added, Testimonials added, Contact section completed, etc.
+- **Do NOT push trivial tweaks**: Avoid separate commits/pushes for minor micro-tweaks during drafting. Bundle them into section/milestone commits.
 
 ## Professional Commit Standards
 - **Conventional Commits**: Use structured and professional commit messages:
-  - `feat: <description>` for new features
+  - `feat: <description>` for new sections and features
   - `fix: <description>` for bug fixes
   - `refactor: <description>` for code improvements without feature changes
   - `perf: <description>` for performance optimizations
   - `docs: <description>` for documentation updates
 - **Quality**:
-  - Keep commit titles clear, concise, and written in the imperative mood (e.g., `feat: implement user authentication flow`).
-  - Add descriptive body text when necessary to explain context or architectural rationale.
+  - Keep commit titles clear, concise, and written in the imperative mood.
+  - Add descriptive body text when necessary to explain context.
