@@ -6,6 +6,7 @@ import WhatIfHealthSection from './components/WhatIfHealthSection'
 import HealthPartnerSection from './components/HealthPartnerSection'
 import ClinicOperationsSection from './components/ClinicOperationsSection'
 import HospitalsAndClinicsSection from './components/HospitalsAndClinicsSection'
+import LabFeaturesSection from './components/LabFeaturesSection'
 
 export default function App() {
   return (
@@ -30,9 +31,13 @@ export default function App() {
 
       {/* Designed for Hospitals and Clinics Section */}
       <HospitalsAndClinicsSection />
+
+      {/* Labs Features for the Site Section */}
+      <LabFeaturesSection />
     </div>
   )
 }
+
 
 
 
