@@ -8,6 +8,7 @@ import ClinicOperationsSection from './components/ClinicOperationsSection'
 import HospitalsAndClinicsSection from './components/HospitalsAndClinicsSection'
 import LabFeaturesSection from './components/LabFeaturesSection'
 import FoundersSection from './components/FoundersSection'
+import FAQSection from './components/FAQSection'
 
 export default function App() {
   return (
@@ -38,9 +39,13 @@ export default function App() {
 
       {/* Founders / Team Section */}
       <FoundersSection />
+
+      {/* Frequently Asked Questions Section */}
+      <FAQSection />
     </div>
   )
 }
+
 
 
 
