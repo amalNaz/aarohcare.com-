@@ -37,7 +37,8 @@ const STATES = [
 const NODE_BASE_ANGLES = [0, 72, 144, 216, 288]
 
 export default function WhatIfHealthSection() {
-  const containerRef = useRef(null)
+  const sectionRef = useRef(null)
+  const pinWrapperRef = useRef(null)
   const headerRef = useRef(null)
   const wheelRef = useRef(null)
   const connectorRef = useRef(null)
@@ -48,6 +49,7 @@ export default function WhatIfHealthSection() {
   const stateCardRefs = useRef([])
 
   const stepRef = useRef(0)
+  const lastStepTimeRef = useRef(0)
   const isSteppingRef = useRef(false)
   const stRef = useRef(null)
 
@@ -55,14 +57,15 @@ export default function WhatIfHealthSection() {
     const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (isReducedMotion) return
 
-    const container = containerRef.current
+    const section = sectionRef.current
+    const pinWrapper = pinWrapperRef.current
     const wheel = wheelRef.current
     const connector = connectorRef.current
     const header = headerRef.current
-    if (!container || !wheel) return
+    if (!section || !pinWrapper || !wheel) return
 
     const ctx = gsap.context(() => {
-      // 1. Initial State Setup (Ensures State 1 'Instant' is fully visible at entry)
+      // 1. Initial State Setup
       if (connector) gsap.set(connector, { opacity: 1 })
 
       stateCardRefs.current.forEach((card, idx) => {
@@ -86,9 +89,7 @@ export default function WhatIfHealthSection() {
         }
       })
 
-      // ======================================================================
-      // SECTION ENTRANCE ANIMATION (Header & Wheel Entrance)
-      // ======================================================================
+      // Section Entrance Animation
       if (header && wheel) {
         gsap.fromTo(
           header,
@@ -99,7 +100,7 @@ export default function WhatIfHealthSection() {
             duration: 1.0,
             ease: 'cubic-bezier(0.22, 1, 0.36, 1)',
             scrollTrigger: {
-              trigger: container,
+              trigger: section,
               start: 'top 85%',
               toggleActions: 'play none none none',
             },
@@ -115,7 +116,7 @@ export default function WhatIfHealthSection() {
             duration: 1.1,
             ease: 'cubic-bezier(0.22, 1, 0.36, 1)',
             scrollTrigger: {
-              trigger: container,
+              trigger: section,
               start: 'top 85%',
               toggleActions: 'play none none none',
             },
@@ -123,46 +124,46 @@ export default function WhatIfHealthSection() {
         )
       }
 
-      // ======================================================================
-      // 6-CHECKPOINT MASTER GSAP TIMELINE (5 Transitions: 0->1, 1->2, 2->3, 3->4, 4->5)
-      // 0.0 (Node 1), 0.2 (Node 2), 0.4 (Node 3), 0.6 (Node 4), 0.8 (Node 5), 1.0 (Node 1 360° Ring)
-      // Linear sub-tweens allow the outer controller to govern the slow, stately movement perfectly.
-      // ======================================================================
+      // Master 6-Checkpoint GSAP Timeline (Pinned on inner pinWrapper, trigger on outer section)
       const validTextRefs = badgeTextRefs.current.filter(Boolean)
 
       const masterTimeline = gsap.timeline({
         scrollTrigger: {
-          trigger: container,
+          trigger: section,
           start: 'top top',
           end: () => `+=${Math.max(3400, window.innerHeight * 3.6)}`,
-          pin: true,
-          scrub: 0.1,
+          pin: pinWrapper,
+          scrub: 0.2,
           anticipatePin: 1,
           invalidateOnRefresh: true,
+          onEnter: () => {
+            stepRef.current = 0
+          },
+          onEnterBack: () => {
+            stepRef.current = 5
+          },
           onUpdate: (self) => {
-            const stepIndex = Math.min(5, Math.floor(self.progress * 5 + 0.5))
             if (!isSteppingRef.current) {
-              stepRef.current = stepIndex
+              const calcStep = Math.min(5, Math.max(0, Math.round(self.progress * 5)))
+              stepRef.current = calcStep
             }
           },
         },
       })
 
-      // Standard timeline duration unit
       const STAGE_DUR = 1.0
 
-      // Ensure State 1 card starts fully opaque at timeline time 0
       if (stateCardRefs.current[0]) {
         masterTimeline.set(stateCardRefs.current[0], { opacity: 1, y: 0, pointerEvents: 'auto' }, 0)
       }
 
-      // Animate through 5 transition intervals connecting the 6 checkpoints (Circle 1 -> 2 -> 3 -> 4 -> 5 -> 1)
+      // 5 transitions connecting the 6 checkpoints (1 -> 2 -> 3 -> 4 -> 5 -> 1 full 360° ring)
       for (let i = 0; i < 5; i++) {
-        const nextIdx = (i + 1) % 5 // 0->1, 1->2, 2->3, 3->4, 4->0
+        const nextIdx = (i + 1) % 5
         const currentIdx = i % 5
         const startTime = i * STAGE_DUR
 
-        // 1. Wheel Rotation (72° per stage linearly across timeline, guided by slow scroll easing)
+        // 1. Wheel Rotation (72° per stage)
         masterTimeline.to(
           wheel,
           {
@@ -173,7 +174,7 @@ export default function WhatIfHealthSection() {
           startTime
         )
 
-        // 2. Counter-rotate badge numbers to keep digits upright (+72° up to +360°)
+        // 2. Counter-rotate badge numbers to keep digits upright
         if (validTextRefs.length > 0) {
           masterTimeline.to(
             validTextRefs,
@@ -186,7 +187,7 @@ export default function WhatIfHealthSection() {
           )
         }
 
-        // 3. Current Card Fades Out smoothly as wheel departs checkpoint
+        // 3. Current Card Fades Out
         const currentCard = stateCardRefs.current[currentIdx]
         if (currentCard) {
           masterTimeline.to(
@@ -202,7 +203,7 @@ export default function WhatIfHealthSection() {
           )
         }
 
-        // 4. Next Card Fades In smoothly as wheel arrives at next checkpoint
+        // 4. Next Card Fades In
         const nextCard = stateCardRefs.current[nextIdx]
         if (nextCard) {
           masterTimeline.fromTo(
@@ -270,7 +271,7 @@ export default function WhatIfHealthSection() {
           }
         }
 
-        // 7. Connector Line Pulse at apex as node docks
+        // 7. Connector Line Pulse
         if (connector) {
           masterTimeline.fromTo(
             connector,
@@ -282,10 +283,10 @@ export default function WhatIfHealthSection() {
       }
 
       stRef.current = masterTimeline.scrollTrigger
-    }, containerRef)
+    }, sectionRef)
 
     // ========================================================================
-    // DISCRETE STEP-TO CONTROLLER (Slow, stately, fluid checkpoint glide)
+    // DISCRETE STEP-TO CONTROLLER (Fluid 1.2s glide per checkpoint)
     // ========================================================================
     const stepTo = (targetStep) => {
       const st = stRef.current
@@ -298,39 +299,37 @@ export default function WhatIfHealthSection() {
       const targetProgress = clampedStep / 5
       const targetScroll = st.start + targetProgress * (st.end - st.start)
 
-      // Slow, luxurious 1.4s glide with smooth exponential ease
       if (typeof window !== 'undefined' && window.__lenis) {
         window.__lenis.scrollTo(targetScroll, {
-          duration: 1.4,
+          duration: 1.15,
           easing: (t) => Math.min(1, 1.001 - Math.pow(2, -7 * t)),
           onComplete: () => {
             setTimeout(() => {
               isSteppingRef.current = false
-            }, 100)
+            }, 80)
           },
         })
       } else {
         gsap.to(window, {
           scrollTo: { y: targetScroll, autoKill: false },
-          duration: 1.4,
-          ease: 'power2.inOut',
+          duration: 1.15,
+          ease: 'power2.out',
           overwrite: 'auto',
           onComplete: () => {
             setTimeout(() => {
               isSteppingRef.current = false
-            }, 100)
+            }, 80)
           },
         })
       }
 
-      // Safety release fallback
       setTimeout(() => {
         isSteppingRef.current = false
-      }, 1600)
+      }, 1300)
     }
 
     // ========================================================================
-    // DISCRETE 1-SCROLL WHEEL CONTROLLER (Runs on capture to intercept before smooth scroll)
+    // 1-SCROLL WHEEL INTERCEPTOR (1 mouse wheel scroll = 1 circle checkpoint)
     // ========================================================================
     const handleWheel = (e) => {
       const st = stRef.current
@@ -339,7 +338,7 @@ export default function WhatIfHealthSection() {
       const scrollY = window.scrollY || window.pageYOffset || 0
       const start = st.start
       const end = st.end
-      const tol = 12
+      const tol = 16
 
       const isPinned = scrollY >= start - tol && scrollY <= end + tol
       if (!isPinned) {
@@ -348,9 +347,10 @@ export default function WhatIfHealthSection() {
         return
       }
 
-      // Filter out micro trackpad jitter
-      if (Math.abs(e.deltaY) < 10) return
+      // Filter out micro trackpad noise
+      if (Math.abs(e.deltaY) < 6) return
 
+      const now = Date.now()
       const direction = e.deltaY > 0 ? 1 : -1
       const curStep = stepRef.current
 
@@ -364,18 +364,21 @@ export default function WhatIfHealthSection() {
         return
       }
 
-      // Intercept wheel inside pinned range to guarantee 1 scroll = 1 circle node
+      // Intercept wheel event inside pinned range
       e.preventDefault()
       e.stopPropagation()
       if (typeof e.stopImmediatePropagation === 'function') {
         e.stopImmediatePropagation()
       }
 
+      // 450ms cooldown prevents one flick from skipping multiple nodes
+      if (now - lastStepTimeRef.current < 450) return
       if (isSteppingRef.current) return
 
       const nextStep = curStep + direction
       if (nextStep < 0 || nextStep > 5) return
 
+      lastStepTimeRef.current = now
       stepTo(nextStep)
     }
 
@@ -388,24 +391,27 @@ export default function WhatIfHealthSection() {
       const st = stRef.current
       if (!st) return
       const scrollY = window.scrollY || window.pageYOffset || 0
-      const isPinned = scrollY >= st.start - 12 && scrollY <= st.end + 12
+      const isPinned = scrollY >= st.start - 16 && scrollY <= st.end + 16
       if (!isPinned) return
 
       const deltaY = touchStartY - e.touches[0].clientY
-      if (Math.abs(deltaY) < 30) return
+      if (Math.abs(deltaY) < 25) return
 
       const direction = deltaY > 0 ? 1 : -1
       const curStep = stepRef.current
 
-      if (curStep === 5 && direction === 1 && scrollY >= st.end - 12) return
-      if (curStep === 0 && direction === -1 && scrollY <= st.start + 12) return
+      if (curStep === 5 && direction === 1 && scrollY >= st.end - 16) return
+      if (curStep === 0 && direction === -1 && scrollY <= st.start + 16) return
 
       e.preventDefault()
+      const now = Date.now()
+      if (now - lastStepTimeRef.current < 450) return
       if (isSteppingRef.current) return
 
       const nextStep = curStep + direction
       if (nextStep < 0 || nextStep > 5) return
 
+      lastStepTimeRef.current = now
       touchStartY = e.touches[0].clientY
       stepTo(nextStep)
     }
@@ -415,7 +421,7 @@ export default function WhatIfHealthSection() {
       const st = stRef.current
       if (!st) return
       const scrollY = window.scrollY || window.pageYOffset || 0
-      const isPinned = scrollY >= st.start - 12 && scrollY <= st.end + 12
+      const isPinned = scrollY >= st.start - 16 && scrollY <= st.end + 16
       if (!isPinned) return
 
       if (e.key === 'ArrowDown' || e.key === 'PageDown') {
@@ -438,9 +444,7 @@ export default function WhatIfHealthSection() {
     window.addEventListener('touchmove', handleTouchMove, { passive: false })
     window.addEventListener('keydown', handleKeyDown)
 
-    // ========================================================================
-    // DIRECT BADGE CLICK NAVIGATION
-    // ========================================================================
+    // Direct Badge Click Navigation
     window.__whatIfAnimateToStep = (index) => {
       let targetStep = index
       if (index === 0) {
@@ -467,126 +471,123 @@ export default function WhatIfHealthSection() {
   return (
     <section
       id="features"
-      ref={containerRef}
-      className="relative w-full h-screen bg-black text-white overflow-hidden select-none z-10 scroll-mt-0"
+      ref={sectionRef}
+      className="relative w-full bg-black scroll-mt-0"
     >
-      {/* Top Header — Clear clearance below mobile navbar with smooth popping entrance */}
+      {/* Inner Pinned Container — GSAP pins this container inside the outer section */}
       <div
-        ref={headerRef}
-        className="absolute top-20 sm:top-20 md:top-14 lg:top-16 left-6 sm:left-10 lg:left-16 z-30 pointer-events-none"
-        style={{ willChange: 'opacity, transform' }}
+        ref={pinWrapperRef}
+        className="relative w-full h-screen bg-black text-white overflow-hidden select-none z-10"
       >
-        <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[4rem] font-bold tracking-tight text-white leading-[1.08]">
-          What If <br />
-          Health Was ...
-        </h2>
-      </div>
+        {/* Top Header */}
+        <div
+          ref={headerRef}
+          className="absolute top-20 sm:top-20 md:top-14 lg:top-16 left-6 sm:left-10 lg:left-16 z-30 pointer-events-none"
+          style={{ willChange: 'opacity, transform' }}
+        >
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[4rem] font-bold tracking-tight text-white leading-[1.08]">
+            What If <br />
+            Health Was ...
+          </h2>
+        </div>
 
-      {/* Apex Indicator: Amber Dot & Vertical Connector Line (Only extends DOWNWARDS) */}
-      <div
-        ref={connectorRef}
-        className="absolute top-[44vh] sm:top-[42vh] md:top-[42vh] lg:top-[40vh] left-1/2 -translate-x-1/2 flex flex-col items-center pointer-events-none z-20"
-        style={{ willChange: 'opacity, transform' }}
-      >
-        {/* Solid Amber Dot centered on the arc path */}
-        <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#f59e0b] shadow-[0_0_8px_rgba(245,158,11,0.8)] -translate-y-1/2" />
-        {/* Crisp Straight Vertical Line extending down into concept text */}
-        <div className="w-[1px] h-8 sm:h-10 md:h-12 lg:h-14 bg-[#8e8e93]/75 -mt-0.5" />
-      </div>
+        {/* Apex Indicator: Amber Dot & Vertical Connector Line */}
+        <div
+          ref={connectorRef}
+          className="absolute top-[44vh] sm:top-[42vh] md:top-[42vh] lg:top-[40vh] left-1/2 -translate-x-1/2 flex flex-col items-center pointer-events-none z-20"
+          style={{ willChange: 'opacity, transform' }}
+        >
+          <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#f59e0b] shadow-[0_0_8px_rgba(245,158,11,0.8)] -translate-y-1/2" />
+          <div className="w-[1px] h-8 sm:h-10 md:h-12 lg:h-14 bg-[#8e8e93]/75 -mt-0.5" />
+        </div>
 
-      {/* Center Active Story Card Container (Inside / below the arc apex) */}
-      <div
-        ref={contentWrapRef}
-        className="absolute top-[calc(44vh+38px)] sm:top-[calc(42vh+48px)] md:top-[calc(42vh+58px)] lg:top-[calc(40vh+68px)] left-1/2 -translate-x-1/2 w-full max-w-lg h-32 sm:h-36 md:h-40 lg:h-44 px-4 text-center z-20 pointer-events-none"
-        style={{ willChange: 'opacity, transform' }}
-      >
-        {STATES.map((state, index) => (
-          <div
-            key={state.num}
-            ref={(el) => (stateCardRefs.current[index] = el)}
-            className="absolute inset-0 flex flex-col items-center justify-start text-center"
-            style={{
-              opacity: index === 0 ? 1 : 0,
-              transform: index === 0 ? 'translateY(0px)' : 'translateY(14px)',
-              pointerEvents: index === 0 ? 'auto' : 'none',
-              willChange: 'opacity, transform',
-            }}
-          >
-            {/* Active Concept Title */}
-            <h3 className="text-2xl sm:text-3xl md:text-3xl lg:text-4xl font-bold text-white mb-1.5 sm:mb-2 tracking-tight">
-              {state.title}
-            </h3>
+        {/* Center Active Story Card Container */}
+        <div
+          ref={contentWrapRef}
+          className="absolute top-[calc(44vh+38px)] sm:top-[calc(42vh+48px)] md:top-[calc(42vh+58px)] lg:top-[calc(40vh+68px)] left-1/2 -translate-x-1/2 w-full max-w-lg h-32 sm:h-36 md:h-40 lg:h-44 px-4 text-center z-20 pointer-events-none"
+          style={{ willChange: 'opacity, transform' }}
+        >
+          {STATES.map((state, index) => (
+            <div
+              key={state.num}
+              ref={(el) => (stateCardRefs.current[index] = el)}
+              className="absolute inset-0 flex flex-col items-center justify-start text-center"
+              style={{
+                opacity: index === 0 ? 1 : 0,
+                transform: index === 0 ? 'translateY(0px)' : 'translateY(14px)',
+                pointerEvents: index === 0 ? 'auto' : 'none',
+                willChange: 'opacity, transform',
+              }}
+            >
+              <h3 className="text-2xl sm:text-3xl md:text-3xl lg:text-4xl font-bold text-white mb-1.5 sm:mb-2 tracking-tight">
+                {state.title}
+              </h3>
 
-            {/* Active Concept Description */}
-            <p className="text-[13px] sm:text-sm md:text-base text-neutral-300 font-normal max-w-[300px] sm:max-w-sm md:max-w-md mx-auto leading-relaxed">
-              {state.description}
-            </p>
-          </div>
-        ))}
-      </div>
+              <p className="text-[13px] sm:text-sm md:text-base text-neutral-300 font-normal max-w-[300px] sm:max-w-sm md:max-w-md mx-auto leading-relaxed">
+                {state.description}
+              </p>
+            </div>
+          ))}
+        </div>
 
-      {/* Giant Rotating Orbital Wheel — Center is at (50%, 50%), Top Apex aligns at top-[44vh]/[40vh] */}
-      <div
-        ref={wheelRef}
-        className="absolute top-[44vh] sm:top-[42vh] md:top-[42vh] lg:top-[40vh] left-1/2 -translate-x-1/2 w-[1050px] h-[1050px] sm:w-[1250px] sm:h-[1250px] md:w-[1450px] md:h-[1450px] lg:w-[1650px] lg:h-[1650px] rounded-full border border-neutral-800 pointer-events-none select-none z-10"
-        style={{ willChange: 'transform' }}
-      >
-        {/* 5 Numbered Orbit Nodes Distributed around 360° at every 72° */}
-        {STATES.map((state, index) => {
-          const angleDeg = NODE_BASE_ANGLES[index]
-          const angleRad = (angleDeg - 90) * (Math.PI / 180) // 0deg corresponds to top apex
+        {/* Giant Rotating Orbital Wheel */}
+        <div
+          ref={wheelRef}
+          className="absolute top-[44vh] sm:top-[42vh] md:top-[42vh] lg:top-[40vh] left-1/2 -translate-x-1/2 w-[1050px] h-[1050px] sm:w-[1250px] sm:h-[1250px] md:w-[1450px] md:h-[1450px] lg:w-[1650px] lg:h-[1650px] rounded-full border border-neutral-800 pointer-events-none select-none z-10"
+          style={{ willChange: 'transform' }}
+        >
+          {/* 5 Numbered Orbit Nodes Distributed around 360° at every 72° */}
+          {STATES.map((state, index) => {
+            const angleDeg = NODE_BASE_ANGLES[index]
+            const angleRad = (angleDeg - 90) * (Math.PI / 180)
 
-          // Position the dot exactly on the 50% radius circumference
-          const dotLeftPercent = 50 + 50 * Math.cos(angleRad)
-          const dotTopPercent = 50 + 50 * Math.sin(angleRad)
+            const dotLeftPercent = 50 + 50 * Math.cos(angleRad)
+            const dotTopPercent = 50 + 50 * Math.sin(angleRad)
 
-          // Position the badge center radially outward
-          const badgeRadiusPercent = 52.0
-          const badgeLeftPercent = 50 + badgeRadiusPercent * Math.cos(angleRad)
-          const badgeTopPercent = 50 + badgeRadiusPercent * Math.sin(angleRad)
+            const badgeRadiusPercent = 52.0
+            const badgeLeftPercent = 50 + badgeRadiusPercent * Math.cos(angleRad)
+            const badgeTopPercent = 50 + badgeRadiusPercent * Math.sin(angleRad)
 
-          return (
-            <React.Fragment key={state.num}>
-              {/* Orbit Arc Dot (Positioned exactly on the arc circumference) */}
-              <div
-                ref={(el) => (nodeDotRefs.current[index] = el)}
-                className="absolute w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-white/70 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
-                style={{
-                  left: `${dotLeftPercent}%`,
-                  top: `${dotTopPercent}%`,
-                  willChange: 'opacity',
-                }}
-              />
+            return (
+              <React.Fragment key={state.num}>
+                <div
+                  ref={(el) => (nodeDotRefs.current[index] = el)}
+                  className="absolute w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-white/70 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+                  style={{
+                    left: `${dotLeftPercent}%`,
+                    top: `${dotTopPercent}%`,
+                    willChange: 'opacity',
+                  }}
+                />
 
-              {/* Number Circle Badge (Matching closeup reference: round black background, crisp border, bold white number) */}
-              <button
-                type="button"
-                ref={(el) => (nodeBadgeRefs.current[index] = el)}
-                onClick={() => {
-                  if (typeof window !== 'undefined' && window.__whatIfAnimateToStep) {
-                    window.__whatIfAnimateToStep(index)
-                  }
-                }}
-                className="absolute w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center font-sans font-bold text-xs sm:text-xs md:text-sm bg-black border border-neutral-700/80 text-white -translate-x-1/2 -translate-y-1/2 cursor-pointer pointer-events-auto shadow-sm focus:outline-none transition-colors duration-200"
-                style={{
-                  left: `${badgeLeftPercent}%`,
-                  top: `${badgeTopPercent}%`,
-                  willChange: 'opacity, transform, border-color, color',
-                }}
-                aria-label={`Jump to state ${state.num}: ${state.title}`}
-              >
-                {/* Digit element counter-rotated so it remains upright */}
-                <span
-                  ref={(el) => (badgeTextRefs.current[index] = el)}
-                  className="inline-block pointer-events-none"
-                  style={{ willChange: 'transform' }}
+                <button
+                  type="button"
+                  ref={(el) => (nodeBadgeRefs.current[index] = el)}
+                  onClick={() => {
+                    if (typeof window !== 'undefined' && window.__whatIfAnimateToStep) {
+                      window.__whatIfAnimateToStep(index)
+                    }
+                  }}
+                  className="absolute w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center font-sans font-bold text-xs sm:text-xs md:text-sm bg-black border border-neutral-700/80 text-white -translate-x-1/2 -translate-y-1/2 cursor-pointer pointer-events-auto shadow-sm focus:outline-none transition-colors duration-200"
+                  style={{
+                    left: `${badgeLeftPercent}%`,
+                    top: `${badgeTopPercent}%`,
+                    willChange: 'opacity, transform, border-color, color',
+                  }}
+                  aria-label={`Jump to state ${state.num}: ${state.title}`}
                 >
-                  {state.num}
-                </span>
-              </button>
-            </React.Fragment>
-          )
-        })}
+                  <span
+                    ref={(el) => (badgeTextRefs.current[index] = el)}
+                    className="inline-block pointer-events-none"
+                    style={{ willChange: 'transform' }}
+                  >
+                    {state.num}
+                  </span>
+                </button>
+              </React.Fragment>
+            )
+          })}
+        </div>
       </div>
     </section>
   )
