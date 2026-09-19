@@ -2,6 +2,7 @@ import React from 'react'
 import smartOpBookingImg from '../assets/smart op booking.png'
 import liveTokenTrackingImg from '../assets/live token tracking.png'
 import { useScrollReveal } from '../hooks/useScrollReveal'
+import { TextAnimate } from '@/registry/magicui/text-animate'
 
 export default function ZeroWaitSection() {
   const containerRef = useScrollReveal({ threshold: 0.1 })
@@ -51,10 +52,15 @@ export default function ZeroWaitSection() {
           Eliminate traditional reception logjams through coordinated clinical scheduling algorithms designed for patients, doctors, and hospital administrators.
         </p>
 
-        <h2 className="reveal-heading text-4xl sm:text-5xl lg:text-[4rem] font-bold tracking-tight text-[#08182b] max-w-4xl leading-[1.08]">
+        <TextAnimate
+          as="h2"
+          animation="slideUp"
+          by="word"
+          className="text-4xl sm:text-5xl lg:text-[4rem] font-bold tracking-tight text-[#08182b] max-w-4xl leading-[1.08]"
+        >
           Engineered for zero-wait <br />
           patient experiences
-        </h2>
+        </TextAnimate>
       </div>
 
       {/* Full-Width Infinite Moving Card Track (Bleeds to Viewport Edges) */}

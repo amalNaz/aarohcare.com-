@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Mail, CheckCircle2 } from 'lucide-react'
 import { useScrollReveal } from '../hooks/useScrollReveal'
+import { TextAnimate } from '@/registry/magicui/text-animate'
 
 export default function CTAEnrollmentSection() {
   const [contactValue, setContactValue] = useState('')
@@ -37,9 +38,14 @@ export default function CTAEnrollmentSection() {
           </div>
 
           {/* Main Headline */}
-          <h2 className="reveal-heading text-3xl sm:text-4xl lg:text-[3.25rem] font-bold text-white tracking-tight leading-[1.16] mt-6 mb-4">
+          <TextAnimate
+            as="h2"
+            animation="slideUp"
+            by="word"
+            className="text-3xl sm:text-4xl lg:text-[3.25rem] font-bold text-white tracking-tight leading-[1.16] mt-6 mb-4 drop-shadow-sm"
+          >
             Ready for hassle-free hospital visits?
-          </h2>
+          </TextAnimate>
 
           {/* Subtitle */}
           <p className="reveal-text text-base sm:text-lg text-slate-300 font-normal leading-relaxed mb-8 sm:mb-10">

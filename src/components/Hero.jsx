@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import { ArrowUpRight } from 'lucide-react'
 import Navbar from './Navbar'
 import { useScrollReveal } from '../hooks/useScrollReveal'
+import { TextAnimate } from '@/registry/magicui/text-animate'
 
 export default function Hero({ videoSrc = '/hero-bg.mp4' }) {
   const videoRef = useRef(null)
@@ -45,10 +46,15 @@ export default function Hero({ videoSrc = '/hero-bg.mp4' }) {
       <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 pt-24 sm:pt-32 lg:pt-36">
         {/* Main Headline */}
         <div className="max-w-3xl mb-24 sm:mb-32 lg:mb-40">
-          <h1 className="reveal-heading text-5xl sm:text-7xl lg:text-[5.75rem] font-bold tracking-tight leading-[1.04] text-white drop-shadow-md">
+          <TextAnimate
+            as="h1"
+            animation="slideUp"
+            by="word"
+            className="text-5xl sm:text-7xl lg:text-[5.75rem] font-bold tracking-tight leading-[1.04] text-white drop-shadow-md"
+          >
             Our Health, <br />
             Our Time.
-          </h1>
+          </TextAnimate>
         </div>
 
         {/* Bottom Section: 3 Features (Left) & Malayalam Quote + CTA (Right) */}

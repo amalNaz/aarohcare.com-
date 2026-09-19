@@ -1,5 +1,6 @@
 import React from 'react'
 import { useScrollReveal } from '../hooks/useScrollReveal'
+import { TextAnimate } from '@/registry/magicui/text-animate'
 
 export default function HospitalsAndClinicsSection() {
   const containerRef = useScrollReveal({ threshold: 0.1 })
@@ -89,10 +90,15 @@ export default function HospitalsAndClinicsSection() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 xl:gap-20 items-start">
           {/* Left Column: Headline and Subtext */}
           <div className="lg:col-span-6 lg:sticky lg:top-28">
-            <h2 className="reveal-heading text-4xl sm:text-5xl lg:text-[4rem] xl:text-[4.5rem] font-bold tracking-tight text-[#161a1f] leading-[1.06]">
+            <TextAnimate
+              as="h2"
+              animation="slideUp"
+              by="word"
+              className="text-4xl sm:text-5xl lg:text-[4rem] xl:text-[4.5rem] font-bold tracking-tight text-[#161a1f] leading-[1.06]"
+            >
               Designed for <br />
               Hospitals and Clinics.
-            </h2>
+            </TextAnimate>
 
             <p className="reveal-text mt-6 sm:mt-8 text-sm sm:text-base lg:text-[1.05rem] text-slate-600 font-normal leading-relaxed max-w-md">
               Streamline daily operations with smarter tools for seamless patient and staff management.

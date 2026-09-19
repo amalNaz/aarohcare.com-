@@ -1,6 +1,7 @@
 import React from 'react'
 import clinicDashboardImg from '../assets/clinic-dashboard-screen.jpg'
 import { useScrollReveal } from '../hooks/useScrollReveal'
+import { TextAnimate } from '@/registry/magicui/text-animate'
 
 export default function ClinicOperationsSection() {
   const containerRef = useScrollReveal({ threshold: 0.1 })
@@ -14,10 +15,15 @@ export default function ClinicOperationsSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Heading */}
         <div className="text-center max-w-3xl mx-auto">
-          <h2 className="reveal-heading text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-bold tracking-tight text-[#161a1f] leading-[1.12]">
+          <TextAnimate
+            as="h2"
+            animation="slideUp"
+            by="word"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-bold tracking-tight text-[#161a1f] leading-[1.12]"
+          >
             Clinic Side Operations <br />
             Management
-          </h2>
+          </TextAnimate>
         </div>
 
         {/* Custom High-Fidelity iPad Pro Mockup Showcase */}

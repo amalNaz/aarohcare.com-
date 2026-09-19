@@ -2,7 +2,7 @@ import React from 'react'
 import { Phone, Mail, MapPin } from 'lucide-react'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 
-export default function Footer() {
+export default function Footer({ onNavigate }) {
   const containerRef = useScrollReveal({ threshold: 0.1 })
   const solutionLinks = [
     { name: 'Smart OP Booking App', href: '#features' },
@@ -15,13 +15,25 @@ export default function Footer() {
 
   const legalLinks = [
     { name: 'Privacy Policy', href: '#' },
-    { name: 'Terms of Service', href: '#' },
+    { name: 'Terms & Conditions', href: '#terms' },
     { name: 'Clinical Compliance', href: '#' },
   ]
 
-  const handleSmoothScroll = (e, href) => {
+  const handleLinkClick = (e, href) => {
+    if (href === '#terms') {
+      e.preventDefault()
+      if (onNavigate) {
+        onNavigate('terms')
+      }
+      return
+    }
+
     if (href.startsWith('#') && href.length > 1) {
       e.preventDefault()
+      if (onNavigate) {
+        onNavigate('home', href)
+      }
+
       if (typeof window !== 'undefined' && window.__lenis) {
         const target = document.querySelector(href)
         if (target) {
@@ -118,7 +130,7 @@ export default function Footer() {
                 <li key={item.name} className="reveal-stagger-item">
                   <a
                     href={item.href}
-                    onClick={(e) => handleSmoothScroll(e, item.href)}
+                    onClick={(e) => handleLinkClick(e, item.href)}
                     className="text-sm text-neutral-300 hover:text-white transition-all duration-200 inline-block hover:translate-x-1"
                   >
                     {item.name}
@@ -168,7 +180,8 @@ export default function Footer() {
               <a
                 key={link.name}
                 href={link.href}
-                className="hover:text-white transition-colors duration-200"
+                onClick={(e) => handleLinkClick(e, link.href)}
+                className="hover:text-white transition-colors duration-200 cursor-pointer"
               >
                 {link.name}
               </a>

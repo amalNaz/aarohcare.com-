@@ -3,6 +3,7 @@ import amalImg from '../assets/amal-hisham.jpg'
 import aslamImg from '../assets/muhammed-aslam.jpg'
 import kiranImg from '../assets/kiran-vk.jpg'
 import { useScrollReveal } from '../hooks/useScrollReveal'
+import { TextAnimate } from '@/registry/magicui/text-animate'
 
 export default function FoundersSection() {
   const containerRef = useScrollReveal({ threshold: 0.1 })
@@ -39,10 +40,14 @@ export default function FoundersSection() {
       <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16">
         {/* Section Headline */}
         <div className="text-center max-w-3xl mx-auto mb-16 sm:mb-20 lg:mb-24">
-          <h2 className="reveal-heading text-xl sm:text-2xl lg:text-[1.85rem] font-semibold text-[#091e38] tracking-tight leading-[1.35]">
-            AarohCare is a Kerala-born health-tech startup built to end <br className="hidden sm:inline" />
-            the age-old hospital waiting-room problem.
-          </h2>
+          <TextAnimate
+            as="h2"
+            animation="slideUp"
+            by="word"
+            className="text-xl sm:text-2xl lg:text-[1.85rem] font-semibold text-[#091e38] tracking-tight leading-[1.35]"
+          >
+            AarohCare is a Kerala-born health-tech startup built to end the age-old hospital waiting-room problem.
+          </TextAnimate>
         </div>
 
         {/* 3 Founder Cards Grid */}

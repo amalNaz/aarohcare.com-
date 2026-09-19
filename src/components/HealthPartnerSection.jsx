@@ -2,6 +2,7 @@ import React from 'react'
 import { ArrowUpRight } from 'lucide-react'
 import healthPartnerHandImg from '../assets/health-partner-hand.jpg'
 import { useScrollReveal } from '../hooks/useScrollReveal'
+import { TextAnimate } from '@/registry/magicui/text-animate'
 
 export default function HealthPartnerSection() {
   const containerRef = useScrollReveal({ threshold: 0.15 })
@@ -23,10 +24,15 @@ export default function HealthPartnerSection() {
         <div className="reveal-group w-full bg-[#c8aa84] text-[#141414] flex flex-col justify-center px-8 py-16 sm:px-14 sm:py-20 lg:px-16 lg:py-24 xl:px-24 2xl:px-32">
           <div className="max-w-xl xl:max-w-2xl">
             {/* Main Heading — Exact 2 lines */}
-            <h2 className="reveal-heading text-4xl sm:text-5xl lg:text-[3.5rem] xl:text-[4.25rem] 2xl:text-[4.75rem] font-bold tracking-tight text-[#141414] leading-[1.05]">
-              <span className="block">Your Health Partner</span>
-              <span className="block">We Imagined.</span>
-            </h2>
+            <TextAnimate
+              as="h2"
+              animation="slideUp"
+              by="word"
+              className="text-4xl sm:text-5xl lg:text-[3.5rem] xl:text-[4.25rem] 2xl:text-[4.75rem] font-bold tracking-tight text-[#141414] leading-[1.05]"
+            >
+              Your Health Partner <br />
+              We Imagined.
+            </TextAnimate>
 
             {/* Paragraph Description */}
             <p className="reveal-text mt-7 sm:mt-8 lg:mt-9 text-base sm:text-lg lg:text-[1.25rem] xl:text-[1.38rem] text-[#221e1a] leading-[1.4] font-normal max-w-lg lg:max-w-xl">

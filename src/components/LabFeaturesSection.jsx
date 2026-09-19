@@ -1,6 +1,7 @@
 import React from 'react'
 import labDashboardImg from '../assets/lab-command-center.png'
 import { useScrollReveal } from '../hooks/useScrollReveal'
+import { TextAnimate } from '@/registry/magicui/text-animate'
 
 export default function LabFeaturesSection() {
   const containerRef = useScrollReveal({ threshold: 0.1 })
@@ -40,10 +41,15 @@ export default function LabFeaturesSection() {
               ========================================================================= */}
           <div className="reveal-group lg:col-span-5 xl:col-span-5 relative z-20 pt-2 sm:pt-4">
             {/* Heading: Exact 2 lines with 400-500 font weight and tight line-height */}
-            <h2 className="reveal-heading text-2xl sm:text-3xl lg:text-[2rem] xl:text-[2.25rem] font-medium tracking-tight text-white leading-[1.02] text-left">
+            <TextAnimate
+              as="h2"
+              animation="slideUp"
+              by="word"
+              className="text-2xl sm:text-3xl lg:text-[2rem] xl:text-[2.25rem] font-medium tracking-tight text-white leading-[1.02] text-left"
+            >
               Labs features for <br />
               the site:
-            </h2>
+            </TextAnimate>
 
             {/* 5 Feature Bullets: Compact editorial layout */}
             <div className="mt-8 sm:mt-9 lg:mt-10 space-y-4 sm:space-y-4.5 lg:space-y-5">

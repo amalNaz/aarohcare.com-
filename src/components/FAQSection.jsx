@@ -7,6 +7,7 @@ import {
 } from '@/components/animate-ui/components/radix/accordion'
 import faqRunningImg from '../assets/faq-running.jpg'
 import { useScrollReveal } from '../hooks/useScrollReveal'
+import { TextAnimate } from '@/registry/magicui/text-animate'
 
 const faqs = [
   {
@@ -107,9 +108,14 @@ export default function FAQSection() {
               ========================================================================= */}
           <div className="lg:col-span-6 xl:col-span-6 w-full flex flex-col justify-start">
             {/* Heading: Refined navy heading aligned with top of the image */}
-            <h2 className="reveal-heading text-2xl sm:text-3xl lg:text-[2.1rem] font-semibold text-[#092240] tracking-tight mb-6 sm:mb-8 leading-tight">
+            <TextAnimate
+              as="h2"
+              animation="slideUp"
+              by="word"
+              className="text-2xl sm:text-3xl lg:text-[2.1rem] font-semibold text-[#092240] tracking-tight mb-6 sm:mb-8 leading-tight"
+            >
               Frequently Asked Questions
-            </h2>
+            </TextAnimate>
 
             {/* 12 AarohCare FAQ Questions: Radix Accordion with smooth transitions */}
             <div className="reveal-group w-full">

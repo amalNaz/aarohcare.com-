@@ -31,9 +31,11 @@ export function useScrollReveal(options = {}) {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add('is-revealed')
-            if (options.once !== false) {
+            if (options.once === true) {
               observer.unobserve(entry.target)
             }
+          } else if (options.once === false) {
+            entry.target.classList.remove('is-revealed')
           }
         })
       },

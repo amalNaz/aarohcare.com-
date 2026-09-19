@@ -1,5 +1,6 @@
 import React from 'react'
 import { useScrollReveal } from '../hooks/useScrollReveal'
+import { TextAnimate } from '@/registry/magicui/text-animate'
 
 export default function JourneySection() {
   const containerRef = useScrollReveal({ threshold: 0.1 })
@@ -61,10 +62,15 @@ export default function JourneySection() {
     >
       {/* Main Headline (Full-width with comfortable margin padding) */}
       <div className="w-full px-6 sm:px-10 lg:px-16 xl:px-20 mb-16 sm:mb-24">
-        <h2 className="reveal-heading text-4xl sm:text-5xl lg:text-[3.75rem] font-bold tracking-tight text-[#08182b] max-w-4xl leading-[1.1]">
+        <TextAnimate
+          as="h2"
+          animation="slideUp"
+          by="word"
+          className="text-4xl sm:text-5xl lg:text-[3.75rem] font-bold tracking-tight text-[#08182b] max-w-4xl leading-[1.1]"
+        >
           A seamless journey from <br />
           token to treatment
-        </h2>
+        </TextAnimate>
       </div>
 
       {/* Full-Width 4-Column Grid Track with Dashed Borders */}

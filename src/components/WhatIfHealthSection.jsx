@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
@@ -47,7 +47,8 @@ export default function WhatIfHealthSection() {
   const badgeTextRefs = useRef([])
   const stateCardRefs = useRef([])
 
-  const [activeStep, setActiveStep] = useState(0)
+  const stepRef = useRef(0)
+  const isSteppingRef = useRef(false)
   const stRef = useRef(null)
 
   useEffect(() => {
@@ -58,7 +59,6 @@ export default function WhatIfHealthSection() {
     const wheel = wheelRef.current
     const connector = connectorRef.current
     const header = headerRef.current
-    const contentWrap = contentWrapRef.current
     if (!container || !wheel) return
 
     const ctx = gsap.context(() => {
@@ -70,7 +70,7 @@ export default function WhatIfHealthSection() {
         if (idx === 0) {
           gsap.set(card, { opacity: 1, y: 0, pointerEvents: 'auto' })
         } else {
-          gsap.set(card, { opacity: 0, y: 10, pointerEvents: 'none' })
+          gsap.set(card, { opacity: 0, y: 14, pointerEvents: 'none' })
         }
       })
 
@@ -96,7 +96,7 @@ export default function WhatIfHealthSection() {
           {
             opacity: 1,
             y: 0,
-            duration: 0.85,
+            duration: 1.0,
             ease: 'cubic-bezier(0.22, 1, 0.36, 1)',
             scrollTrigger: {
               trigger: container,
@@ -112,7 +112,7 @@ export default function WhatIfHealthSection() {
           {
             opacity: 1,
             scale: 1,
-            duration: 0.95,
+            duration: 1.1,
             ease: 'cubic-bezier(0.22, 1, 0.36, 1)',
             scrollTrigger: {
               trigger: container,
@@ -124,34 +124,31 @@ export default function WhatIfHealthSection() {
       }
 
       // ======================================================================
-      // 5-STAGE MASTER GSAP TIMELINE (4 Transitions: 0->1, 1->2, 2->3, 3->4)
-      // Snap points: 0.0 (State 1), 0.25 (State 2), 0.50 (State 3), 0.75 (State 4), 1.0 (State 5)
+      // 6-CHECKPOINT MASTER GSAP TIMELINE (5 Transitions: 0->1, 1->2, 2->3, 3->4, 4->5)
+      // 0.0 (Node 1), 0.2 (Node 2), 0.4 (Node 3), 0.6 (Node 4), 0.8 (Node 5), 1.0 (Node 1 360° Ring)
+      // Linear sub-tweens allow the outer controller to govern the slow, stately movement perfectly.
       // ======================================================================
-      const snapPoints = [0, 0.25, 0.5, 0.75, 1.0]
       const validTextRefs = badgeTextRefs.current.filter(Boolean)
 
       const masterTimeline = gsap.timeline({
         scrollTrigger: {
           trigger: container,
           start: 'top top',
-          end: () => `+=${Math.max(2600, window.innerHeight * 2.8)}`,
+          end: () => `+=${Math.max(3400, window.innerHeight * 3.6)}`,
           pin: true,
-          scrub: 0.4,
-          snap: {
-            snapTo: snapPoints,
-            duration: { min: 0.25, max: 0.45 },
-            ease: 'power2.out',
-          },
+          scrub: 0.1,
           anticipatePin: 1,
           invalidateOnRefresh: true,
           onUpdate: (self) => {
-            const stepIndex = Math.min(4, Math.floor(self.progress * 4 + 0.5))
-            setActiveStep(stepIndex)
+            const stepIndex = Math.min(5, Math.floor(self.progress * 5 + 0.5))
+            if (!isSteppingRef.current) {
+              stepRef.current = stepIndex
+            }
           },
         },
       })
 
-      // Duration per stage transition on the timeline
+      // Standard timeline duration unit
       const STAGE_DUR = 1.0
 
       // Ensure State 1 card starts fully opaque at timeline time 0
@@ -159,62 +156,63 @@ export default function WhatIfHealthSection() {
         masterTimeline.set(stateCardRefs.current[0], { opacity: 1, y: 0, pointerEvents: 'auto' }, 0)
       }
 
-      // Animate through 4 transition intervals connecting the 5 states
-      for (let i = 0; i < 4; i++) {
-        const nextIdx = i + 1
+      // Animate through 5 transition intervals connecting the 6 checkpoints (Circle 1 -> 2 -> 3 -> 4 -> 5 -> 1)
+      for (let i = 0; i < 5; i++) {
+        const nextIdx = (i + 1) % 5 // 0->1, 1->2, 2->3, 3->4, 4->0
+        const currentIdx = i % 5
         const startTime = i * STAGE_DUR
 
-        // 1. Wheel Rotation (72° per stage)
+        // 1. Wheel Rotation (72° per stage linearly across timeline, guided by slow scroll easing)
         masterTimeline.to(
           wheel,
           {
             rotation: -(i + 1) * 72,
-            ease: 'power1.inOut',
+            ease: 'none',
             duration: STAGE_DUR,
           },
           startTime
         )
 
-        // 2. Counter-rotate badge numbers to keep digits upright
+        // 2. Counter-rotate badge numbers to keep digits upright (+72° up to +360°)
         if (validTextRefs.length > 0) {
           masterTimeline.to(
             validTextRefs,
             {
               rotation: (i + 1) * 72,
-              ease: 'power1.inOut',
+              ease: 'none',
               duration: STAGE_DUR,
             },
             startTime
           )
         }
 
-        // 3. Current Card Fades Out (Starts after 20% hold, completes by 50%)
-        const currentCard = stateCardRefs.current[i]
+        // 3. Current Card Fades Out smoothly as wheel departs checkpoint
+        const currentCard = stateCardRefs.current[currentIdx]
         if (currentCard) {
           masterTimeline.to(
             currentCard,
             {
               opacity: 0,
-              y: -8,
+              y: -10,
               ease: 'power1.in',
-              duration: STAGE_DUR * 0.3,
+              duration: STAGE_DUR * 0.35,
               pointerEvents: 'none',
             },
-            startTime + STAGE_DUR * 0.2
+            startTime + STAGE_DUR * 0.1
           )
         }
 
-        // 4. Next Card Fades In (Starts at 55%, completes by 85%, holds till next stage)
+        // 4. Next Card Fades In smoothly as wheel arrives at next checkpoint
         const nextCard = stateCardRefs.current[nextIdx]
         if (nextCard) {
           masterTimeline.fromTo(
             nextCard,
-            { opacity: 0, y: 10, pointerEvents: 'none' },
+            { opacity: 0, y: 14, pointerEvents: 'none' },
             {
               opacity: 1,
               y: 0,
               ease: 'power1.out',
-              duration: STAGE_DUR * 0.3,
+              duration: STAGE_DUR * 0.35,
               pointerEvents: 'auto',
               immediateRender: false,
             },
@@ -223,8 +221,8 @@ export default function WhatIfHealthSection() {
         }
 
         // 5. Current Badge Dims
-        const currentBadge = nodeBadgeRefs.current[i]
-        const currentDot = nodeDotRefs.current[i]
+        const currentBadge = nodeBadgeRefs.current[currentIdx]
+        const currentDot = nodeDotRefs.current[currentIdx]
         if (currentBadge) {
           masterTimeline.to(
             currentBadge,
@@ -236,13 +234,13 @@ export default function WhatIfHealthSection() {
               duration: STAGE_DUR * 0.35,
               ease: 'power1.inOut',
             },
-            startTime + STAGE_DUR * 0.2
+            startTime + STAGE_DUR * 0.1
           )
           if (currentDot) {
             masterTimeline.to(
               currentDot,
               { opacity: 0.6, duration: STAGE_DUR * 0.35, ease: 'power1.inOut' },
-              startTime + STAGE_DUR * 0.2
+              startTime + STAGE_DUR * 0.1
             )
           }
         }
@@ -272,12 +270,12 @@ export default function WhatIfHealthSection() {
           }
         }
 
-        // 7. Connector Line Pulse at apex
+        // 7. Connector Line Pulse at apex as node docks
         if (connector) {
           masterTimeline.fromTo(
             connector,
-            { opacity: 0.4 },
-            { opacity: 1, duration: STAGE_DUR * 0.3, ease: 'power1.out', immediateRender: false },
+            { opacity: 0.35, scaleY: 0.96 },
+            { opacity: 1, scaleY: 1, duration: STAGE_DUR * 0.3, ease: 'power1.out', immediateRender: false },
             startTime + STAGE_DUR * 0.6
           )
         }
@@ -287,29 +285,168 @@ export default function WhatIfHealthSection() {
     }, containerRef)
 
     // ========================================================================
-    // DIRECT BADGE CLICK NAVIGATION
+    // DISCRETE STEP-TO CONTROLLER (Slow, stately, fluid checkpoint glide)
     // ========================================================================
-    window.__whatIfAnimateToStep = (index) => {
+    const stepTo = (targetStep) => {
       const st = stRef.current
       if (!st) return
 
-      setActiveStep(index)
-      const targetProgress = index / 4
+      const clampedStep = Math.max(0, Math.min(5, targetStep))
+      isSteppingRef.current = true
+      stepRef.current = clampedStep
+
+      const targetProgress = clampedStep / 5
       const targetScroll = st.start + targetProgress * (st.end - st.start)
 
+      // Slow, luxurious 1.4s glide with smooth exponential ease
       if (typeof window !== 'undefined' && window.__lenis) {
         window.__lenis.scrollTo(targetScroll, {
-          duration: 0.9,
-          easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+          duration: 1.4,
+          easing: (t) => Math.min(1, 1.001 - Math.pow(2, -7 * t)),
+          onComplete: () => {
+            setTimeout(() => {
+              isSteppingRef.current = false
+            }, 100)
+          },
         })
       } else {
         gsap.to(window, {
           scrollTo: { y: targetScroll, autoKill: false },
-          duration: 0.9,
-          ease: 'power2.out',
+          duration: 1.4,
+          ease: 'power2.inOut',
           overwrite: 'auto',
+          onComplete: () => {
+            setTimeout(() => {
+              isSteppingRef.current = false
+            }, 100)
+          },
         })
       }
+
+      // Safety release fallback
+      setTimeout(() => {
+        isSteppingRef.current = false
+      }, 1600)
+    }
+
+    // ========================================================================
+    // DISCRETE 1-SCROLL WHEEL CONTROLLER (Runs on capture to intercept before smooth scroll)
+    // ========================================================================
+    const handleWheel = (e) => {
+      const st = stRef.current
+      if (!st) return
+
+      const scrollY = window.scrollY || window.pageYOffset || 0
+      const start = st.start
+      const end = st.end
+      const tol = 12
+
+      const isPinned = scrollY >= start - tol && scrollY <= end + tol
+      if (!isPinned) {
+        if (scrollY < start) stepRef.current = 0
+        else if (scrollY > end) stepRef.current = 5
+        return
+      }
+
+      // Filter out micro trackpad jitter
+      if (Math.abs(e.deltaY) < 10) return
+
+      const direction = e.deltaY > 0 ? 1 : -1
+      const curStep = stepRef.current
+
+      // Forward exit: when at Step 5 (Circle 1 full ring) and scrolling DOWN -> allow scroll to next section
+      if (curStep === 5 && direction === 1 && scrollY >= end - tol) {
+        return
+      }
+
+      // Reverse exit: when at Step 0 (Circle 1 start) and scrolling UP -> allow scroll to previous section
+      if (curStep === 0 && direction === -1 && scrollY <= start + tol) {
+        return
+      }
+
+      // Intercept wheel inside pinned range to guarantee 1 scroll = 1 circle node
+      e.preventDefault()
+      e.stopPropagation()
+      if (typeof e.stopImmediatePropagation === 'function') {
+        e.stopImmediatePropagation()
+      }
+
+      if (isSteppingRef.current) return
+
+      const nextStep = curStep + direction
+      if (nextStep < 0 || nextStep > 5) return
+
+      stepTo(nextStep)
+    }
+
+    // Touch swipe support for mobile/tablet
+    let touchStartY = 0
+    const handleTouchStart = (e) => {
+      touchStartY = e.touches[0].clientY
+    }
+    const handleTouchMove = (e) => {
+      const st = stRef.current
+      if (!st) return
+      const scrollY = window.scrollY || window.pageYOffset || 0
+      const isPinned = scrollY >= st.start - 12 && scrollY <= st.end + 12
+      if (!isPinned) return
+
+      const deltaY = touchStartY - e.touches[0].clientY
+      if (Math.abs(deltaY) < 30) return
+
+      const direction = deltaY > 0 ? 1 : -1
+      const curStep = stepRef.current
+
+      if (curStep === 5 && direction === 1 && scrollY >= st.end - 12) return
+      if (curStep === 0 && direction === -1 && scrollY <= st.start + 12) return
+
+      e.preventDefault()
+      if (isSteppingRef.current) return
+
+      const nextStep = curStep + direction
+      if (nextStep < 0 || nextStep > 5) return
+
+      touchStartY = e.touches[0].clientY
+      stepTo(nextStep)
+    }
+
+    // Keyboard Arrow navigation
+    const handleKeyDown = (e) => {
+      const st = stRef.current
+      if (!st) return
+      const scrollY = window.scrollY || window.pageYOffset || 0
+      const isPinned = scrollY >= st.start - 12 && scrollY <= st.end + 12
+      if (!isPinned) return
+
+      if (e.key === 'ArrowDown' || e.key === 'PageDown') {
+        const curStep = stepRef.current
+        if (curStep < 5) {
+          e.preventDefault()
+          if (!isSteppingRef.current) stepTo(curStep + 1)
+        }
+      } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+        const curStep = stepRef.current
+        if (curStep > 0) {
+          e.preventDefault()
+          if (!isSteppingRef.current) stepTo(curStep - 1)
+        }
+      }
+    }
+
+    window.addEventListener('wheel', handleWheel, { passive: false, capture: true })
+    window.addEventListener('touchstart', handleTouchStart, { passive: true })
+    window.addEventListener('touchmove', handleTouchMove, { passive: false })
+    window.addEventListener('keydown', handleKeyDown)
+
+    // ========================================================================
+    // DIRECT BADGE CLICK NAVIGATION
+    // ========================================================================
+    window.__whatIfAnimateToStep = (index) => {
+      let targetStep = index
+      if (index === 0) {
+        targetStep = stepRef.current >= 4 ? 5 : 0
+      }
+      stepTo(targetStep)
     }
 
     const refreshTimer = setTimeout(() => {
@@ -318,6 +455,10 @@ export default function WhatIfHealthSection() {
 
     return () => {
       delete window.__whatIfAnimateToStep
+      window.removeEventListener('wheel', handleWheel, { capture: true })
+      window.removeEventListener('touchstart', handleTouchStart)
+      window.removeEventListener('touchmove', handleTouchMove)
+      window.removeEventListener('keydown', handleKeyDown)
       clearTimeout(refreshTimer)
       ctx.revert()
     }
@@ -366,7 +507,7 @@ export default function WhatIfHealthSection() {
             className="absolute inset-0 flex flex-col items-center justify-start text-center"
             style={{
               opacity: index === 0 ? 1 : 0,
-              transform: index === 0 ? 'translateY(0px)' : 'translateY(10px)',
+              transform: index === 0 ? 'translateY(0px)' : 'translateY(14px)',
               pointerEvents: index === 0 ? 'auto' : 'none',
               willChange: 'opacity, transform',
             }}
