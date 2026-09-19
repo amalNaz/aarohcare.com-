@@ -7,6 +7,7 @@ import HealthPartnerSection from './components/HealthPartnerSection'
 import ClinicOperationsSection from './components/ClinicOperationsSection'
 import HospitalsAndClinicsSection from './components/HospitalsAndClinicsSection'
 import LabFeaturesSection from './components/LabFeaturesSection'
+import FoundersSection from './components/FoundersSection'
 
 export default function App() {
   return (
@@ -34,9 +35,13 @@ export default function App() {
 
       {/* Labs Features for the Site Section */}
       <LabFeaturesSection />
+
+      {/* Founders / Team Section */}
+      <FoundersSection />
     </div>
   )
 }
+
 
 
 
