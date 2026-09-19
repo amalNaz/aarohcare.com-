@@ -63,14 +63,14 @@ export default function FAQSection() {
   }
 
   return (
-    <section className="w-full bg-[#f4f4f4] text-slate-900 py-12 sm:py-14 lg:py-16">
-      <div className="max-w-[880px] lg:max-w-[920px] xl:max-w-[940px] mx-auto px-5 sm:px-6 lg:px-8 w-full">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-9 items-start">
+    <section className="w-full bg-[#f4f4f4] text-slate-900 py-14 sm:py-16 lg:py-20">
+      <div className="max-w-6xl xl:max-w-7xl 2xl:max-w-[1360px] mx-auto px-6 sm:px-8 lg:px-12 w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 xl:gap-14 items-start">
           {/* =========================================================================
-              LEFT COLUMN (~50% width): Compact Editorial Image with Aarohcare text
+              LEFT COLUMN (57–58% width): Prominent Large Image with Centered Aarohcare Text
               ========================================================================= */}
-          <div className="w-full">
-            <div className="relative w-full aspect-[1.12/1] sm:h-[350px] md:h-[360px] rounded-[7px] overflow-hidden bg-slate-900 shadow-sm">
+          <div className="lg:col-span-7 xl:col-span-7 w-full">
+            <div className="relative w-full aspect-[1.12/1] sm:aspect-[1.1/1] lg:h-[540px] xl:h-[580px] 2xl:h-[600px] rounded-[8px] sm:rounded-[10px] overflow-hidden bg-slate-900 shadow-sm">
               <img
                 src={faqRunningImg}
                 alt="Aarohcare"
@@ -79,7 +79,7 @@ export default function FAQSection() {
               />
               {/* Centered Aarohcare brand text */}
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <span className="text-white text-2xl sm:text-[1.65rem] font-medium tracking-tight drop-shadow-sm">
+                <span className="text-white text-2xl sm:text-3xl lg:text-[1.85rem] font-medium tracking-tight drop-shadow-sm">
                   Aarohcare
                 </span>
               </div>
@@ -87,11 +87,11 @@ export default function FAQSection() {
           </div>
 
           {/* =========================================================================
-              RIGHT COLUMN (~50% width): Heading & Compact Dotted Accordion
+              RIGHT COLUMN (42–43% width): Heading & Compact Dotted Accordion
               ========================================================================= */}
-          <div className="w-full flex flex-col justify-start">
-            {/* Heading: Compact editorial navy heading on single line on desktop */}
-            <h2 className="text-xl sm:text-2xl lg:text-[1.65rem] font-semibold text-[#092240] tracking-tight mb-5 sm:mb-6 leading-tight whitespace-normal sm:whitespace-nowrap">
+          <div className="lg:col-span-5 xl:col-span-5 w-full flex flex-col justify-start">
+            {/* Heading: Refined navy heading aligned with top of the image */}
+            <h2 className="text-xl sm:text-2xl lg:text-[1.75rem] font-semibold text-[#092240] tracking-tight mb-5 sm:mb-6 leading-tight">
               Frequently Asked Questions
             </h2>
 
@@ -116,7 +116,7 @@ export default function FAQSection() {
                       aria-expanded={isOpen}
                       aria-controls={answerId}
                     >
-                      <span className="text-[13px] sm:text-[13.5px] lg:text-[14px] font-medium text-[#092240] tracking-tight group-hover:text-blue-900 transition-colors">
+                      <span className="text-[13.5px] sm:text-[14px] lg:text-[14.5px] font-medium text-[#092240] tracking-tight group-hover:text-blue-900 transition-colors">
                         {faq.question}
                       </span>
 
@@ -140,7 +140,7 @@ export default function FAQSection() {
                       }`}
                     >
                       <div className="overflow-hidden">
-                        <p className="text-[11.5px] sm:text-[12px] text-slate-500 font-normal leading-[1.55] pr-3">
+                        <p className="text-[11.5px] sm:text-[12px] text-slate-500 font-normal leading-[1.55] pr-2">
                           {faq.answer}
                         </p>
                       </div>
