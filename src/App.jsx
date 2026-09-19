@@ -4,6 +4,7 @@ import ZeroWaitSection from './components/ZeroWaitSection'
 import JourneySection from './components/JourneySection'
 import WhatIfHealthSection from './components/WhatIfHealthSection'
 import HealthPartnerSection from './components/HealthPartnerSection'
+import ClinicOperationsSection from './components/ClinicOperationsSection'
 
 export default function App() {
   return (
@@ -22,7 +23,11 @@ export default function App() {
 
       {/* Your Health Partner We Imagined. (Beige Split Section) */}
       <HealthPartnerSection />
+
+      {/* Clinic Side Operations Management Section */}
+      <ClinicOperationsSection />
     </div>
   )
 }
+
 
