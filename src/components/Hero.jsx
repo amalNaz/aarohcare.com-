@@ -1,28 +1,37 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { ArrowUpRight } from 'lucide-react'
 import Navbar from './Navbar'
 
 export default function Hero({ videoSrc = '/hero-bg.mp4' }) {
+  const videoRef = useRef(null)
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.defaultMuted = true
+      videoRef.current.muted = true
+      videoRef.current.play().catch((err) => {
+        console.warn('Hero background video autoplay prevented:', err)
+      })
+    }
+  }, [videoSrc])
+
   return (
-    <section className="relative w-full hero-gradient-bg text-white overflow-hidden pb-16 sm:pb-24">
-      {/* Background Video Element with Fallback Poster & Gradient Overlay */}
-      {videoSrc && (
-        <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-0">
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="w-full h-full object-cover object-center opacity-70"
-          >
-            <source src={videoSrc} type="video/mp4" />
-            <source src={videoSrc.replace('.mp4', '.webm')} type="video/webm" />
-          </video>
-          {/* Subtle cinematic gradient overlay to ensure text contrast */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#010a14]/60 via-transparent to-[#010a14]/80" />
-          <div className="absolute inset-0 bg-black/25" />
-        </div>
-      )}
+    <section className="relative w-full hero-gradient-bg text-white overflow-hidden pb-16 sm:pb-24 min-h-[620px]">
+      {/* Background Video Element with Gradient Overlays */}
+      <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-0">
+        <video
+          ref={videoRef}
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="w-full h-full object-cover object-center"
+        >
+          <source src={videoSrc} type="video/mp4" />
+        </video>
+        {/* Subtle dark gradient overlay to ensure text contrast and legibility */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#010a14]/50 via-[#010a14]/20 to-[#010a14]/85 pointer-events-none" />
+      </div>
 
       {/* Header / Navbar */}
       <Navbar />
@@ -30,7 +39,7 @@ export default function Hero({ videoSrc = '/hero-bg.mp4' }) {
       <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 pt-12 sm:pt-20 lg:pt-24">
         {/* Main Headline */}
         <div className="max-w-3xl mb-24 sm:mb-32 lg:mb-40">
-          <h1 className="text-5xl sm:text-7xl lg:text-[5.75rem] font-bold tracking-tight leading-[1.04] text-white drop-shadow-sm">
+          <h1 className="text-5xl sm:text-7xl lg:text-[5.75rem] font-bold tracking-tight leading-[1.04] text-white drop-shadow-md">
             Our Health, <br />
             Our Time.
           </h1>
