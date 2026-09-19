@@ -10,7 +10,7 @@ gsap.registerPlugin(ScrollTrigger, ScrollToPlugin)
 // ============================================================================
 const CONFIG = {
   stepAngle: 72, // 360° / 5 = 72° per checkpoint
-  totalSteps: 6, // 0 (Node 1) -> 1 (Node 2) -> 2 (Node 3) -> 3 (Node 4) -> 4 (Node 5) -> 5 (Node 1 again)
+  totalSteps: 6, // 6 discrete points: 0 (Circle 1) -> 1 (Circle 2) -> 2 (Circle 3) -> 3 (Circle 4) -> 4 (Circle 5) -> 5 (Circle 1)
   transitionDuration: 0.55, // Smooth cinematic rotation duration
   scrollCooldown: 500, // Minimum ms between gestures to prevent multi-step skipping
 }
@@ -77,7 +77,7 @@ export default function WhatIfHealthSection() {
     const applyStepVisuals = (targetStep, duration = CONFIG.transitionDuration) => {
       const targetRotation = -targetStep * CONFIG.stepAngle
       const counterRotation = targetStep * CONFIG.stepAngle
-      const activeStateIndex = targetStep % STATES.length // 0, 1, 2, 3, 4, then back to 0 at step 5
+      const activeStateIndex = targetStep % STATES.length // 0, 1, 2, 3, 4, and 0 for step 5
 
       // 1. Rotate the wheel smoothly
       if (wheel) {
@@ -215,14 +215,15 @@ export default function WhatIfHealthSection() {
       })
 
       // ========================================================================
-      // SCROLLTRIGGER PIN CONTROLLER WITH 6-CHECKPOINT PROGRESSION (1 -> 2 -> 3 -> 4 -> 5 -> 1)
+      // SCROLLTRIGGER PIN CONTROLLER: 6 Discrete Checkpoints (0 to 5)
+      // 0: Circle 1 | 1: Circle 2 | 2: Circle 3 | 3: Circle 4 | 4: Circle 5 | 5: Circle 1
       // ========================================================================
       const snapPoints = [0, 0.2, 0.4, 0.6, 0.8, 1.0]
 
       const st = ScrollTrigger.create({
         trigger: container,
         start: 'top top',
-        end: () => `+=${Math.max(2400, window.innerHeight * 2.8)}`,
+        end: () => `+=${Math.max(2500, window.innerHeight * 2.8)}`,
         pin: true,
         anticipatePin: 1,
         invalidateOnRefresh: true,
@@ -232,25 +233,26 @@ export default function WhatIfHealthSection() {
           ease: 'power2.out',
         },
         onEnter: () => {
-          // Always start at Circle 1 when entering from top
+          // Entering from top: Show Circle 1 (Step 0)
           activeStepRef.current = 0
           setActiveStep(0)
           applyStepVisuals(0, 0.3)
         },
         onEnterBack: () => {
-          // Always start at Circle 1 when entering from bottom as requested
-          activeStepRef.current = 0
-          setActiveStep(0)
-          applyStepVisuals(0, 0.3)
+          // Entering from bottom: Show Circle 1 (Step 5 at 360°/0°)
+          activeStepRef.current = 5
+          setActiveStep(5)
+          applyStepVisuals(5, 0.3)
         },
         onLeave: () => {
           activeStepRef.current = 5
           setActiveStep(5)
+          applyStepVisuals(5, 0.2)
         },
         onLeaveBack: () => {
           activeStepRef.current = 0
           setActiveStep(0)
-          applyStepVisuals(0, 0.3)
+          applyStepVisuals(0, 0.2)
         },
         onUpdate: (self) => {
           if (!isAnimatingRef.current) {
@@ -290,14 +292,13 @@ export default function WhatIfHealthSection() {
         onComplete: () => {
           setTimeout(() => {
             isAnimatingRef.current = false
-          }, 100)
+          }, 80)
         },
       })
     }
 
-    // Expose for node click handler
+    // Expose for badge click handler
     window.__whatIfAnimateToStep = (index) => {
-      // If user clicks node 0 and we're at step 4 or 5, go to 5 (full loop), else go to index
       if (index === 0 && activeStepRef.current >= 4) {
         animateToStep(5)
       } else {
@@ -306,7 +307,8 @@ export default function WhatIfHealthSection() {
     }
 
     // ========================================================================
-    // SMOOTH 1-SCROLL-PER-CIRCLE WHEEL INTERCEPTOR (1 -> 2 -> 3 -> 4 -> 5 -> 1)
+    // SMOOTH SCROLL WHEEL FLOW
+    // 1 -> 2 -> 3 -> 4 -> 5 -> next scroll shows Circle 1 -> then next section smoothly starts!
     // ========================================================================
     const handleWheel = (e) => {
       const st = stRef.current
@@ -318,25 +320,27 @@ export default function WhatIfHealthSection() {
       const timeSinceLast = now - lastScrollTimeRef.current
 
       if (e.deltaY > 0) {
-        // User scrolling DOWN: Step 0 -> 1 -> 2 -> 3 -> 4 -> 5 -> next section
+        // Scrolling DOWN
         if (activeStepRef.current < CONFIG.totalSteps - 1) {
+          // Progress through: 0 -> 1 -> 2 -> 3 -> 4 -> 5 (Circle 1 reached cleanly)
           e.preventDefault()
           if (timeSinceLast > CONFIG.scrollCooldown && !isAnimatingRef.current) {
             lastScrollTimeRef.current = now
             animateToStep(activeStepRef.current + 1)
           }
         }
-        // At step 5 (Circle 1 reached again), let default scroll down proceed seamlessly
+        // When already at step 5 (Circle 1), natural unpin scroll smoothly transitions into next section!
       } else if (e.deltaY < 0) {
-        // User scrolling UP: Step 5 -> 4 -> 3 -> 2 -> 1 -> 0 -> previous section
+        // Scrolling UP
         if (activeStepRef.current > 0) {
+          // Reverse through: 5 -> 4 -> 3 -> 2 -> 1 -> 0
           e.preventDefault()
           if (timeSinceLast > CONFIG.scrollCooldown && !isAnimatingRef.current) {
             lastScrollTimeRef.current = now
             animateToStep(activeStepRef.current - 1)
           }
         }
-        // At step 0 (Circle 1), let default scroll up proceed seamlessly
+        // When already at step 0 (Circle 1), natural scroll smoothly transitions into previous section!
       }
     }
 

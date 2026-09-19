@@ -3,7 +3,7 @@ import clinicDashboardImg from '../assets/clinic-dashboard-screen.jpg'
 
 export default function ClinicOperationsSection() {
   return (
-    <section className="w-full bg-[#f8f9fa] text-slate-900 pt-16 sm:pt-20 lg:pt-24 pb-16 sm:pb-24 lg:pb-32 overflow-hidden">
+    <section className="w-full bg-white text-slate-900 pt-16 sm:pt-20 lg:pt-24 pb-8 sm:pb-12 lg:pb-16 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Heading */}
         <div className="text-center max-w-3xl mx-auto">
@@ -16,11 +16,8 @@ export default function ClinicOperationsSection() {
         {/* Custom High-Fidelity iPad Pro Mockup Showcase */}
         <div className="mt-8 sm:mt-10 lg:mt-12 max-w-4xl lg:max-w-5xl xl:max-w-[1020px] mx-auto">
           <div className="relative group">
-            {/* Ambient Base Shadow underneath iPad */}
-            <div className="absolute -inset-x-6 -bottom-6 h-16 bg-slate-950/15 blur-2xl rounded-full pointer-events-none" />
-
-            {/* iPad Chassis */}
-            <div className="relative bg-[#0d0f12] p-[9px] sm:p-[13px] lg:p-[15px] rounded-[28px] sm:rounded-[38px] lg:rounded-[44px] shadow-[0_30px_70px_-15px_rgba(15,23,42,0.35),0_0_0_1px_rgba(255,255,255,0.08),inset_0_0_0_1px_rgba(255,255,255,0.12)] transition-transform duration-500 group-hover:scale-[1.008]">
+            {/* iPad Chassis (No external blurry floor shadow) */}
+            <div className="relative bg-[#0d0f12] p-[9px] sm:p-[13px] lg:p-[15px] rounded-[28px] sm:rounded-[38px] lg:rounded-[44px] shadow-[0_20px_50px_-10px_rgba(0,0,0,0.18),0_0_0_1px_rgba(0,0,0,0.06)] transition-transform duration-500 group-hover:scale-[1.008]">
               {/* Landscape Front Camera & Sensor Header */}
               <div className="absolute top-[4px] sm:top-[6px] lg:top-[7px] left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-20 pointer-events-none">
                 {/* Camera Lens */}

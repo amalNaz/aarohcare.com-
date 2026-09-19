@@ -5,6 +5,7 @@ import JourneySection from './components/JourneySection'
 import WhatIfHealthSection from './components/WhatIfHealthSection'
 import HealthPartnerSection from './components/HealthPartnerSection'
 import ClinicOperationsSection from './components/ClinicOperationsSection'
+import HospitalsAndClinicsSection from './components/HospitalsAndClinicsSection'
 
 export default function App() {
   return (
@@ -26,8 +27,12 @@ export default function App() {
 
       {/* Clinic Side Operations Management Section */}
       <ClinicOperationsSection />
+
+      {/* Designed for Hospitals and Clinics Section */}
+      <HospitalsAndClinicsSection />
     </div>
   )
 }
+
 
 
