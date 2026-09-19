@@ -11,27 +11,14 @@ export default function HealthPartnerSection() {
     <section ref={containerRef} className="w-full bg-white overflow-hidden select-none">
       <div className="w-full grid grid-cols-1 lg:grid-cols-2 min-h-[540px] sm:min-h-[600px] lg:min-h-[660px] xl:min-h-[720px] 2xl:min-h-[780px]">
         {/* Left Column: Hand with Smartphone Mockup on Dark Curved Backdrop */}
-        <a
-          href="https://wa.me/919072043356?text=Hi%20AarohCare%2C%20I%20would%20like%20to%20know%20more%20about%20the%20AarohCare%20Health%20Partner%20App."
-          target="_blank"
-          rel="noopener noreferrer"
-          title="Click to learn about AarohCare App on WhatsApp"
-          className="relative w-full h-[400px] sm:h-[500px] lg:h-auto min-h-full bg-[#0a1820] overflow-hidden flex items-center justify-center group cursor-pointer"
-        >
+        <div className="relative w-full h-[400px] sm:h-[500px] lg:h-auto min-h-full bg-[#0a1820] overflow-hidden flex items-center justify-center">
           <img
             src={healthPartnerHandImg}
             alt="AarohCare App Live OP Queue Tracking"
-            className="reveal-image w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.03]"
+            className="reveal-image w-full h-full object-cover object-center pointer-events-none"
             loading="lazy"
           />
-          {/* Subtle WhatsApp Hover Indicator */}
-          <div className="absolute inset-0 bg-black/35 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-            <span className="bg-[#18181b]/95 text-white border border-neutral-700 text-xs sm:text-sm font-semibold px-4 py-2 rounded-full shadow-xl flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-              <span>Chat on WhatsApp</span>
-            </span>
-          </div>
-        </a>
+        </div>
 
         {/* Right Column: Warm Beige Section with Typography & CTA */}
         <div className="reveal-group w-full bg-[#c8aa84] text-[#141414] flex flex-col justify-center px-8 py-16 sm:px-14 sm:py-20 lg:px-16 lg:py-24 xl:px-24 2xl:px-32">

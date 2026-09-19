@@ -1,5 +1,4 @@
 import React from 'react'
-import { Mail, MessageSquare } from 'lucide-react'
 import amalImg from '../assets/amal-hisham.jpg'
 import aslamImg from '../assets/muhammed-aslam.jpg'
 import kiranImg from '../assets/kiran-vk.jpg'
@@ -15,7 +14,6 @@ export default function FoundersSection() {
       bio: 'Leads product vision and company direction',
       image: amalImg,
       imagePosition: 'object-[center_20%]',
-      whatsappText: 'Hi Amal Hisham, I would like to connect regarding AarohCare product vision.',
     },
     {
       name: 'Muhammed Aslam',
@@ -23,7 +21,6 @@ export default function FoundersSection() {
       bio: 'leads operations and hospital/clinic partnerships',
       image: aslamImg,
       imagePosition: 'object-[center_15%]',
-      whatsappText: 'Hi Muhammed Aslam, I would like to connect regarding hospital/clinic partnerships.',
     },
     {
       name: 'Kiran VK',
@@ -31,7 +28,6 @@ export default function FoundersSection() {
       bio: 'leads marketing and growth',
       image: kiranImg,
       imagePosition: 'object-[center_25%]',
-      whatsappText: 'Hi Kiran VK, I would like to connect regarding marketing and growth at AarohCare.',
     },
   ]
 
@@ -56,76 +52,35 @@ export default function FoundersSection() {
 
         {/* 3 Founder Cards Grid */}
         <div className="reveal-group grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-8 lg:gap-10 max-w-6xl mx-auto">
-          {founders.map((founder, idx) => {
-            const waUrl = `https://wa.me/919072043356?text=${encodeURIComponent(founder.whatsappText)}`
-            const mailUrl = `mailto:aarohcare.in@gmail.com?subject=Connecting%20with%20${encodeURIComponent(founder.name)}`
-
-            return (
-              <div
-                key={idx}
-                className="reveal-stagger-item bg-[#dde3ea] rounded-[28px] sm:rounded-[32px] lg:rounded-[36px] p-4 sm:p-4.5 lg:p-5 pb-6 sm:pb-7 flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:-translate-y-1.5 group"
-              >
-                {/* Photo Box with Direct WhatsApp Click */}
-                <a
-                  href={waUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  title={`Chat with ${founder.name} on WhatsApp`}
-                  className="relative w-full aspect-[1/1.12] rounded-[22px] sm:rounded-[26px] lg:rounded-[28px] overflow-hidden bg-white shadow-sm block cursor-pointer"
-                >
-                  <img
-                    src={founder.image}
-                    alt={founder.name}
-                    className={`reveal-image w-full h-full object-cover grayscale transition-transform duration-500 group-hover:scale-[1.03] ${founder.imagePosition}`}
-                    loading="lazy"
-                  />
-                  {/* Subtle WhatsApp Hover Indicator */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-between p-4">
-                    <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-white bg-emerald-600/90 backdrop-blur-sm px-3 py-1 rounded-full shadow-md">
-                      <MessageSquare className="w-3.5 h-3.5" />
-                      <span>Chat on WhatsApp</span>
-                    </span>
-                  </div>
-                </a>
-
-                {/* Founder Information & Quick Connect Buttons */}
-                <div className="mt-5 sm:mt-6 px-1.5 space-y-1.5">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-lg sm:text-xl lg:text-[1.28rem] font-bold text-[#111822] tracking-tight">
-                      {founder.name}
-                    </h3>
-
-                    {/* Quick Connect Icons */}
-                    <div className="flex items-center gap-1.5">
-                      <a
-                        href={waUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        title={`WhatsApp ${founder.name}`}
-                        className="w-7 h-7 rounded-full bg-white/80 hover:bg-emerald-500 text-slate-700 hover:text-white flex items-center justify-center transition-all duration-200 shadow-xs cursor-pointer"
-                      >
-                        <MessageSquare className="w-3.5 h-3.5" />
-                      </a>
-                      <a
-                        href={mailUrl}
-                        title={`Email ${founder.name}`}
-                        className="w-7 h-7 rounded-full bg-white/80 hover:bg-blue-600 text-slate-700 hover:text-white flex items-center justify-center transition-all duration-200 shadow-xs cursor-pointer"
-                      >
-                        <Mail className="w-3.5 h-3.5" />
-                      </a>
-                    </div>
-                  </div>
-
-                  <p className="text-xs sm:text-[13px] font-medium text-[#4a5568]">
-                    {founder.role}
-                  </p>
-                  <p className="text-[11px] sm:text-[12px] text-[#6b778c] font-normal leading-relaxed pt-0.5">
-                    {founder.bio}
-                  </p>
-                </div>
+          {founders.map((founder, idx) => (
+            <div
+              key={idx}
+              className="reveal-stagger-item bg-[#dde3ea] rounded-[28px] sm:rounded-[32px] lg:rounded-[36px] p-4 sm:p-4.5 lg:p-5 pb-7 sm:pb-8 flex flex-col justify-between transition-all duration-300 hover:shadow-lg hover:-translate-y-1 group"
+            >
+              {/* Photo Box */}
+              <div className="relative w-full aspect-[1/1.12] rounded-[22px] sm:rounded-[26px] lg:rounded-[28px] overflow-hidden bg-white shadow-sm">
+                <img
+                  src={founder.image}
+                  alt={founder.name}
+                  className={`reveal-image w-full h-full object-cover grayscale transition-transform duration-500 group-hover:scale-[1.02] ${founder.imagePosition}`}
+                  loading="lazy"
+                />
               </div>
-            )
-          })}
+
+              {/* Founder Information */}
+              <div className="mt-5 sm:mt-6 px-1.5 space-y-1">
+                <h3 className="text-lg sm:text-xl lg:text-[1.28rem] font-bold text-[#111822] tracking-tight">
+                  {founder.name}
+                </h3>
+                <p className="text-xs sm:text-[13px] font-medium text-[#4a5568]">
+                  {founder.role}
+                </p>
+                <p className="text-[11px] sm:text-[12px] text-[#6b778c] font-normal leading-relaxed pt-0.5">
+                  {founder.bio}
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>

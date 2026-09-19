@@ -269,10 +269,93 @@
   .reveal-meta,
   .reveal-btn,
   .reveal-image,
-  .reveal-stagger-item {
+  .reveal-stagger-item,
+  .reveal-ipad-showcase,
+  .reveal-ipad-showcase .ipad-device-chassis,
+  .reveal-ipad-showcase .ipad-screen-content {
     opacity: 1 !important;
     transform: none !important;
+    filter: none !important;
+    box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(0, 0, 0, 0.06) !important;
     transition: none !important;
+  }
+}
+
+/* ==========================================================================
+   PREMIUM IPAD SCROLL-TRIGGERED ENTRANCE ANIMATION
+   Easing curve: cubic-bezier(0.22, 1, 0.36, 1) — smooth, elegant, physical
+   ========================================================================== */
+
+.reveal-ipad-showcase {
+  opacity: 0;
+  transform: translateY(70px) scale(0.94);
+  filter: blur(2px);
+  transition: opacity 950ms cubic-bezier(0.22, 1, 0.36, 1),
+              transform 950ms cubic-bezier(0.22, 1, 0.36, 1),
+              filter 950ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform, filter;
+}
+
+.reveal-ipad-showcase .ipad-device-chassis {
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.02);
+  transition: box-shadow 950ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: box-shadow;
+}
+
+.reveal-ipad-showcase .ipad-screen-content {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 800ms cubic-bezier(0.22, 1, 0.36, 1) 120ms,
+              transform 800ms cubic-bezier(0.22, 1, 0.36, 1) 120ms;
+  will-change: opacity, transform;
+}
+
+/* When Triggered: Apply Active Reveal State */
+.is-revealed.reveal-ipad-showcase,
+.is-revealed .reveal-ipad-showcase,
+.reveal-ipad-showcase.is-revealed {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+}
+
+.is-revealed.reveal-ipad-showcase .ipad-device-chassis,
+.is-revealed .reveal-ipad-showcase .ipad-device-chassis,
+.reveal-ipad-showcase.is-revealed .ipad-device-chassis {
+  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(0, 0, 0, 0.06);
+}
+
+.is-revealed.reveal-ipad-showcase .ipad-screen-content,
+.is-revealed .reveal-ipad-showcase .ipad-screen-content,
+.reveal-ipad-showcase.is-revealed .ipad-screen-content {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Tablet Optimizations (<= 1024px) */
+@media (max-width: 1024px) {
+  .reveal-ipad-showcase {
+    transform: translateY(50px) scale(0.95);
+    transition-duration: 900ms;
+  }
+  .reveal-ipad-showcase .ipad-screen-content {
+    transform: translateY(10px);
+    transition-duration: 750ms;
+    transition-delay: 100ms;
+  }
+}
+
+/* Mobile Optimizations (<= 768px) */
+@media (max-width: 768px) {
+  .reveal-ipad-showcase {
+    transform: translateY(38px) scale(0.97);
+    filter: blur(1.5px);
+    transition-duration: 800ms;
+  }
+  .reveal-ipad-showcase .ipad-screen-content {
+    transform: translateY(6px);
+    transition-duration: 650ms;
+    transition-delay: 80ms;
   }
 }
 
@@ -311,4 +394,46 @@
 [data-state="closed"].animate-accordion-up,
 .data-\[state\=closed\]\:animate-accordion-up[data-state="closed"] {
   animation: accordion-up 300ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* ==========================================================================
+   WHATSAPP CHAT SCROLL JUMPING ANIMATION
+   ========================================================================== */
+
+@keyframes chatScrollJump {
+  0%, 100% {
+    transform: translateY(0) scale(1, 1);
+  }
+  20% {
+    transform: translateY(-12px) scale(0.96, 1.05);
+  }
+  45% {
+    transform: translateY(0px) scale(1.04, 0.96);
+  }
+  65% {
+    transform: translateY(-6px) scale(0.98, 1.02);
+  }
+  85% {
+    transform: translateY(0px) scale(1.01, 0.99);
+  }
+}
+
+@keyframes chatIconWiggle {
+  0%, 100% {
+    transform: rotate(0deg) scale(1);
+  }
+  25% {
+    transform: rotate(-10deg) scale(1.12);
+  }
+  75% {
+    transform: rotate(10deg) scale(1.12);
+  }
+}
+
+.animate-chat-jump {
+  animation: chatScrollJump 0.75s cubic-bezier(0.28, 0.84, 0.42, 1) infinite;
+}
+
+.animate-icon-wiggle {
+  animation: chatIconWiggle 0.75s ease-in-out infinite;
 }

@@ -1,35 +1,79 @@
-import React from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 
 export default function WhatsAppButton({
   phoneNumber = '919072043356',
   message = 'Hi AarohCare, I would like to know more about your services.',
 }) {
+  const [isScrolling, setIsScrolling] = useState(false)
+  const scrollTimeoutRef = useRef(null)
   const encodedMsg = encodeURIComponent(message)
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMsg}`
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolling(true)
+
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current)
+      }
+
+      scrollTimeoutRef.current = setTimeout(() => {
+        setIsScrolling(false)
+      }, 350)
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+
+    // Also attach to Lenis scroll if available
+    let unbindLenis = null
+    if (typeof window !== 'undefined' && window.__lenis) {
+      unbindLenis = window.__lenis.on('scroll', handleScroll)
+    }
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      if (typeof unbindLenis === 'function') {
+        unbindLenis()
+      }
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current)
+      }
+    }
+  }, [])
 
   return (
     <aside
       aria-label="Contact via WhatsApp"
-      className="fixed bottom-6 right-6 z-50 select-none animate-in fade-in slide-in-from-bottom-4 duration-300"
+      className={`fixed bottom-6 right-6 z-50 select-none transition-transform duration-300 ${
+        isScrolling ? 'animate-chat-jump' : 'hover:scale-[1.04]'
+      }`}
     >
       <a
         href={whatsappUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="flex items-center gap-2.5 bg-[#18181b]/95 hover:bg-[#222226] text-white border border-neutral-700/80 hover:border-neutral-600 rounded-full pl-4 sm:pl-4.5 pr-1.5 py-1.5 shadow-[0_10px_30px_-5px_rgba(0,0,0,0.5),0_0_20px_rgba(37,211,102,0.25)] hover:shadow-[0_12px_35px_-5px_rgba(0,0,0,0.6),0_0_25px_rgba(37,211,102,0.45)] backdrop-blur-md transition-all duration-300 hover:scale-[1.04] active:scale-[0.98] group cursor-pointer"
+        className="flex items-center gap-2.5 bg-[#18181b]/95 hover:bg-[#222226] text-white border border-neutral-700/80 hover:border-neutral-600 rounded-full pl-4 sm:pl-4.5 pr-1.5 py-1.5 shadow-[0_10px_30px_-5px_rgba(0,0,0,0.5),0_0_20px_rgba(37,211,102,0.25)] hover:shadow-[0_12px_35px_-5px_rgba(0,0,0,0.6),0_0_25px_rgba(37,211,102,0.45)] backdrop-blur-md transition-all duration-300 active:scale-[0.98] group cursor-pointer"
         aria-label="Chat with AarohCare on WhatsApp"
       >
         {/* Chat text with sparkle icon */}
         <span className="text-xs sm:text-sm font-semibold tracking-normal text-white flex items-center gap-1.5">
           <span>Chat</span>
           {/* Sparkle ✦ */}
-          <span className="text-emerald-400 text-xs sm:text-sm transition-transform duration-300 group-hover:rotate-12 group-hover:scale-125">
+          <span
+            className={`text-emerald-400 text-xs sm:text-sm transition-transform duration-300 ${
+              isScrolling ? 'rotate-45 scale-125' : 'group-hover:rotate-12 group-hover:scale-125'
+            }`}
+          >
             ✦
           </span>
         </span>
 
         {/* WhatsApp Green Circular Icon Badge */}
-        <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#25D366] flex items-center justify-center text-white shadow-md transition-transform duration-300 group-hover:scale-110">
+        <div
+          className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#25D366] flex items-center justify-center text-white shadow-md transition-transform duration-300 ${
+            isScrolling ? 'animate-icon-wiggle' : 'group-hover:scale-110'
+          }`}
+        >
           <svg
             viewBox="0 0 24 24"
             fill="currentColor"

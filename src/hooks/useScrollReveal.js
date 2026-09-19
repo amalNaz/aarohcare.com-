@@ -14,7 +14,7 @@ export function useScrollReveal(options = {}) {
       // If user prefers reduced motion, make everything visible immediately
       if (containerRef.current) {
         const elements = containerRef.current.querySelectorAll(
-          '.reveal-heading, .reveal-text, .reveal-meta, .reveal-btn, .reveal-image, .reveal-stagger-item'
+          '.reveal-heading, .reveal-text, .reveal-meta, .reveal-btn, .reveal-image, .reveal-stagger-item, .reveal-ipad-showcase'
         )
         elements.forEach((el) => {
           el.classList.add('is-revealed')
@@ -51,14 +51,15 @@ export function useScrollReveal(options = {}) {
       container.classList.contains('reveal-heading') ||
       container.classList.contains('reveal-text') ||
       container.classList.contains('reveal-group') ||
-      container.classList.contains('reveal-image')
+      container.classList.contains('reveal-image') ||
+      container.classList.contains('reveal-ipad-showcase')
     ) {
       observer.observe(container)
     }
 
     // Observe any nested reveal elements
     const elements = container.querySelectorAll(
-      '.reveal-group, .reveal-heading, .reveal-text, .reveal-meta, .reveal-btn, .reveal-image, .reveal-stagger-item'
+      '.reveal-group, .reveal-heading, .reveal-text, .reveal-meta, .reveal-btn, .reveal-image, .reveal-stagger-item, .reveal-ipad-showcase'
     )
     elements.forEach((el) => observer.observe(el))
 
