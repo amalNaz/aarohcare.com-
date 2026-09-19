@@ -10,6 +10,7 @@ import LabFeaturesSection from './components/LabFeaturesSection'
 import FoundersSection from './components/FoundersSection'
 import FAQSection from './components/FAQSection'
 import CTAEnrollmentSection from './components/CTAEnrollmentSection'
+import Footer from './components/Footer'
 
 export default function App() {
   return (
@@ -46,6 +47,9 @@ export default function App() {
 
       {/* Early Pilot Enrollment / CTA Section */}
       <CTAEnrollmentSection />
+
+      {/* AarohaCare Technologies Footer Section */}
+      <Footer />
     </div>
   )
 }
