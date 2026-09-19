@@ -3,7 +3,6 @@
 @layer base {
   html {
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    scroll-behavior: smooth;
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* IE / Edge */
   }
@@ -82,7 +81,204 @@
 }
 
 /* ==========================================================================
+   PREMIUM MOTION SYSTEM (SCROLL REVEAL & STAGGER ENGINE)
+   Easing curve: cubic-bezier(0.22, 1, 0.36, 1)
+   ========================================================================== */
+
+.reveal-heading {
+  opacity: 0;
+  transform: translateY(48px);
+  transition: opacity 850ms cubic-bezier(0.22, 1, 0.36, 1),
+              transform 850ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-text {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 800ms cubic-bezier(0.22, 1, 0.36, 1) 100ms,
+              transform 800ms cubic-bezier(0.22, 1, 0.36, 1) 100ms;
+  will-change: opacity, transform;
+}
+
+.reveal-meta {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 750ms cubic-bezier(0.22, 1, 0.36, 1) 180ms,
+              transform 750ms cubic-bezier(0.22, 1, 0.36, 1) 180ms;
+  will-change: opacity, transform;
+}
+
+.reveal-btn {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 750ms cubic-bezier(0.22, 1, 0.36, 1) 220ms,
+              transform 750ms cubic-bezier(0.22, 1, 0.36, 1) 220ms;
+  will-change: opacity, transform;
+}
+
+.reveal-image {
+  opacity: 0;
+  transform: scale(1.03);
+  transition: opacity 1000ms cubic-bezier(0.22, 1, 0.36, 1),
+              transform 1000ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-stagger-item {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 750ms cubic-bezier(0.22, 1, 0.36, 1),
+              transform 750ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+/* When Triggered: Apply Active Reveal State */
+.is-revealed.reveal-heading,
+.is-revealed .reveal-heading,
+.reveal-heading.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.is-revealed.reveal-text,
+.is-revealed .reveal-text,
+.reveal-text.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.is-revealed.reveal-meta,
+.is-revealed .reveal-meta,
+.reveal-meta.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.is-revealed.reveal-btn,
+.is-revealed .reveal-btn,
+.reveal-btn.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.is-revealed.reveal-image,
+.is-revealed .reveal-image,
+.reveal-image.is-revealed {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.is-revealed.reveal-stagger-item,
+.is-revealed .reveal-stagger-item,
+.reveal-stagger-item.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger Delays for Grouped List/Grid Items (~80-100ms increments) */
+.is-revealed .reveal-stagger-item:nth-child(1),
+.reveal-group.is-revealed > *:nth-child(1) {
+  transition-delay: 40ms;
+}
+
+.is-revealed .reveal-stagger-item:nth-child(2),
+.reveal-group.is-revealed > *:nth-child(2) {
+  transition-delay: 130ms;
+}
+
+.is-revealed .reveal-stagger-item:nth-child(3),
+.reveal-group.is-revealed > *:nth-child(3) {
+  transition-delay: 220ms;
+}
+
+.is-revealed .reveal-stagger-item:nth-child(4),
+.reveal-group.is-revealed > *:nth-child(4) {
+  transition-delay: 310ms;
+}
+
+.is-revealed .reveal-stagger-item:nth-child(5),
+.reveal-group.is-revealed > *:nth-child(5) {
+  transition-delay: 400ms;
+}
+
+.is-revealed .reveal-stagger-item:nth-child(6),
+.reveal-group.is-revealed > *:nth-child(6) {
+  transition-delay: 490ms;
+}
+
+.is-revealed .reveal-stagger-item:nth-child(7),
+.reveal-group.is-revealed > *:nth-child(7) {
+  transition-delay: 580ms;
+}
+
+.is-revealed .reveal-stagger-item:nth-child(8),
+.reveal-group.is-revealed > *:nth-child(8) {
+  transition-delay: 670ms;
+}
+
+.is-revealed .reveal-stagger-item:nth-child(9),
+.reveal-group.is-revealed > *:nth-child(9) {
+  transition-delay: 760ms;
+}
+
+.is-revealed .reveal-stagger-item:nth-child(10),
+.reveal-group.is-revealed > *:nth-child(10) {
+  transition-delay: 850ms;
+}
+
+.is-revealed .reveal-stagger-item:nth-child(11),
+.reveal-group.is-revealed > *:nth-child(11) {
+  transition-delay: 940ms;
+}
+
+.is-revealed .reveal-stagger-item:nth-child(12),
+.reveal-group.is-revealed > *:nth-child(12) {
+  transition-delay: 1030ms;
+}
+
+/* Mobile Optimizations: Reduced distances & durations */
+@media (max-width: 768px) {
+  .reveal-heading {
+    transform: translateY(24px);
+    transition-duration: 650ms;
+  }
+  .reveal-text {
+    transform: translateY(14px);
+    transition-duration: 600ms;
+  }
+  .reveal-meta,
+  .reveal-btn {
+    transform: translateY(10px);
+    transition-duration: 550ms;
+  }
+  .reveal-image {
+    transform: scale(1.02);
+    transition-duration: 800ms;
+  }
+  .reveal-stagger-item {
+    transform: translateY(16px);
+    transition-duration: 550ms;
+  }
+}
+
+/* Accessibility: Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .reveal-heading,
+  .reveal-text,
+  .reveal-meta,
+  .reveal-btn,
+  .reveal-image,
+  .reveal-stagger-item {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* ==========================================================================
    RADIX ACCORDION ANIMATIONS
+   Expanded in 300-350ms with smooth cubic-bezier curve and opacity cross-fade
    ========================================================================== */
 
 @keyframes accordion-down {
@@ -109,10 +305,10 @@
 
 [data-state="open"].animate-accordion-down,
 .data-\[state\=open\]\:animate-accordion-down[data-state="open"] {
-  animation: accordion-down 0.25s ease-out;
+  animation: accordion-down 350ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 [data-state="closed"].animate-accordion-up,
 .data-\[state\=closed\]\:animate-accordion-up[data-state="closed"] {
-  animation: accordion-up 0.25s ease-out;
+  animation: accordion-up 300ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }

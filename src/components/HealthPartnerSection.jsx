@@ -1,39 +1,42 @@
 import React from 'react'
 import { ArrowUpRight } from 'lucide-react'
 import healthPartnerHandImg from '../assets/health-partner-hand.jpg'
+import { useScrollReveal } from '../hooks/useScrollReveal'
 
 export default function HealthPartnerSection() {
+  const containerRef = useScrollReveal({ threshold: 0.15 })
+
   return (
-    <section className="w-full bg-white overflow-hidden select-none">
+    <section ref={containerRef} className="w-full bg-white overflow-hidden select-none">
       <div className="w-full grid grid-cols-1 lg:grid-cols-2 min-h-[540px] sm:min-h-[600px] lg:min-h-[660px] xl:min-h-[720px] 2xl:min-h-[780px]">
         {/* Left Column: Hand with Smartphone Mockup on Dark Curved Backdrop */}
         <div className="relative w-full h-[400px] sm:h-[500px] lg:h-auto min-h-full bg-[#0a1820] overflow-hidden flex items-center justify-center">
           <img
             src={healthPartnerHandImg}
             alt="AarohCare App Live OP Queue Tracking"
-            className="w-full h-full object-cover object-center pointer-events-none"
+            className="reveal-image w-full h-full object-cover object-center pointer-events-none"
             loading="lazy"
           />
         </div>
 
         {/* Right Column: Warm Beige Section with Typography & CTA */}
-        <div className="w-full bg-[#c8aa84] text-[#141414] flex flex-col justify-center px-8 py-16 sm:px-14 sm:py-20 lg:px-16 lg:py-24 xl:px-24 2xl:px-32">
+        <div className="reveal-group w-full bg-[#c8aa84] text-[#141414] flex flex-col justify-center px-8 py-16 sm:px-14 sm:py-20 lg:px-16 lg:py-24 xl:px-24 2xl:px-32">
           <div className="max-w-xl xl:max-w-2xl">
             {/* Main Heading — Exact 2 lines */}
-            <h2 className="text-4xl sm:text-5xl lg:text-[3.5rem] xl:text-[4.25rem] 2xl:text-[4.75rem] font-bold tracking-tight text-[#141414] leading-[1.05]">
+            <h2 className="reveal-heading text-4xl sm:text-5xl lg:text-[3.5rem] xl:text-[4.25rem] 2xl:text-[4.75rem] font-bold tracking-tight text-[#141414] leading-[1.05]">
               <span className="block">Your Health Partner</span>
               <span className="block">We Imagined.</span>
             </h2>
 
             {/* Paragraph Description */}
-            <p className="mt-7 sm:mt-8 lg:mt-9 text-base sm:text-lg lg:text-[1.25rem] xl:text-[1.38rem] text-[#221e1a] leading-[1.4] font-normal max-w-lg lg:max-w-xl">
+            <p className="reveal-text mt-7 sm:mt-8 lg:mt-9 text-base sm:text-lg lg:text-[1.25rem] xl:text-[1.38rem] text-[#221e1a] leading-[1.4] font-normal max-w-lg lg:max-w-xl">
               AarohCare connects your OP ticket with the live queue, helping you understand where you are in line and when it's time to head to the hospital.
             </p>
 
             {/* CTA Button */}
-            <div className="mt-8 sm:mt-10 lg:mt-12">
+            <div className="reveal-btn mt-8 sm:mt-10 lg:mt-12">
               <a
-                href="#explore"
+                href="#how-it-works"
                 className="group inline-flex items-center gap-3.5 bg-black hover:bg-neutral-900 text-white pl-6 pr-2 py-2 rounded-full text-xs sm:text-sm font-semibold tracking-wide shadow-md hover:shadow-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
               >
                 <span>Explore More</span>

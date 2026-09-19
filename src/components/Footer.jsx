@@ -1,7 +1,9 @@
 import React from 'react'
 import { Phone, Mail, MapPin } from 'lucide-react'
+import { useScrollReveal } from '../hooks/useScrollReveal'
 
 export default function Footer() {
+  const containerRef = useScrollReveal({ threshold: 0.1 })
   const solutionLinks = [
     { name: 'Smart OP Booking App', href: '#features' },
     { name: 'Live Queue Management', href: '#products' },
@@ -20,6 +22,13 @@ export default function Footer() {
   const handleSmoothScroll = (e, href) => {
     if (href.startsWith('#') && href.length > 1) {
       e.preventDefault()
+      if (typeof window !== 'undefined' && window.__lenis) {
+        const target = document.querySelector(href)
+        if (target) {
+          window.__lenis.scrollTo(target, { offset: 0, duration: 1.2 })
+          return
+        }
+      }
       const target = document.querySelector(href)
       if (target) {
         target.scrollIntoView({ behavior: 'smooth' })
@@ -28,7 +37,7 @@ export default function Footer() {
   }
 
   return (
-    <footer className="w-full bg-black text-white border-t border-neutral-900 overflow-hidden select-none">
+    <footer ref={containerRef} className="w-full bg-black text-white border-t border-neutral-900 overflow-hidden select-none">
       <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 pt-16 pb-12">
         {/* Main Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8 mb-14">
@@ -36,7 +45,7 @@ export default function Footer() {
           <div className="lg:col-span-5 flex flex-col justify-between">
             <div>
               {/* Brand Logo & Title */}
-              <div className="flex items-center gap-3.5 mb-4">
+              <div className="reveal-heading flex items-center gap-3.5 mb-4">
                 {/* Stylized AarohaCare 'A' Logo Icon */}
                 <div className="w-9 h-9 rounded-lg bg-white flex items-center justify-center p-1.5 shadow-sm">
                   <svg
@@ -74,13 +83,13 @@ export default function Footer() {
               </div>
 
               {/* Mission Paragraph */}
-              <p className="text-neutral-400 text-sm leading-relaxed max-w-sm">
+              <p className="reveal-text text-neutral-400 text-sm leading-relaxed max-w-sm">
                 Pioneering digital outpatient pacing across Kerala. Eliminating waiting halls through coordinated token telemetry and smart transit prompts.
               </p>
             </div>
 
             {/* Direct Contact Row */}
-            <div className="flex flex-wrap items-center gap-y-2 gap-x-3 text-xs sm:text-sm text-neutral-300 font-medium mt-6 pt-2">
+            <div className="reveal-meta flex flex-wrap items-center gap-y-2 gap-x-3 text-xs sm:text-sm text-neutral-300 font-medium mt-6 pt-2">
               <a
                 href="tel:+919072043356"
                 className="inline-flex items-center gap-1.5 hover:text-white transition-colors duration-200"
@@ -101,12 +110,12 @@ export default function Footer() {
 
           {/* Column 2: Solutions (4 Cols on LG) */}
           <div className="lg:col-span-4 lg:pl-6">
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-neutral-400 mb-5">
+            <h4 className="reveal-heading text-xs font-semibold uppercase tracking-wider text-neutral-400 mb-5">
               Solutions
             </h4>
-            <ul className="space-y-3">
+            <ul className="reveal-group space-y-3">
               {solutionLinks.map((item) => (
-                <li key={item.name}>
+                <li key={item.name} className="reveal-stagger-item">
                   <a
                     href={item.href}
                     onClick={(e) => handleSmoothScroll(e, item.href)}
@@ -120,7 +129,7 @@ export default function Footer() {
           </div>
 
           {/* Column 3: Operational Hub (3 Cols on LG) */}
-          <div className="lg:col-span-3">
+          <div className="reveal-meta lg:col-span-3">
             <h4 className="text-xs font-semibold uppercase tracking-wider text-neutral-400 mb-5">
               Operational Hub
             </h4>
@@ -148,7 +157,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar Divider */}
-        <div className="border-t border-neutral-800/80 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-neutral-400">
+        <div className="reveal-meta border-t border-neutral-800/80 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-neutral-400">
           <p className="text-center md:text-left">
             © 2025 AarohCare — Aarohacare Technologies Pvt Ltd. All rights reserved.
           </p>

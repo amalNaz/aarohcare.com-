@@ -11,46 +11,49 @@ import FoundersSection from './components/FoundersSection'
 import FAQSection from './components/FAQSection'
 import CTAEnrollmentSection from './components/CTAEnrollmentSection'
 import Footer from './components/Footer'
+import SmoothScroll from './components/SmoothScroll'
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-white w-full">
-      {/* Hero Section */}
-      <Hero />
+    <SmoothScroll>
+      <div className="min-h-screen bg-white w-full">
+        {/* Hero Section */}
+        <Hero />
 
-      {/* Zero Wait Section with Moving Cards */}
-      <ZeroWaitSection />
+        {/* Zero Wait Section with Moving Cards */}
+        <ZeroWaitSection />
 
-      {/* Journey Section with 4 Steps */}
-      <JourneySection />
+        {/* Journey Section with 4 Steps */}
+        <JourneySection />
 
-      {/* What If Health Was... (5-State Pinned Orbital Scroll Section) */}
-      <WhatIfHealthSection />
+        {/* What If Health Was... (5-State Pinned Orbital Scroll Section) */}
+        <WhatIfHealthSection />
 
-      {/* Your Health Partner We Imagined. (Beige Split Section) */}
-      <HealthPartnerSection />
+        {/* Your Health Partner We Imagined. (Beige Split Section) */}
+        <HealthPartnerSection />
 
-      {/* Clinic Side Operations Management Section */}
-      <ClinicOperationsSection />
+        {/* Clinic Side Operations Management Section */}
+        <ClinicOperationsSection />
 
-      {/* Designed for Hospitals and Clinics Section */}
-      <HospitalsAndClinicsSection />
+        {/* Designed for Hospitals and Clinics Section */}
+        <HospitalsAndClinicsSection />
 
-      {/* Labs Features for the Site Section */}
-      <LabFeaturesSection />
+        {/* Labs Features for the Site Section */}
+        <LabFeaturesSection />
 
-      {/* Founders / Team Section */}
-      <FoundersSection />
+        {/* Founders / Team Section */}
+        <FoundersSection />
 
-      {/* Frequently Asked Questions Section */}
-      <FAQSection />
+        {/* Frequently Asked Questions Section */}
+        <FAQSection />
 
-      {/* Early Pilot Enrollment / CTA Section */}
-      <CTAEnrollmentSection />
+        {/* Early Pilot Enrollment / CTA Section */}
+        <CTAEnrollmentSection />
 
-      {/* AarohaCare Technologies Footer Section */}
-      <Footer />
-    </div>
+        {/* AarohaCare Technologies Footer Section */}
+        <Footer />
+      </div>
+    </SmoothScroll>
   )
 }
 

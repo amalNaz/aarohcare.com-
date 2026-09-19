@@ -1,7 +1,9 @@
 import React from 'react'
 import labDashboardImg from '../assets/lab-command-center.png'
+import { useScrollReveal } from '../hooks/useScrollReveal'
 
 export default function LabFeaturesSection() {
+  const containerRef = useScrollReveal({ threshold: 0.1 })
   const labFeatures = [
     {
       title: 'Accessible Expert Care',
@@ -30,15 +32,15 @@ export default function LabFeaturesSection() {
   ]
 
   return (
-    <section className="relative w-full bg-[#0B294B] text-white overflow-hidden py-10 sm:py-12 lg:py-14 xl:py-16 min-h-[560px] lg:min-h-[620px] xl:min-h-[660px]">
+    <section ref={containerRef} className="relative w-full bg-[#0B294B] text-white overflow-hidden py-10 sm:py-12 lg:py-14 xl:py-16 min-h-[560px] lg:min-h-[620px] xl:min-h-[660px]">
       <div className="max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-14 xl:px-16 w-full relative">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-6 items-start">
           {/* =========================================================================
               LEFT COLUMN (43–45% width): Positioned strictly toward Upper-Left
               ========================================================================= */}
-          <div className="lg:col-span-5 xl:col-span-5 relative z-20 pt-2 sm:pt-4">
+          <div className="reveal-group lg:col-span-5 xl:col-span-5 relative z-20 pt-2 sm:pt-4">
             {/* Heading: Exact 2 lines with 400-500 font weight and tight line-height */}
-            <h2 className="text-2xl sm:text-3xl lg:text-[2rem] xl:text-[2.25rem] font-medium tracking-tight text-white leading-[1.02] text-left">
+            <h2 className="reveal-heading text-2xl sm:text-3xl lg:text-[2rem] xl:text-[2.25rem] font-medium tracking-tight text-white leading-[1.02] text-left">
               Labs features for <br />
               the site:
             </h2>
@@ -46,7 +48,7 @@ export default function LabFeaturesSection() {
             {/* 5 Feature Bullets: Compact editorial layout */}
             <div className="mt-8 sm:mt-9 lg:mt-10 space-y-4 sm:space-y-4.5 lg:space-y-5">
               {labFeatures.map((item, idx) => (
-                <div key={idx} className="space-y-0.5 group text-left">
+                <div key={idx} className="reveal-stagger-item space-y-0.5 group text-left">
                   {/* Bullet Dot & Feature Title */}
                   <div className="flex items-center gap-2.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-white shrink-0 opacity-90" />
@@ -66,9 +68,8 @@ export default function LabFeaturesSection() {
 
           {/* =========================================================================
               RIGHT COLUMN (55–57% width): Realistic Apple-style iPad Mockup
-              Left edge starts at ~48% width, Top at ~16% height, Cropped at right & bottom
               ========================================================================= */}
-          <div className="lg:col-span-7 xl:col-span-7 relative w-full pt-4 lg:pt-0">
+          <div className="reveal-image lg:col-span-7 xl:col-span-7 relative w-full pt-4 lg:pt-0">
             {/* Desktop Absolute Bleed Container */}
             <div className="w-full lg:absolute lg:top-4 xl:top-2 lg:left-0 lg:w-[132%] xl:w-[136%] 2xl:w-[140%]">
               {/* iPad Physical Chassis: Champagne Gold / Sand Metallic Rim matching reference */}

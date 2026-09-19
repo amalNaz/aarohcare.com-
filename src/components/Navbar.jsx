@@ -62,12 +62,20 @@ export default function Navbar() {
     e.preventDefault()
     setMobileMenuOpen(false)
     if (href === '#' || href === '#hero') {
-      window.scrollTo({ top: 0, behavior: 'smooth' })
+      if (typeof window !== 'undefined' && window.__lenis) {
+        window.__lenis.scrollTo(0, { duration: 1.2 })
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      }
       return
     }
     const targetElement = document.querySelector(href)
     if (targetElement) {
-      targetElement.scrollIntoView({ behavior: 'smooth' })
+      if (typeof window !== 'undefined' && window.__lenis) {
+        window.__lenis.scrollTo(targetElement, { offset: 0, duration: 1.2 })
+      } else {
+        targetElement.scrollIntoView({ behavior: 'smooth' })
+      }
     }
   }
 

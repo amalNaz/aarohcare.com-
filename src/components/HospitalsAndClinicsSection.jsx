@@ -1,6 +1,8 @@
 import React from 'react'
+import { useScrollReveal } from '../hooks/useScrollReveal'
 
 export default function HospitalsAndClinicsSection() {
+  const containerRef = useScrollReveal({ threshold: 0.1 })
   const features = [
     {
       id: 'live-queue',
@@ -82,25 +84,25 @@ export default function HospitalsAndClinicsSection() {
   ]
 
   return (
-    <section className="w-full bg-white text-slate-900 pt-6 sm:pt-10 lg:pt-14 pb-20 sm:pb-28 lg:pb-36">
+    <section ref={containerRef} className="w-full bg-white text-slate-900 pt-6 sm:pt-10 lg:pt-14 pb-20 sm:pb-28 lg:pb-36">
       <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 xl:gap-20 items-start">
           {/* Left Column: Headline and Subtext */}
           <div className="lg:col-span-6 lg:sticky lg:top-28">
-            <h2 className="text-4xl sm:text-5xl lg:text-[4rem] xl:text-[4.5rem] font-bold tracking-tight text-[#161a1f] leading-[1.06]">
+            <h2 className="reveal-heading text-4xl sm:text-5xl lg:text-[4rem] xl:text-[4.5rem] font-bold tracking-tight text-[#161a1f] leading-[1.06]">
               Designed for <br />
               Hospitals and Clinics.
             </h2>
 
-            <p className="mt-6 sm:mt-8 text-sm sm:text-base lg:text-[1.05rem] text-slate-600 font-normal leading-relaxed max-w-md">
+            <p className="reveal-text mt-6 sm:mt-8 text-sm sm:text-base lg:text-[1.05rem] text-slate-600 font-normal leading-relaxed max-w-md">
               Streamline daily operations with smarter tools for seamless patient and staff management.
             </p>
           </div>
 
           {/* Right Column: 5 Feature Rows */}
-          <div className="lg:col-span-6 space-y-8 sm:space-y-10 lg:space-y-11">
+          <div className="reveal-group lg:col-span-6 space-y-8 sm:space-y-10 lg:space-y-11">
             {features.map((item) => (
-              <div key={item.id} className="flex items-start gap-5 sm:gap-6 group">
+              <div key={item.id} className="reveal-stagger-item flex items-start gap-5 sm:gap-6 group">
                 {/* Icon Container */}
                 <div className="w-8 h-8 sm:w-9 sm:h-9 text-[#1c2229] flex-shrink-0 flex items-center justify-center mt-0.5 transition-transform duration-300 group-hover:scale-110">
                   {item.icon}

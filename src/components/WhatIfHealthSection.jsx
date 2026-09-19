@@ -1,19 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { ScrollToPlugin } from 'gsap/ScrollToPlugin'
 
-gsap.registerPlugin(ScrollTrigger, ScrollToPlugin)
-
-// ============================================================================
-// CONFIGURATION & CONSTANTS
-// ============================================================================
-const CONFIG = {
-  stepAngle: 72, // 360° / 5 = 72° per checkpoint
-  totalSteps: 6, // 6 discrete points: 0 (Circle 1) -> 1 (Circle 2) -> 2 (Circle 3) -> 3 (Circle 4) -> 4 (Circle 5) -> 5 (Circle 1)
-  transitionDuration: 0.55, // Smooth cinematic rotation duration
-  scrollCooldown: 500, // Minimum ms between gestures to prevent multi-step skipping
-}
+gsap.registerPlugin(ScrollTrigger)
 
 // 5 Core Story States
 const STATES = [
@@ -49,17 +38,16 @@ const NODE_BASE_ANGLES = [0, 72, 144, 216, 288]
 
 export default function WhatIfHealthSection() {
   const containerRef = useRef(null)
+  const headerRef = useRef(null)
   const wheelRef = useRef(null)
   const connectorRef = useRef(null)
+  const contentWrapRef = useRef(null)
   const nodeBadgeRefs = useRef([])
   const nodeDotRefs = useRef([])
   const badgeTextRefs = useRef([])
   const stateCardRefs = useRef([])
 
   const [activeStep, setActiveStep] = useState(0)
-  const activeStepRef = useRef(0)
-  const isAnimatingRef = useRef(false)
-  const lastScrollTimeRef = useRef(0)
   const stRef = useRef(null)
 
   useEffect(() => {
@@ -69,318 +57,260 @@ export default function WhatIfHealthSection() {
     const container = containerRef.current
     const wheel = wheelRef.current
     const connector = connectorRef.current
+    const header = headerRef.current
+    const contentWrap = contentWrapRef.current
     if (!container || !wheel) return
 
-    // ========================================================================
-    // VISUAL STATE TRANSITION ENGINE
-    // ========================================================================
-    const applyStepVisuals = (targetStep, duration = CONFIG.transitionDuration) => {
-      const targetRotation = -targetStep * CONFIG.stepAngle
-      const counterRotation = targetStep * CONFIG.stepAngle
-      const activeStateIndex = targetStep % STATES.length // 0, 1, 2, 3, 4, and 0 for step 5
-
-      // 1. Rotate the wheel smoothly
-      if (wheel) {
-        gsap.to(wheel, {
-          rotation: targetRotation,
-          duration,
-          ease: 'power2.out',
-          overwrite: 'auto',
-        })
-      }
-
-      // 2. Counter-rotate the digits inside each badge to keep text upright
-      badgeTextRefs.current.forEach((textEl) => {
-        if (textEl) {
-          gsap.to(textEl, {
-            rotation: counterRotation,
-            duration,
-            ease: 'power2.out',
-            overwrite: 'auto',
-          })
-        }
-      })
-
-      // 3. Yellow/Grey Connector Bar: Brief pulse during transition, fade in at apex
-      if (connector) {
-        gsap.killTweensOf(connector)
-        const tl = gsap.timeline()
-        tl.to(connector, { opacity: 0.25, duration: duration * 0.25, ease: 'power1.out' })
-        tl.to(connector, { opacity: 1, duration: duration * 0.45, ease: 'power1.in' }, duration * 0.55)
-      }
-
-      // 4. Cross-fade text cards (activeStateIndex)
-      stateCardRefs.current.forEach((card, idx) => {
-        if (!card) return
-        gsap.killTweensOf(card)
-        if (idx === activeStateIndex) {
-          gsap.fromTo(
-            card,
-            { opacity: 0, y: 12, pointerEvents: 'none' },
-            {
-              opacity: 1,
-              y: 0,
-              duration: duration * 0.6,
-              delay: duration * 0.3,
-              ease: 'power2.out',
-              pointerEvents: 'auto',
-            }
-          )
-        } else {
-          gsap.to(card, {
-            opacity: 0,
-            y: -10,
-            duration: duration * 0.3,
-            ease: 'power1.inOut',
-            pointerEvents: 'none',
-          })
-        }
-      })
-
-      // 5. Update badge borders and dots
-      nodeBadgeRefs.current.forEach((badge, idx) => {
-        if (!badge) return
-        const dot = nodeDotRefs.current[idx]
-        gsap.killTweensOf(badge)
-        if (dot) gsap.killTweensOf(dot)
-
-        if (idx === activeStateIndex) {
-          gsap.to(badge, {
-            opacity: 1,
-            scale: 1,
-            borderColor: '#71717a',
-            color: '#ffffff',
-            duration: duration * 0.5,
-            delay: duration * 0.25,
-            ease: 'power2.out',
-          })
-          if (dot) {
-            gsap.to(dot, { opacity: 0, duration: duration * 0.3 })
-          }
-        } else {
-          gsap.to(badge, {
-            opacity: 0.5,
-            scale: 0.95,
-            borderColor: '#27272a',
-            color: '#71717a',
-            duration: duration * 0.3,
-            ease: 'power2.out',
-          })
-          if (dot) {
-            gsap.to(dot, { opacity: 0.6, duration: duration * 0.4, delay: duration * 0.2 })
-          }
-        }
-      })
-    }
-
     const ctx = gsap.context(() => {
-      // 1. Initialize connector bar (visible at state 0)
-      if (connector) {
-        gsap.set(connector, { opacity: 1, scaleY: 1 })
-      }
+      // 1. Initial State Setup (Ensures State 1 'Instant' is fully visible at entry)
+      if (connector) gsap.set(connector, { opacity: 1 })
 
-      // 2. Initialize all 5 cards
       stateCardRefs.current.forEach((card, idx) => {
         if (!card) return
         if (idx === 0) {
           gsap.set(card, { opacity: 1, y: 0, pointerEvents: 'auto' })
         } else {
-          gsap.set(card, { opacity: 0, y: 14, pointerEvents: 'none' })
+          gsap.set(card, { opacity: 0, y: 10, pointerEvents: 'none' })
         }
       })
 
-      // 3. Initialize node badges and dots
       nodeBadgeRefs.current.forEach((badge, idx) => {
         if (!badge) return
         const dot = nodeDotRefs.current[idx]
         if (idx === 0) {
-          gsap.set(badge, {
-            opacity: 1,
-            scale: 1,
-            borderColor: '#71717a',
-            color: '#ffffff',
-            backgroundColor: '#000000',
-          })
+          gsap.set(badge, { opacity: 1, scale: 1, borderColor: '#ffffff', color: '#ffffff', backgroundColor: '#000000' })
           if (dot) gsap.set(dot, { opacity: 0 })
         } else {
-          gsap.set(badge, {
-            opacity: 0.5,
-            scale: 0.95,
-            borderColor: '#27272a',
-            color: '#71717a',
-            backgroundColor: '#000000',
-          })
+          gsap.set(badge, { opacity: 0.45, scale: 0.95, borderColor: '#3f3f46', color: '#a1a1aa', backgroundColor: '#000000' })
           if (dot) gsap.set(dot, { opacity: 0.6 })
         }
       })
 
-      // ========================================================================
-      // SCROLLTRIGGER PIN CONTROLLER: 6 Discrete Checkpoints (0 to 5)
-      // 0: Circle 1 | 1: Circle 2 | 2: Circle 3 | 3: Circle 4 | 4: Circle 5 | 5: Circle 1
-      // ========================================================================
-      const snapPoints = [0, 0.2, 0.4, 0.6, 0.8, 1.0]
-
-      const st = ScrollTrigger.create({
-        trigger: container,
-        start: 'top top',
-        end: () => `+=${Math.max(2500, window.innerHeight * 2.8)}`,
-        pin: true,
-        anticipatePin: 1,
-        invalidateOnRefresh: true,
-        snap: {
-          snapTo: snapPoints,
-          duration: { min: 0.2, max: 0.45 },
-          ease: 'power2.out',
-        },
-        onEnter: () => {
-          // Entering from top: Show Circle 1 (Step 0)
-          activeStepRef.current = 0
-          setActiveStep(0)
-          applyStepVisuals(0, 0.3)
-        },
-        onEnterBack: () => {
-          // Entering from bottom: Show Circle 1 (Step 5 at 360°/0°)
-          activeStepRef.current = 5
-          setActiveStep(5)
-          applyStepVisuals(5, 0.3)
-        },
-        onLeave: () => {
-          activeStepRef.current = 5
-          setActiveStep(5)
-          applyStepVisuals(5, 0.2)
-        },
-        onLeaveBack: () => {
-          activeStepRef.current = 0
-          setActiveStep(0)
-          applyStepVisuals(0, 0.2)
-        },
-        onUpdate: (self) => {
-          if (!isAnimatingRef.current) {
-            const nearestStep = Math.min(5, Math.max(0, Math.round(self.progress * 5)))
-            if (nearestStep !== activeStepRef.current) {
-              activeStepRef.current = nearestStep
-              setActiveStep(nearestStep)
-              applyStepVisuals(nearestStep, 0.3)
-            }
+      // ======================================================================
+      // SECTION ENTRANCE ANIMATION (Header & Wheel Entrance)
+      // ======================================================================
+      if (header && wheel) {
+        gsap.fromTo(
+          header,
+          { opacity: 0, y: 30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.85,
+            ease: 'cubic-bezier(0.22, 1, 0.36, 1)',
+            scrollTrigger: {
+              trigger: container,
+              start: 'top 85%',
+              toggleActions: 'play none none none',
+            },
           }
+        )
+
+        gsap.fromTo(
+          wheel,
+          { opacity: 0, scale: 0.95 },
+          {
+            opacity: 1,
+            scale: 1,
+            duration: 0.95,
+            ease: 'cubic-bezier(0.22, 1, 0.36, 1)',
+            scrollTrigger: {
+              trigger: container,
+              start: 'top 85%',
+              toggleActions: 'play none none none',
+            },
+          }
+        )
+      }
+
+      // ======================================================================
+      // 5-STAGE MASTER GSAP TIMELINE (4 Transitions: 0->1, 1->2, 2->3, 3->4)
+      // Snap points: 0.0 (State 1), 0.25 (State 2), 0.50 (State 3), 0.75 (State 4), 1.0 (State 5)
+      // ======================================================================
+      const snapPoints = [0, 0.25, 0.5, 0.75, 1.0]
+      const validTextRefs = badgeTextRefs.current.filter(Boolean)
+
+      const masterTimeline = gsap.timeline({
+        scrollTrigger: {
+          trigger: container,
+          start: 'top top',
+          end: () => `+=${Math.max(2600, window.innerHeight * 2.8)}`,
+          pin: true,
+          scrub: 0.4,
+          snap: {
+            snapTo: snapPoints,
+            duration: { min: 0.25, max: 0.45 },
+            ease: 'power2.out',
+          },
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+          onUpdate: (self) => {
+            const stepIndex = Math.min(4, Math.floor(self.progress * 4 + 0.5))
+            setActiveStep(stepIndex)
+          },
         },
       })
 
-      stRef.current = st
+      // Duration per stage transition on the timeline
+      const STAGE_DUR = 1.0
+
+      // Ensure State 1 card starts fully opaque at timeline time 0
+      if (stateCardRefs.current[0]) {
+        masterTimeline.set(stateCardRefs.current[0], { opacity: 1, y: 0, pointerEvents: 'auto' }, 0)
+      }
+
+      // Animate through 4 transition intervals connecting the 5 states
+      for (let i = 0; i < 4; i++) {
+        const nextIdx = i + 1
+        const startTime = i * STAGE_DUR
+
+        // 1. Wheel Rotation (72° per stage)
+        masterTimeline.to(
+          wheel,
+          {
+            rotation: -(i + 1) * 72,
+            ease: 'power1.inOut',
+            duration: STAGE_DUR,
+          },
+          startTime
+        )
+
+        // 2. Counter-rotate badge numbers to keep digits upright
+        if (validTextRefs.length > 0) {
+          masterTimeline.to(
+            validTextRefs,
+            {
+              rotation: (i + 1) * 72,
+              ease: 'power1.inOut',
+              duration: STAGE_DUR,
+            },
+            startTime
+          )
+        }
+
+        // 3. Current Card Fades Out (Starts after 20% hold, completes by 50%)
+        const currentCard = stateCardRefs.current[i]
+        if (currentCard) {
+          masterTimeline.to(
+            currentCard,
+            {
+              opacity: 0,
+              y: -8,
+              ease: 'power1.in',
+              duration: STAGE_DUR * 0.3,
+              pointerEvents: 'none',
+            },
+            startTime + STAGE_DUR * 0.2
+          )
+        }
+
+        // 4. Next Card Fades In (Starts at 55%, completes by 85%, holds till next stage)
+        const nextCard = stateCardRefs.current[nextIdx]
+        if (nextCard) {
+          masterTimeline.fromTo(
+            nextCard,
+            { opacity: 0, y: 10, pointerEvents: 'none' },
+            {
+              opacity: 1,
+              y: 0,
+              ease: 'power1.out',
+              duration: STAGE_DUR * 0.3,
+              pointerEvents: 'auto',
+              immediateRender: false,
+            },
+            startTime + STAGE_DUR * 0.55
+          )
+        }
+
+        // 5. Current Badge Dims
+        const currentBadge = nodeBadgeRefs.current[i]
+        const currentDot = nodeDotRefs.current[i]
+        if (currentBadge) {
+          masterTimeline.to(
+            currentBadge,
+            {
+              opacity: 0.45,
+              scale: 0.95,
+              borderColor: '#3f3f46',
+              color: '#a1a1aa',
+              duration: STAGE_DUR * 0.35,
+              ease: 'power1.inOut',
+            },
+            startTime + STAGE_DUR * 0.2
+          )
+          if (currentDot) {
+            masterTimeline.to(
+              currentDot,
+              { opacity: 0.6, duration: STAGE_DUR * 0.35, ease: 'power1.inOut' },
+              startTime + STAGE_DUR * 0.2
+            )
+          }
+        }
+
+        // 6. Next Badge Illuminates
+        const nextBadge = nodeBadgeRefs.current[nextIdx]
+        const nextDot = nodeDotRefs.current[nextIdx]
+        if (nextBadge) {
+          masterTimeline.to(
+            nextBadge,
+            {
+              opacity: 1,
+              scale: 1,
+              borderColor: '#ffffff',
+              color: '#ffffff',
+              duration: STAGE_DUR * 0.35,
+              ease: 'power1.inOut',
+            },
+            startTime + STAGE_DUR * 0.55
+          )
+          if (nextDot) {
+            masterTimeline.to(
+              nextDot,
+              { opacity: 0, duration: STAGE_DUR * 0.35, ease: 'power1.inOut' },
+              startTime + STAGE_DUR * 0.55
+            )
+          }
+        }
+
+        // 7. Connector Line Pulse at apex
+        if (connector) {
+          masterTimeline.fromTo(
+            connector,
+            { opacity: 0.4 },
+            { opacity: 1, duration: STAGE_DUR * 0.3, ease: 'power1.out', immediateRender: false },
+            startTime + STAGE_DUR * 0.6
+          )
+        }
+      }
+
+      stRef.current = masterTimeline.scrollTrigger
     }, containerRef)
 
     // ========================================================================
-    // DISCRETE CHECKPOINT CONTROLLER WITH ScrollToPlugin
+    // DIRECT BADGE CLICK NAVIGATION
     // ========================================================================
-    const animateToStep = (targetStep) => {
+    window.__whatIfAnimateToStep = (index) => {
       const st = stRef.current
       if (!st) return
-      isAnimatingRef.current = true
-      activeStepRef.current = targetStep
-      setActiveStep(targetStep)
 
-      const targetProgress = targetStep / (CONFIG.totalSteps - 1)
+      setActiveStep(index)
+      const targetProgress = index / 4
       const targetScroll = st.start + targetProgress * (st.end - st.start)
 
-      applyStepVisuals(targetStep, CONFIG.transitionDuration)
-
-      gsap.to(window, {
-        scrollTo: { y: targetScroll, autoKill: false },
-        duration: CONFIG.transitionDuration,
-        ease: 'power2.out',
-        overwrite: 'auto',
-        onComplete: () => {
-          setTimeout(() => {
-            isAnimatingRef.current = false
-          }, 80)
-        },
-      })
-    }
-
-    // Expose for badge click handler
-    window.__whatIfAnimateToStep = (index) => {
-      if (index === 0 && activeStepRef.current >= 4) {
-        animateToStep(5)
+      if (typeof window !== 'undefined' && window.__lenis) {
+        window.__lenis.scrollTo(targetScroll, {
+          duration: 0.9,
+          easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        })
       } else {
-        animateToStep(index)
+        gsap.to(window, {
+          scrollTo: { y: targetScroll, autoKill: false },
+          duration: 0.9,
+          ease: 'power2.out',
+          overwrite: 'auto',
+        })
       }
     }
-
-    // ========================================================================
-    // SMOOTH SCROLL WHEEL FLOW
-    // 1 -> 2 -> 3 -> 4 -> 5 -> next scroll shows Circle 1 -> then next section smoothly starts!
-    // ========================================================================
-    const handleWheel = (e) => {
-      const st = stRef.current
-      if (!st || !st.isActive) return
-
-      if (Math.abs(e.deltaY) < 12) return
-
-      const now = Date.now()
-      const timeSinceLast = now - lastScrollTimeRef.current
-
-      if (e.deltaY > 0) {
-        // Scrolling DOWN
-        if (activeStepRef.current < CONFIG.totalSteps - 1) {
-          // Progress through: 0 -> 1 -> 2 -> 3 -> 4 -> 5 (Circle 1 reached cleanly)
-          e.preventDefault()
-          if (timeSinceLast > CONFIG.scrollCooldown && !isAnimatingRef.current) {
-            lastScrollTimeRef.current = now
-            animateToStep(activeStepRef.current + 1)
-          }
-        }
-        // When already at step 5 (Circle 1), natural unpin scroll smoothly transitions into next section!
-      } else if (e.deltaY < 0) {
-        // Scrolling UP
-        if (activeStepRef.current > 0) {
-          // Reverse through: 5 -> 4 -> 3 -> 2 -> 1 -> 0
-          e.preventDefault()
-          if (timeSinceLast > CONFIG.scrollCooldown && !isAnimatingRef.current) {
-            lastScrollTimeRef.current = now
-            animateToStep(activeStepRef.current - 1)
-          }
-        }
-        // When already at step 0 (Circle 1), natural scroll smoothly transitions into previous section!
-      }
-    }
-
-    // Touch Support for Mobile / Tablets
-    let touchStartY = 0
-    const handleTouchStart = (e) => {
-      touchStartY = e.touches[0].clientY
-    }
-
-    const handleTouchMove = (e) => {
-      const st = stRef.current
-      if (!st || !st.isActive) return
-      const currentY = e.touches[0].clientY
-      const deltaY = touchStartY - currentY
-
-      if (Math.abs(deltaY) < 30) return
-
-      const now = Date.now()
-      const timeSinceLast = now - lastScrollTimeRef.current
-
-      if (deltaY > 0 && activeStepRef.current < CONFIG.totalSteps - 1) {
-        e.preventDefault()
-        if (timeSinceLast > CONFIG.scrollCooldown && !isAnimatingRef.current) {
-          lastScrollTimeRef.current = now
-          touchStartY = currentY
-          animateToStep(activeStepRef.current + 1)
-        }
-      } else if (deltaY < 0 && activeStepRef.current > 0) {
-        e.preventDefault()
-        if (timeSinceLast > CONFIG.scrollCooldown && !isAnimatingRef.current) {
-          lastScrollTimeRef.current = now
-          touchStartY = currentY
-          animateToStep(activeStepRef.current - 1)
-        }
-      }
-    }
-
-    window.addEventListener('wheel', handleWheel, { passive: false })
-    window.addEventListener('touchstart', handleTouchStart, { passive: true })
-    window.addEventListener('touchmove', handleTouchMove, { passive: false })
 
     const refreshTimer = setTimeout(() => {
       ScrollTrigger.refresh()
@@ -388,9 +318,6 @@ export default function WhatIfHealthSection() {
 
     return () => {
       delete window.__whatIfAnimateToStep
-      window.removeEventListener('wheel', handleWheel)
-      window.removeEventListener('touchstart', handleTouchStart)
-      window.removeEventListener('touchmove', handleTouchMove)
       clearTimeout(refreshTimer)
       ctx.revert()
     }
@@ -402,8 +329,12 @@ export default function WhatIfHealthSection() {
       ref={containerRef}
       className="relative w-full h-screen bg-black text-white overflow-hidden select-none z-10 scroll-mt-0"
     >
-      {/* Top Header — Clear clearance below mobile navbar */}
-      <div className="absolute top-20 sm:top-20 md:top-14 lg:top-16 left-6 sm:left-10 lg:left-16 z-30 pointer-events-none">
+      {/* Top Header — Clear clearance below mobile navbar with smooth popping entrance */}
+      <div
+        ref={headerRef}
+        className="absolute top-20 sm:top-20 md:top-14 lg:top-16 left-6 sm:left-10 lg:left-16 z-30 pointer-events-none"
+        style={{ willChange: 'opacity, transform' }}
+      >
         <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[4rem] font-bold tracking-tight text-white leading-[1.08]">
           What If <br />
           Health Was ...
@@ -423,13 +354,22 @@ export default function WhatIfHealthSection() {
       </div>
 
       {/* Center Active Story Card Container (Inside / below the arc apex) */}
-      <div className="absolute top-[calc(44vh+38px)] sm:top-[calc(42vh+48px)] md:top-[calc(42vh+58px)] lg:top-[calc(40vh+68px)] left-1/2 -translate-x-1/2 w-full max-w-lg px-4 text-center z-20 pointer-events-none">
+      <div
+        ref={contentWrapRef}
+        className="absolute top-[calc(44vh+38px)] sm:top-[calc(42vh+48px)] md:top-[calc(42vh+58px)] lg:top-[calc(40vh+68px)] left-1/2 -translate-x-1/2 w-full max-w-lg h-32 sm:h-36 md:h-40 lg:h-44 px-4 text-center z-20 pointer-events-none"
+        style={{ willChange: 'opacity, transform' }}
+      >
         {STATES.map((state, index) => (
           <div
             key={state.num}
             ref={(el) => (stateCardRefs.current[index] = el)}
             className="absolute inset-0 flex flex-col items-center justify-start text-center"
-            style={{ willChange: 'opacity, transform' }}
+            style={{
+              opacity: index === 0 ? 1 : 0,
+              transform: index === 0 ? 'translateY(0px)' : 'translateY(10px)',
+              pointerEvents: index === 0 ? 'auto' : 'none',
+              willChange: 'opacity, transform',
+            }}
           >
             {/* Active Concept Title */}
             <h3 className="text-2xl sm:text-3xl md:text-3xl lg:text-4xl font-bold text-white mb-1.5 sm:mb-2 tracking-tight">

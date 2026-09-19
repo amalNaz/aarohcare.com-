@@ -6,6 +6,7 @@ import {
   AccordionContent,
 } from '@/components/animate-ui/components/radix/accordion'
 import faqRunningImg from '../assets/faq-running.jpg'
+import { useScrollReveal } from '../hooks/useScrollReveal'
 
 const faqs = [
   {
@@ -71,15 +72,21 @@ const faqs = [
 ]
 
 export default function FAQSection() {
+  const containerRef = useScrollReveal({ threshold: 0.1 })
+
   return (
-    <section id="faq" className="w-full bg-[#f4f4f4] text-slate-900 py-16 sm:py-20 lg:py-28 relative scroll-mt-12">
+    <section
+      id="faq"
+      ref={containerRef}
+      className="w-full bg-[#f4f4f4] text-slate-900 py-16 sm:py-20 lg:py-28 relative scroll-mt-12"
+    >
       <div className="max-w-6xl xl:max-w-7xl 2xl:max-w-[1360px] mx-auto px-6 sm:px-8 lg:px-12 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 xl:gap-16 items-start">
           {/* =========================================================================
-              LEFT COLUMN (Sticky on Desktop): Sticks & waits until accordions finish
+              LEFT COLUMN: Sticky on Desktop — Waits until all accordions finish
               ========================================================================= */}
           <div className="lg:col-span-6 xl:col-span-6 w-full lg:sticky lg:top-24 lg:self-start">
-            <div className="relative w-full aspect-[1.12/1] sm:aspect-[1.1/1] lg:h-[480px] xl:h-[530px] rounded-[10px] sm:rounded-[12px] overflow-hidden bg-slate-900 shadow-sm">
+            <div className="reveal-image relative w-full aspect-[1.12/1] sm:aspect-[1.1/1] lg:h-[480px] xl:h-[530px] rounded-[10px] sm:rounded-[12px] overflow-hidden bg-slate-900 shadow-sm">
               <img
                 src={faqRunningImg}
                 alt="Aarohcare"
@@ -96,32 +103,38 @@ export default function FAQSection() {
           </div>
 
           {/* =========================================================================
-              RIGHT COLUMN: Heading & Scrollable 12-Item Radix UI Accordion Flow
+              RIGHT COLUMN: Heading & Staggered Radix UI Accordion Flow
               ========================================================================= */}
           <div className="lg:col-span-6 xl:col-span-6 w-full flex flex-col justify-start">
             {/* Heading: Refined navy heading aligned with top of the image */}
-            <h2 className="text-2xl sm:text-3xl lg:text-[2.1rem] font-semibold text-[#092240] tracking-tight mb-6 sm:mb-8 leading-tight">
+            <h2 className="reveal-heading text-2xl sm:text-3xl lg:text-[2.1rem] font-semibold text-[#092240] tracking-tight mb-6 sm:mb-8 leading-tight">
               Frequently Asked Questions
             </h2>
 
             {/* 12 AarohCare FAQ Questions: Radix Accordion with smooth transitions */}
-            <Accordion
-              type="single"
-              collapsible
-              defaultValue="item-1"
-              className="w-full"
-            >
-              {faqs.map((faq, index) => (
-                <AccordionItem key={index} value={`item-${index + 1}`}>
-                  <AccordionTrigger showArrow={true}>
-                    {faq.question}
-                  </AccordionTrigger>
-                  <AccordionContent keepRendered={false}>
-                    {faq.answer}
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
+            <div className="reveal-group w-full">
+              <Accordion
+                type="single"
+                collapsible
+                defaultValue="item-1"
+                className="w-full"
+              >
+                {faqs.map((faq, index) => (
+                  <AccordionItem
+                    key={index}
+                    value={`item-${index + 1}`}
+                    className="reveal-stagger-item"
+                  >
+                    <AccordionTrigger showArrow={true}>
+                      {faq.question}
+                    </AccordionTrigger>
+                    <AccordionContent keepRendered={false}>
+                      {faq.answer}
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            </div>
           </div>
         </div>
       </div>

@@ -1,6 +1,8 @@
 import React from 'react'
+import { useScrollReveal } from '../hooks/useScrollReveal'
 
 export default function JourneySection() {
+  const containerRef = useScrollReveal({ threshold: 0.1 })
   const steps = [
     {
       title: 'Smart OP Booking',
@@ -52,10 +54,14 @@ export default function JourneySection() {
   ]
 
   return (
-    <section id="how-it-works" className="w-full bg-white text-slate-900 pt-16 sm:pt-24 pb-24 sm:pb-36 overflow-hidden scroll-mt-12">
+    <section
+      id="how-it-works"
+      ref={containerRef}
+      className="w-full bg-white text-slate-900 pt-16 sm:pt-24 pb-24 sm:pb-36 overflow-hidden scroll-mt-12"
+    >
       {/* Main Headline (Full-width with comfortable margin padding) */}
       <div className="w-full px-6 sm:px-10 lg:px-16 xl:px-20 mb-16 sm:mb-24">
-        <h2 className="text-4xl sm:text-5xl lg:text-[3.75rem] font-bold tracking-tight text-[#08182b] max-w-4xl leading-[1.1]">
+        <h2 className="reveal-heading text-4xl sm:text-5xl lg:text-[3.75rem] font-bold tracking-tight text-[#08182b] max-w-4xl leading-[1.1]">
           A seamless journey from <br />
           token to treatment
         </h2>
@@ -63,11 +69,11 @@ export default function JourneySection() {
 
       {/* Full-Width 4-Column Grid Track with Dashed Borders */}
       <div className="w-full border-t border-dashed border-slate-300">
-        <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="reveal-group w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
           {steps.map((step, index) => (
             <div
               key={step.title}
-              className={`flex flex-col justify-between py-10 sm:py-12 lg:py-14 px-6 sm:px-8 lg:px-10 xl:px-14 ${
+              className={`reveal-stagger-item flex flex-col justify-between py-10 sm:py-12 lg:py-14 px-6 sm:px-8 lg:px-10 xl:px-14 ${
                 index < steps.length - 1
                   ? 'border-b sm:border-b-0 border-dashed border-slate-300'
                   : ''
