@@ -40,12 +40,20 @@ export default function SmoothScroll({ children }) {
     gsap.ticker.add(updateTicker)
     gsap.ticker.lagSmoothing(0)
 
-    // Handle smooth anchor scrolling across the entire page
+    // Handle smooth anchor scrolling across the page (ignoring page routes like #terms)
     const handleAnchorClick = (e) => {
       const target = e.target.closest('a[href^="#"]')
       if (!target) return
       const href = target.getAttribute('href')
-      if (!href || href === '#') return
+      if (
+        !href ||
+        href === '#' ||
+        href === '#terms' ||
+        href === '#terms-and-conditions' ||
+        href.startsWith('#terms')
+      ) {
+        return
+      }
 
       const element = document.querySelector(href)
       if (element) {

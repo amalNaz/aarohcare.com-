@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useLayoutEffect } from 'react'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Hero from './components/Hero'
 import ZeroWaitSection from './components/ZeroWaitSection'
 import JourneySection from './components/JourneySection'
@@ -14,33 +15,32 @@ import Footer from './components/Footer'
 import SmoothScroll from './components/SmoothScroll'
 import TermsPage from './pages/TermsPage'
 
+const isTermsRoute = () => {
+  if (typeof window === 'undefined') return false
+  const hash = window.location.hash.toLowerCase()
+  const path = window.location.pathname.toLowerCase()
+  const search = window.location.search.toLowerCase()
+  return (
+    hash === '#terms' ||
+    hash === '#terms-and-conditions' ||
+    hash.startsWith('#/terms') ||
+    hash.startsWith('#terms') ||
+    path === '/terms' ||
+    path === '/terms-and-conditions' ||
+    path.endsWith('/terms') ||
+    search.includes('terms')
+  )
+}
+
 export default function App() {
   const [currentPage, setCurrentPage] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const hash = window.location.hash.toLowerCase()
-      const path = window.location.pathname.toLowerCase()
-      if (
-        hash === '#terms' ||
-        hash === '#terms-and-conditions' ||
-        path === '/terms' ||
-        path === '/terms-and-conditions'
-      ) {
-        return 'terms'
-      }
-    }
-    return 'home'
+    return isTermsRoute() ? 'terms' : 'home'
   })
 
+  // Listen to browser forward/back & hash changes
   useEffect(() => {
     const handleLocationChange = () => {
-      const hash = window.location.hash.toLowerCase()
-      const path = window.location.pathname.toLowerCase()
-      if (
-        hash === '#terms' ||
-        hash === '#terms-and-conditions' ||
-        path === '/terms' ||
-        path === '/terms-and-conditions'
-      ) {
+      if (isTermsRoute()) {
         setCurrentPage('terms')
       } else {
         setCurrentPage('home')
@@ -55,30 +55,58 @@ export default function App() {
     }
   }, [])
 
+  // Reset scroll and recalculate heights when page changes
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0)
+    if (typeof window !== 'undefined') {
+      if (window.__lenis) {
+        window.__lenis.scrollTo(0, { immediate: true })
+        window.__lenis.resize()
+      }
+      setTimeout(() => {
+        window.scrollTo(0, 0)
+        if (window.__lenis) {
+          window.__lenis.scrollTo(0, { immediate: true })
+          window.__lenis.resize()
+        }
+        ScrollTrigger.refresh()
+      }, 50)
+    }
+  }, [currentPage])
+
   const navigateTo = (page, hashTarget) => {
     if (page === 'terms') {
-      window.location.hash = 'terms'
+      if (window.location.hash !== '#terms') {
+        window.location.hash = 'terms'
+      }
       setCurrentPage('terms')
-      window.scrollTo(0, 0)
     } else {
-      if (hashTarget && hashTarget.startsWith('#')) {
+      if (hashTarget && hashTarget.startsWith('#') && hashTarget !== '#hero') {
         window.location.hash = hashTarget
       } else {
         if (window.location.hash.includes('terms')) {
-          history.replaceState(null, '', window.location.pathname)
+          history.pushState(null, '', window.location.pathname)
         }
       }
       setCurrentPage('home')
+
       setTimeout(() => {
-        if (hashTarget && hashTarget.startsWith('#')) {
+        if (hashTarget && hashTarget.startsWith('#') && hashTarget !== '#hero') {
           const el = document.querySelector(hashTarget)
           if (el) {
-            el.scrollIntoView({ behavior: 'smooth' })
+            if (window.__lenis) {
+              window.__lenis.scrollTo(el, { offset: 0, duration: 1.2 })
+            } else {
+              el.scrollIntoView({ behavior: 'smooth' })
+            }
             return
           }
         }
         window.scrollTo(0, 0)
-      }, 50)
+        if (window.__lenis) {
+          window.__lenis.scrollTo(0, { immediate: true })
+        }
+      }, 100)
     }
   }
 

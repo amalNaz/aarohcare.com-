@@ -254,6 +254,10 @@ export default function TermsPage({ onNavigateHome }) {
 
   useEffect(() => {
     window.scrollTo(0, 0)
+    if (typeof window !== 'undefined' && window.__lenis) {
+      window.__lenis.scrollTo(0, { immediate: true })
+      window.__lenis.resize()
+    }
     document.title = 'Terms & Conditions — AarohCare'
   }, [])
 
@@ -295,14 +299,22 @@ export default function TermsPage({ onNavigateHome }) {
   const scrollToClause = (id) => {
     const element = document.getElementById(id)
     if (element) {
-      const yOffset = -90
-      const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset
-      window.scrollTo({ top: y, behavior: 'smooth' })
+      if (typeof window !== 'undefined' && window.__lenis) {
+        window.__lenis.scrollTo(element, { offset: -90, duration: 1.0 })
+      } else {
+        const yOffset = -90
+        const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset
+        window.scrollTo({ top: y, behavior: 'smooth' })
+      }
     }
   }
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    if (typeof window !== 'undefined' && window.__lenis) {
+      window.__lenis.scrollTo(0, { duration: 1.0 })
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
   }
 
   return (

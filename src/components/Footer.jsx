@@ -20,7 +20,7 @@ export default function Footer({ onNavigate }) {
   ]
 
   const handleLinkClick = (e, href) => {
-    if (href === '#terms') {
+    if (href === '#terms' || href === '/terms' || href.includes('terms') || href === '#terms-and-conditions') {
       e.preventDefault()
       if (onNavigate) {
         onNavigate('terms')
