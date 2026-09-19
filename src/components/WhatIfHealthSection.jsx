@@ -10,12 +10,12 @@ gsap.registerPlugin(ScrollTrigger, ScrollToPlugin)
 // ============================================================================
 const CONFIG = {
   stepAngle: 72, // 360° / 5 = 72° per checkpoint
-  totalRotation: 288, // 4 steps * 72° = 288° total rotation across 5 states
-  transitionDuration: 0.6, // Smooth cinematic rotation duration
-  scrollCooldown: 650, // Minimum ms between wheel gestures to prevent multi-step skipping
+  totalSteps: 6, // 0 (Node 1) -> 1 (Node 2) -> 2 (Node 3) -> 3 (Node 4) -> 4 (Node 5) -> 5 (Node 1 again)
+  transitionDuration: 0.55, // Smooth cinematic rotation duration
+  scrollCooldown: 500, // Minimum ms between gestures to prevent multi-step skipping
 }
 
-// Exactly 5 states matching the reference sequence
+// 5 Core Story States
 const STATES = [
   {
     num: '1',
@@ -71,6 +71,108 @@ export default function WhatIfHealthSection() {
     const connector = connectorRef.current
     if (!container || !wheel) return
 
+    // ========================================================================
+    // VISUAL STATE TRANSITION ENGINE
+    // ========================================================================
+    const applyStepVisuals = (targetStep, duration = CONFIG.transitionDuration) => {
+      const targetRotation = -targetStep * CONFIG.stepAngle
+      const counterRotation = targetStep * CONFIG.stepAngle
+      const activeStateIndex = targetStep % STATES.length // 0, 1, 2, 3, 4, then back to 0 at step 5
+
+      // 1. Rotate the wheel smoothly
+      if (wheel) {
+        gsap.to(wheel, {
+          rotation: targetRotation,
+          duration,
+          ease: 'power2.out',
+          overwrite: 'auto',
+        })
+      }
+
+      // 2. Counter-rotate the digits inside each badge to keep text upright
+      badgeTextRefs.current.forEach((textEl) => {
+        if (textEl) {
+          gsap.to(textEl, {
+            rotation: counterRotation,
+            duration,
+            ease: 'power2.out',
+            overwrite: 'auto',
+          })
+        }
+      })
+
+      // 3. Yellow/Grey Connector Bar: Brief pulse during transition, fade in at apex
+      if (connector) {
+        gsap.killTweensOf(connector)
+        const tl = gsap.timeline()
+        tl.to(connector, { opacity: 0.25, duration: duration * 0.25, ease: 'power1.out' })
+        tl.to(connector, { opacity: 1, duration: duration * 0.45, ease: 'power1.in' }, duration * 0.55)
+      }
+
+      // 4. Cross-fade text cards (activeStateIndex)
+      stateCardRefs.current.forEach((card, idx) => {
+        if (!card) return
+        gsap.killTweensOf(card)
+        if (idx === activeStateIndex) {
+          gsap.fromTo(
+            card,
+            { opacity: 0, y: 12, pointerEvents: 'none' },
+            {
+              opacity: 1,
+              y: 0,
+              duration: duration * 0.6,
+              delay: duration * 0.3,
+              ease: 'power2.out',
+              pointerEvents: 'auto',
+            }
+          )
+        } else {
+          gsap.to(card, {
+            opacity: 0,
+            y: -10,
+            duration: duration * 0.3,
+            ease: 'power1.inOut',
+            pointerEvents: 'none',
+          })
+        }
+      })
+
+      // 5. Update badge borders and dots
+      nodeBadgeRefs.current.forEach((badge, idx) => {
+        if (!badge) return
+        const dot = nodeDotRefs.current[idx]
+        gsap.killTweensOf(badge)
+        if (dot) gsap.killTweensOf(dot)
+
+        if (idx === activeStateIndex) {
+          gsap.to(badge, {
+            opacity: 1,
+            scale: 1,
+            borderColor: '#71717a',
+            color: '#ffffff',
+            duration: duration * 0.5,
+            delay: duration * 0.25,
+            ease: 'power2.out',
+          })
+          if (dot) {
+            gsap.to(dot, { opacity: 0, duration: duration * 0.3 })
+          }
+        } else {
+          gsap.to(badge, {
+            opacity: 0.5,
+            scale: 0.95,
+            borderColor: '#27272a',
+            color: '#71717a',
+            duration: duration * 0.3,
+            ease: 'power2.out',
+          })
+          if (dot) {
+            gsap.to(dot, { opacity: 0.6, duration: duration * 0.4, delay: duration * 0.2 })
+          }
+        }
+      })
+    }
+
     const ctx = gsap.context(() => {
       // 1. Initialize connector bar (visible at state 0)
       if (connector) {
@@ -113,39 +215,46 @@ export default function WhatIfHealthSection() {
       })
 
       // ========================================================================
-      // SCROLLTRIGGER PIN CONTROLLER WITH CHECKPOINT SNAP
+      // SCROLLTRIGGER PIN CONTROLLER WITH 6-CHECKPOINT PROGRESSION (1 -> 2 -> 3 -> 4 -> 5 -> 1)
       // ========================================================================
+      const snapPoints = [0, 0.2, 0.4, 0.6, 0.8, 1.0]
+
       const st = ScrollTrigger.create({
         trigger: container,
         start: 'top top',
-        end: () => `+=${Math.max(2000, window.innerHeight * 2.5)}`,
+        end: () => `+=${Math.max(2400, window.innerHeight * 2.8)}`,
         pin: true,
         anticipatePin: 1,
         invalidateOnRefresh: true,
         snap: {
-          snapTo: [0, 0.25, 0.5, 0.75, 1.0],
+          snapTo: snapPoints,
           duration: { min: 0.2, max: 0.45 },
           ease: 'power2.out',
         },
         onEnter: () => {
+          // Always start at Circle 1 when entering from top
           activeStepRef.current = 0
           setActiveStep(0)
+          applyStepVisuals(0, 0.3)
         },
         onEnterBack: () => {
-          activeStepRef.current = 4
-          setActiveStep(4)
+          // Always start at Circle 1 when entering from bottom as requested
+          activeStepRef.current = 0
+          setActiveStep(0)
+          applyStepVisuals(0, 0.3)
         },
         onLeave: () => {
-          activeStepRef.current = 4
-          setActiveStep(4)
+          activeStepRef.current = 5
+          setActiveStep(5)
         },
         onLeaveBack: () => {
           activeStepRef.current = 0
           setActiveStep(0)
+          applyStepVisuals(0, 0.3)
         },
         onUpdate: (self) => {
           if (!isAnimatingRef.current) {
-            const nearestStep = Math.min(4, Math.max(0, Math.round(self.progress * 4)))
+            const nearestStep = Math.min(5, Math.max(0, Math.round(self.progress * 5)))
             if (nearestStep !== activeStepRef.current) {
               activeStepRef.current = nearestStep
               setActiveStep(nearestStep)
@@ -159,107 +268,6 @@ export default function WhatIfHealthSection() {
     }, containerRef)
 
     // ========================================================================
-    // VISUAL STATE TRANSITION ENGINE
-    // ========================================================================
-    const applyStepVisuals = (targetStep, duration = CONFIG.transitionDuration) => {
-      const targetRotation = -targetStep * CONFIG.stepAngle
-      const counterRotation = targetStep * CONFIG.stepAngle
-
-      // 1. Rotate the wheel smoothly
-      if (wheel) {
-        gsap.to(wheel, {
-          rotation: targetRotation,
-          duration,
-          ease: 'power2.out',
-          overwrite: 'auto',
-        })
-      }
-
-      // 2. Counter-rotate the digits inside each badge to keep text upright
-      badgeTextRefs.current.forEach((textEl) => {
-        if (textEl) {
-          gsap.to(textEl, {
-            rotation: counterRotation,
-            duration,
-            ease: 'power2.out',
-            overwrite: 'auto',
-          })
-        }
-      })
-
-      // 3. Yellow/Grey Connector Bar: Brief fade out during transition, fade in at apex
-      if (connector) {
-        gsap.killTweensOf(connector)
-        const tl = gsap.timeline()
-        tl.to(connector, { opacity: 0, duration: duration * 0.25, ease: 'power1.out' })
-        tl.to(connector, { opacity: 1, duration: duration * 0.45, ease: 'power1.in' }, duration * 0.55)
-      }
-
-      // 4. Cross-fade text cards
-      stateCardRefs.current.forEach((card, idx) => {
-        if (!card) return
-        gsap.killTweensOf(card)
-        if (idx === targetStep) {
-          gsap.fromTo(
-            card,
-            { opacity: 0, y: 12, pointerEvents: 'none' },
-            {
-              opacity: 1,
-              y: 0,
-              duration: duration * 0.6,
-              delay: duration * 0.35,
-              ease: 'power2.out',
-              pointerEvents: 'auto',
-            }
-          )
-        } else {
-          gsap.to(card, {
-            opacity: 0,
-            y: -10,
-            duration: duration * 0.3,
-            ease: 'power1.inOut',
-            pointerEvents: 'none',
-          })
-        }
-      })
-
-      // 5. Update badge borders and dots
-      nodeBadgeRefs.current.forEach((badge, idx) => {
-        if (!badge) return
-        const dot = nodeDotRefs.current[idx]
-        gsap.killTweensOf(badge)
-        if (dot) gsap.killTweensOf(dot)
-
-        if (idx === targetStep) {
-          gsap.to(badge, {
-            opacity: 1,
-            scale: 1,
-            borderColor: '#71717a',
-            color: '#ffffff',
-            duration: duration * 0.5,
-            delay: duration * 0.3,
-            ease: 'power2.out',
-          })
-          if (dot) {
-            gsap.to(dot, { opacity: 0, duration: duration * 0.3 })
-          }
-        } else {
-          gsap.to(badge, {
-            opacity: 0.5,
-            scale: 0.95,
-            borderColor: '#27272a',
-            color: '#71717a',
-            duration: duration * 0.3,
-            ease: 'power2.out',
-          })
-          if (dot) {
-            gsap.to(dot, { opacity: 0.6, duration: duration * 0.4, delay: duration * 0.2 })
-          }
-        }
-      })
-    }
-
-    // ========================================================================
     // DISCRETE CHECKPOINT CONTROLLER WITH ScrollToPlugin
     // ========================================================================
     const animateToStep = (targetStep) => {
@@ -269,7 +277,7 @@ export default function WhatIfHealthSection() {
       activeStepRef.current = targetStep
       setActiveStep(targetStep)
 
-      const targetProgress = targetStep / (STATES.length - 1)
+      const targetProgress = targetStep / (CONFIG.totalSteps - 1)
       const targetScroll = st.start + targetProgress * (st.end - st.start)
 
       applyStepVisuals(targetStep, CONFIG.transitionDuration)
@@ -282,16 +290,23 @@ export default function WhatIfHealthSection() {
         onComplete: () => {
           setTimeout(() => {
             isAnimatingRef.current = false
-          }, 120)
+          }, 100)
         },
       })
     }
 
     // Expose for node click handler
-    window.__whatIfAnimateToStep = animateToStep
+    window.__whatIfAnimateToStep = (index) => {
+      // If user clicks node 0 and we're at step 4 or 5, go to 5 (full loop), else go to index
+      if (index === 0 && activeStepRef.current >= 4) {
+        animateToStep(5)
+      } else {
+        animateToStep(index)
+      }
+    }
 
     // ========================================================================
-    // ROBUST 1-SCROLL-PER-CIRCLE WHEEL INTERCEPTOR
+    // SMOOTH 1-SCROLL-PER-CIRCLE WHEEL INTERCEPTOR (1 -> 2 -> 3 -> 4 -> 5 -> 1)
     // ========================================================================
     const handleWheel = (e) => {
       const st = stRef.current
@@ -303,17 +318,17 @@ export default function WhatIfHealthSection() {
       const timeSinceLast = now - lastScrollTimeRef.current
 
       if (e.deltaY > 0) {
-        // User scrolling DOWN
-        if (activeStepRef.current < STATES.length - 1) {
+        // User scrolling DOWN: Step 0 -> 1 -> 2 -> 3 -> 4 -> 5 -> next section
+        if (activeStepRef.current < CONFIG.totalSteps - 1) {
           e.preventDefault()
           if (timeSinceLast > CONFIG.scrollCooldown && !isAnimatingRef.current) {
             lastScrollTimeRef.current = now
             animateToStep(activeStepRef.current + 1)
           }
         }
-        // If at state 4, allow default scroll to proceed naturally down to next section
+        // At step 5 (Circle 1 reached again), let default scroll down proceed seamlessly
       } else if (e.deltaY < 0) {
-        // User scrolling UP
+        // User scrolling UP: Step 5 -> 4 -> 3 -> 2 -> 1 -> 0 -> previous section
         if (activeStepRef.current > 0) {
           e.preventDefault()
           if (timeSinceLast > CONFIG.scrollCooldown && !isAnimatingRef.current) {
@@ -321,7 +336,7 @@ export default function WhatIfHealthSection() {
             animateToStep(activeStepRef.current - 1)
           }
         }
-        // If at state 0, allow default scroll to proceed naturally up to previous section
+        // At step 0 (Circle 1), let default scroll up proceed seamlessly
       }
     }
 
@@ -342,7 +357,7 @@ export default function WhatIfHealthSection() {
       const now = Date.now()
       const timeSinceLast = now - lastScrollTimeRef.current
 
-      if (deltaY > 0 && activeStepRef.current < STATES.length - 1) {
+      if (deltaY > 0 && activeStepRef.current < CONFIG.totalSteps - 1) {
         e.preventDefault()
         if (timeSinceLast > CONFIG.scrollCooldown && !isAnimatingRef.current) {
           lastScrollTimeRef.current = now
@@ -440,7 +455,6 @@ export default function WhatIfHealthSection() {
           const dotTopPercent = 50 + 50 * Math.sin(angleRad)
 
           // Position the badge center radially outward by 28px
-          // (50% * (R + 28px) / R -> roughly 52.0% radius)
           const badgeRadiusPercent = 52.0
           const badgeLeftPercent = 50 + badgeRadiusPercent * Math.cos(angleRad)
           const badgeTopPercent = 50 + badgeRadiusPercent * Math.sin(angleRad)
@@ -491,4 +505,3 @@ export default function WhatIfHealthSection() {
     </section>
   )
 }
-
