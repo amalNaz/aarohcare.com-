@@ -3,7 +3,7 @@ import Hero from './components/Hero'
 import ZeroWaitSection from './components/ZeroWaitSection'
 import JourneySection from './components/JourneySection'
 import WhatIfHealthSection from './components/WhatIfHealthSection'
-import EveryoneEverywhereSection from './components/EveryoneEverywhereSection'
+import HealthPartnerSection from './components/HealthPartnerSection'
 
 export default function App() {
   return (
@@ -20,8 +20,9 @@ export default function App() {
       {/* What If Health Was... (5-State Pinned Orbital Scroll Section) */}
       <WhatIfHealthSection />
 
-      {/* Everyone. Everywhere. (Warm Beige Follow-Up Section) */}
-      <EveryoneEverywhereSection />
+      {/* Your Health Partner We Imagined. (Beige Split Section) */}
+      <HealthPartnerSection />
     </div>
   )
 }
+
