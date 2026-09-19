@@ -113,47 +113,49 @@ export default function App() {
   return (
     <SmoothScroll>
       <div className="min-h-screen bg-white w-full">
-        {currentPage === 'terms' ? (
+        {/* Dedicated Terms Page View */}
+        <div style={{ display: currentPage === 'terms' ? 'block' : 'none' }}>
           <TermsPage onNavigateHome={(hash) => navigateTo('home', hash)} />
-        ) : (
-          <>
-            {/* Hero Section */}
-            <Hero />
+        </div>
 
-            {/* Zero Wait Section with Moving Cards */}
-            <ZeroWaitSection />
+        {/* Home Page View with Pinned Sections */}
+        <div style={{ display: currentPage === 'home' ? 'block' : 'none' }}>
+          {/* Hero Section */}
+          <Hero />
 
-            {/* Journey Section with 4 Steps */}
-            <JourneySection />
+          {/* Zero Wait Section with Moving Cards */}
+          <ZeroWaitSection />
 
-            {/* What If Health Was... (5-State Pinned Orbital Scroll Section) */}
-            <WhatIfHealthSection />
+          {/* Journey Section with 4 Steps */}
+          <JourneySection />
 
-            {/* Your Health Partner We Imagined. (Beige Split Section) */}
-            <HealthPartnerSection />
+          {/* What If Health Was... (5-State Pinned Orbital Scroll Section) */}
+          <WhatIfHealthSection />
 
-            {/* Clinic Side Operations Management Section */}
-            <ClinicOperationsSection />
+          {/* Your Health Partner We Imagined. (Beige Split Section) */}
+          <HealthPartnerSection />
 
-            {/* Designed for Hospitals and Clinics Section */}
-            <HospitalsAndClinicsSection />
+          {/* Clinic Side Operations Management Section */}
+          <ClinicOperationsSection />
 
-            {/* Labs Features for the Site Section */}
-            <LabFeaturesSection />
+          {/* Designed for Hospitals and Clinics Section */}
+          <HospitalsAndClinicsSection />
 
-            {/* Founders / Team Section */}
-            <FoundersSection />
+          {/* Labs Features for the Site Section */}
+          <LabFeaturesSection />
 
-            {/* Frequently Asked Questions Section */}
-            <FAQSection />
+          {/* Founders / Team Section */}
+          <FoundersSection />
 
-            {/* Early Pilot Enrollment / CTA Section */}
-            <CTAEnrollmentSection />
+          {/* Frequently Asked Questions Section */}
+          <FAQSection />
 
-            {/* AarohaCare Technologies Footer Section */}
-            <Footer onNavigate={navigateTo} />
-          </>
-        )}
+          {/* Early Pilot Enrollment / CTA Section */}
+          <CTAEnrollmentSection />
+
+          {/* AarohaCare Technologies Footer Section */}
+          <Footer onNavigate={navigateTo} />
+        </div>
       </div>
     </SmoothScroll>
   )
