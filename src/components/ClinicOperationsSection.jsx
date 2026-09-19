@@ -28,9 +28,15 @@ export default function ClinicOperationsSection() {
 
         {/* Custom High-Fidelity iPad Pro Mockup Showcase */}
         <div className="reveal-image mt-8 sm:mt-10 lg:mt-12 max-w-4xl lg:max-w-5xl xl:max-w-[1020px] mx-auto">
-          <div className="relative group">
+          <a
+            href="https://wa.me/919072043356?text=Hi%20AarohCare%2C%20I%20would%20like%20to%20request%20a%20demo%20of%20the%20Clinic%20Side%20Operations%20Management%20Dashboard."
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Click to request a live demo on WhatsApp"
+            className="relative group block cursor-pointer"
+          >
             {/* iPad Chassis (No external blurry floor shadow) */}
-            <div className="relative bg-[#0d0f12] p-[9px] sm:p-[13px] lg:p-[15px] rounded-[28px] sm:rounded-[38px] lg:rounded-[44px] shadow-[0_20px_50px_-10px_rgba(0,0,0,0.18),0_0_0_1px_rgba(0,0,0,0.06)] transition-transform duration-500 group-hover:scale-[1.008]">
+            <div className="relative bg-[#0d0f12] p-[9px] sm:p-[13px] lg:p-[15px] rounded-[28px] sm:rounded-[38px] lg:rounded-[44px] shadow-[0_20px_50px_-10px_rgba(0,0,0,0.18),0_0_0_1px_rgba(0,0,0,0.06)] transition-transform duration-500 group-hover:scale-[1.01]">
               {/* Landscape Front Camera & Sensor Header */}
               <div className="absolute top-[4px] sm:top-[6px] lg:top-[7px] left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-20 pointer-events-none">
                 {/* Camera Lens */}
@@ -51,11 +57,19 @@ export default function ClinicOperationsSection() {
                   loading="lazy"
                 />
 
+                {/* Hover Demo Pill Overlay */}
+                <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none">
+                  <span className="bg-[#18181b]/95 text-white border border-neutral-700 text-xs sm:text-sm font-semibold px-4 py-2 rounded-full shadow-xl flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                    <span>Request Clinic Demo on WhatsApp</span>
+                  </span>
+                </div>
+
                 {/* Subtle Glass Surface Reflection Sheen */}
                 <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.02] to-white/[0.06] pointer-events-none rounded-[20px] sm:rounded-[26px] lg:rounded-[30px]" />
               </div>
             </div>
-          </div>
+          </a>
         </div>
       </div>
     </section>

@@ -66,34 +66,51 @@ export default function ZeroWaitSection() {
       {/* Full-Width Infinite Moving Card Track (Bleeds to Viewport Edges) */}
       <div className="w-full overflow-hidden select-none py-2 reveal-meta">
         <div className="animate-card-marquee flex gap-6 sm:gap-8 px-3">
-          {allCards.map((card, index) => (
-            <div
-              key={`${card.id}-${index}`}
-              className="group relative flex-shrink-0 w-[78vw] sm:w-[50vw] md:w-[42vw] lg:w-[38vw] xl:w-[480px] max-w-[500px] aspect-[4/5] rounded-2xl sm:rounded-3xl overflow-hidden bg-slate-900 shadow-md hover:shadow-xl transition-all duration-300"
-            >
-              {/* Card Image */}
-              <img
-                src={card.image}
-                alt={card.alt}
-                className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out"
-                loading="lazy"
-                draggable={false}
-              />
+          {allCards.map((card, index) => {
+            const waText = encodeURIComponent(`Hi AarohCare, I would like to know more about ${card.title}.`)
+            const waUrl = `https://wa.me/919072043356?text=${waText}`
 
-              {/* Dark Gradient Overlay for High Contrast */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent pointer-events-none" />
+            return (
+              <a
+                key={`${card.id}-${index}`}
+                href={waUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                title={`Chat on WhatsApp about ${card.title}`}
+                className="group relative flex-shrink-0 w-[78vw] sm:w-[50vw] md:w-[42vw] lg:w-[38vw] xl:w-[480px] max-w-[500px] aspect-[4/5] rounded-2xl sm:rounded-3xl overflow-hidden bg-slate-900 shadow-md hover:shadow-2xl transition-all duration-300 block cursor-pointer"
+              >
+                {/* Card Image */}
+                <img
+                  src={card.image}
+                  alt={card.alt}
+                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out"
+                  loading="lazy"
+                  draggable={false}
+                />
 
-              {/* Card Text Content */}
-              <div className="absolute inset-x-0 bottom-0 p-6 sm:p-8 text-white flex flex-col justify-end">
-                <h3 className="text-lg sm:text-xl font-bold tracking-tight text-white mb-2 leading-snug">
-                  {card.title}
-                </h3>
-                <p className="text-xs sm:text-sm text-slate-200/90 leading-relaxed font-light">
-                  {card.description}
-                </p>
-              </div>
-            </div>
-          ))}
+                {/* Dark Gradient Overlay for High Contrast */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent pointer-events-none" />
+
+                {/* Top WhatsApp Pill Badge on Hover */}
+                <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
+                  <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-white bg-emerald-600/90 backdrop-blur-md px-3 py-1.5 rounded-full shadow-lg">
+                    <span>Chat on WhatsApp</span>
+                    <span>✦</span>
+                  </span>
+                </div>
+
+                {/* Card Text Content */}
+                <div className="absolute inset-x-0 bottom-0 p-6 sm:p-8 text-white flex flex-col justify-end">
+                  <h3 className="text-lg sm:text-xl font-bold tracking-tight text-white mb-2 leading-snug">
+                    {card.title}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-slate-200/90 leading-relaxed font-light">
+                    {card.description}
+                  </p>
+                </div>
+              </a>
+            )
+          })}
         </div>
       </div>
     </section>

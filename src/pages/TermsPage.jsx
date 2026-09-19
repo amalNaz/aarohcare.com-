@@ -214,7 +214,7 @@ const SECTIONS = [
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1">
           <a
-            href="mailto:aarohcare.in@gmail.com"
+            href="mailto:aarohcare.in@gmail.com?subject=AarohCare%20Terms%20Inquiry"
             className="flex items-center gap-3 p-3.5 rounded-xl bg-slate-50 hover:bg-blue-50/70 border border-slate-200/80 hover:border-blue-200 transition-all duration-200 group"
           >
             <div className="w-9 h-9 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
@@ -227,14 +227,19 @@ const SECTIONS = [
           </a>
 
           <a
-            href="tel:+919072043356"
-            className="flex items-center gap-3 p-3.5 rounded-xl bg-slate-50 hover:bg-blue-50/70 border border-slate-200/80 hover:border-blue-200 transition-all duration-200 group"
+            href="https://wa.me/919072043356?text=Hi%20AarohCare%2C%20I%20have%20a%20question%20regarding%20the%20Terms%20and%20Conditions."
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-3 p-3.5 rounded-xl bg-slate-50 hover:bg-emerald-50/70 border border-slate-200/80 hover:border-emerald-200 transition-all duration-200 group"
           >
             <div className="w-9 h-9 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
               <Phone className="w-4 h-4" />
             </div>
             <div>
-              <p className="text-[11px] font-medium text-slate-500 uppercase tracking-wider">Call Us</p>
+              <p className="text-[11px] font-medium text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+                <span>WhatsApp / Call</span>
+                <span className="text-[9px] bg-emerald-100 text-emerald-700 px-1 rounded font-bold">LIVE</span>
+              </p>
               <p className="text-xs sm:text-sm font-semibold text-slate-800">+91 9072043356</p>
             </div>
           </a>

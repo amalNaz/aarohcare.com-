@@ -14,6 +14,7 @@ import CTAEnrollmentSection from './components/CTAEnrollmentSection'
 import Footer from './components/Footer'
 import SmoothScroll from './components/SmoothScroll'
 import TermsPage from './pages/TermsPage'
+import WhatsAppButton from './components/WhatsAppButton'
 
 const isTermsRoute = () => {
   if (typeof window === 'undefined') return false
@@ -154,6 +155,9 @@ export default function App() {
             <Footer onNavigate={navigateTo} />
           </>
         )}
+
+        {/* Global Floating WhatsApp Chat Pill Widget */}
+        <WhatsAppButton />
       </div>
     </SmoothScroll>
   )

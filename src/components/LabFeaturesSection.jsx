@@ -78,32 +78,48 @@ export default function LabFeaturesSection() {
           <div className="reveal-image lg:col-span-7 xl:col-span-7 relative w-full pt-4 lg:pt-0">
             {/* Desktop Absolute Bleed Container */}
             <div className="w-full lg:absolute lg:top-4 xl:top-2 lg:left-0 lg:w-[132%] xl:w-[136%] 2xl:w-[140%]">
-              {/* iPad Physical Chassis: Champagne Gold / Sand Metallic Rim matching reference */}
-              <div className="relative bg-[#0d1015] p-[8px] sm:p-[10px] lg:p-[12px] rounded-tl-[32px] sm:rounded-tl-[40px] lg:rounded-tl-[48px] rounded-bl-[32px] sm:rounded-bl-[40px] lg:rounded-bl-[48px] rounded-tr-none rounded-br-none border-[3px] border-r-0 border-[#c8aa84] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.6),0_0_0_1px_rgba(200,170,132,0.25)] transition-transform duration-300 hover:scale-[1.004]">
-                {/* Left Bezel Front Camera & Ambient Sensor */}
-                <div className="absolute left-[3px] sm:left-[4px] lg:left-[4.5px] top-1/2 -translate-y-1/2 flex flex-col items-center gap-1.5 z-20 pointer-events-none">
-                  {/* Camera lens with optical reflection */}
-                  <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[#1a1f26] ring-[0.5px] ring-slate-600/70 flex items-center justify-center">
-                    <div className="w-0.5 h-0.5 sm:w-1 sm:h-1 rounded-full bg-[#0a3556]" />
+              <a
+                href="https://wa.me/919072043356?text=Hi%20AarohCare%2C%20I%20would%20like%20to%20know%20more%20about%20the%20Digital%20Lab%20Reports%20module."
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Click to inquire about Lab Module on WhatsApp"
+                className="block group cursor-pointer"
+              >
+                {/* iPad Physical Chassis: Champagne Gold / Sand Metallic Rim matching reference */}
+                <div className="relative bg-[#0d1015] p-[8px] sm:p-[10px] lg:p-[12px] rounded-tl-[32px] sm:rounded-tl-[40px] lg:rounded-tl-[48px] rounded-bl-[32px] sm:rounded-bl-[40px] lg:rounded-bl-[48px] rounded-tr-none rounded-br-none border-[3px] border-r-0 border-[#c8aa84] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.6),0_0_0_1px_rgba(200,170,132,0.25)] transition-transform duration-300 group-hover:scale-[1.008]">
+                  {/* Left Bezel Front Camera & Ambient Sensor */}
+                  <div className="absolute left-[3px] sm:left-[4px] lg:left-[4.5px] top-1/2 -translate-y-1/2 flex flex-col items-center gap-1.5 z-20 pointer-events-none">
+                    {/* Camera lens with optical reflection */}
+                    <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[#1a1f26] ring-[0.5px] ring-slate-600/70 flex items-center justify-center">
+                      <div className="w-0.5 h-0.5 sm:w-1 sm:h-1 rounded-full bg-[#0a3556]" />
+                    </div>
+                    {/* Ambient sensor */}
+                    <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-[#11161d]" />
                   </div>
-                  {/* Ambient sensor */}
-                  <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-[#11161d]" />
-                </div>
 
-                {/* Inner Screen Display Glass */}
-                <div className="relative w-full rounded-tl-[24px] sm:rounded-tl-[30px] lg:rounded-tl-[36px] rounded-bl-[24px] sm:rounded-bl-[30px] lg:rounded-bl-[36px] rounded-tr-none rounded-br-none overflow-hidden bg-white ring-1 ring-black/10 shadow-inner">
-                  {/* Dashboard Screenshot */}
-                  <img
-                    src={labDashboardImg}
-                    alt="AarohCare Lab Command Center Dashboard"
-                    className="w-full h-auto object-contain select-none block"
-                    loading="lazy"
-                  />
+                  {/* Inner Screen Display Glass */}
+                  <div className="relative w-full rounded-tl-[24px] sm:rounded-tl-[30px] lg:rounded-tl-[36px] rounded-bl-[24px] sm:rounded-bl-[30px] lg:rounded-bl-[36px] rounded-tr-none rounded-br-none overflow-hidden bg-white ring-1 ring-black/10 shadow-inner">
+                    {/* Dashboard Screenshot */}
+                    <img
+                      src={labDashboardImg}
+                      alt="AarohCare Lab Command Center Dashboard"
+                      className="w-full h-auto object-contain select-none block"
+                      loading="lazy"
+                    />
 
-                  {/* Subtle glass glare reflection */}
-                  <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.015] to-white/[0.045] pointer-events-none" />
+                    {/* Hover Demo Pill Overlay */}
+                    <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none">
+                      <span className="bg-[#18181b]/95 text-white border border-neutral-700 text-xs sm:text-sm font-semibold px-4 py-2 rounded-full shadow-xl flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                        <span>Inquire About Lab Module on WhatsApp</span>
+                      </span>
+                    </div>
+
+                    {/* Subtle glass glare reflection */}
+                    <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.015] to-white/[0.045] pointer-events-none" />
+                  </div>
                 </div>
-              </div>
+              </a>
             </div>
           </div>
         </div>

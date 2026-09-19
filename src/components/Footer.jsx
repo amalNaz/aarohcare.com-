@@ -103,15 +103,20 @@ export default function Footer({ onNavigate }) {
             {/* Direct Contact Row */}
             <div className="reveal-meta flex flex-wrap items-center gap-y-2 gap-x-3 text-xs sm:text-sm text-neutral-300 font-medium mt-6 pt-2">
               <a
-                href="tel:+919072043356"
-                className="inline-flex items-center gap-1.5 hover:text-white transition-colors duration-200"
+                href="https://wa.me/919072043356?text=Hi%20AarohCare%2C%20I%20would%20like%20to%20connect%20with%20your%20team."
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Chat on WhatsApp"
+                className="inline-flex items-center gap-1.5 hover:text-emerald-400 transition-colors duration-200 group"
               >
-                <Phone className="w-3.5 h-3.5 text-neutral-400" />
+                <Phone className="w-3.5 h-3.5 text-neutral-400 group-hover:text-emerald-400 transition-colors" />
                 <span>+91 9072043356</span>
+                <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-mono font-normal">WhatsApp</span>
               </a>
               <span className="text-neutral-600 select-none">•</span>
               <a
-                href="mailto:aarohcare.in@gmail.com"
+                href="mailto:aarohcare.in@gmail.com?subject=Inquiry%20-%20AarohCare"
+                title="Send an Email"
                 className="inline-flex items-center gap-1.5 hover:text-white transition-colors duration-200"
               >
                 <Mail className="w-3.5 h-3.5 text-neutral-400" />
