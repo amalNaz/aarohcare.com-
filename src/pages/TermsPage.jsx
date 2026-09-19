@@ -16,11 +16,8 @@ import {
   RefreshCw,
   Mail,
   Phone,
-  Printer,
   ChevronRight,
   ArrowUp,
-  Share2,
-  Check,
 } from 'lucide-react'
 import { TextAnimate } from '@/registry/magicui/text-animate'
 import Footer from '../components/Footer'
@@ -250,7 +247,6 @@ const SECTIONS = [
 export default function TermsPage({ onNavigateHome }) {
   const [activeSection, setActiveSection] = useState('about')
   const [showScrollTop, setShowScrollTop] = useState(false)
-  const [copied, setCopied] = useState(false)
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -284,18 +280,6 @@ export default function TermsPage({ onNavigateHome }) {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  const handlePrint = () => {
-    window.print()
-  }
-
-  const handleCopyLink = () => {
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(window.location.href)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
-    }
-  }
-
   const scrollToClause = (id) => {
     const element = document.getElementById(id)
     if (element) {
@@ -319,9 +303,10 @@ export default function TermsPage({ onNavigateHome }) {
 
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-900 flex flex-col justify-between selection:bg-blue-500/20 selection:text-blue-900">
-      {/* Top Floating Navigation Header */}
+      {/* Top Clean Navigation Header */}
       <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200/80 shadow-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+          {/* Back to Home Button */}
           <button
             type="button"
             onClick={() => onNavigateHome && onNavigateHome()}
@@ -331,42 +316,16 @@ export default function TermsPage({ onNavigateHome }) {
             <span>Back to Home</span>
           </button>
 
-          {/* AarohCare Brand Logo */}
+          {/* AarohCare Brand Name Only (No Icon) */}
           <button
             type="button"
             onClick={() => onNavigateHome && onNavigateHome('#hero')}
-            className="flex items-center gap-2.5 cursor-pointer bg-transparent border-none"
+            className="cursor-pointer bg-transparent border-none p-0 focus:outline-none"
           >
-            <div className="w-7 h-7 rounded-md bg-blue-600 text-white flex items-center justify-center p-1 shadow-xs">
-              <svg viewBox="0 0 24 24" fill="none" className="w-full h-full stroke-white stroke-[2.5]">
-                <path d="M12 2L3 21h4.5l2-4.5h5l2 4.5H21L12 2z" fill="#ffffff" stroke="none" />
-              </svg>
-            </div>
-            <span className="font-bold text-base sm:text-lg tracking-tight text-slate-900">AarohCare</span>
+            <span className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 hover:opacity-85 transition-opacity">
+              AarohCare
+            </span>
           </button>
-
-          {/* Header Action Buttons */}
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={handleCopyLink}
-              title="Copy Page Link"
-              className="hidden sm:inline-flex items-center gap-1.5 text-xs font-medium text-slate-600 hover:text-slate-900 border border-slate-200 hover:border-slate-300 px-3 py-1.5 rounded-lg transition-colors cursor-pointer bg-white"
-            >
-              {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Share2 className="w-3.5 h-3.5" />}
-              <span>{copied ? 'Copied' : 'Share'}</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={handlePrint}
-              title="Print Terms Document"
-              className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-600 hover:text-slate-900 border border-slate-200 hover:border-slate-300 px-3 py-1.5 rounded-lg transition-colors cursor-pointer bg-white"
-            >
-              <Printer className="w-3.5 h-3.5" />
-              <span className="hidden xs:inline">Print</span>
-            </button>
-          </div>
         </div>
       </header>
 
