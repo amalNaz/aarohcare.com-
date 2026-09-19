@@ -16,7 +16,7 @@ export default function Hero({ videoSrc = '/hero-bg.mp4' }) {
   }, [videoSrc])
 
   return (
-    <section className="relative w-full hero-gradient-bg text-white overflow-hidden pb-16 sm:pb-24 min-h-[620px]">
+    <section id="hero" className="relative w-full hero-gradient-bg text-white overflow-hidden pb-16 sm:pb-24 min-h-[620px]">
       {/* Background Video Element with Gradient Overlays */}
       <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-0">
         <video
@@ -36,7 +36,7 @@ export default function Hero({ videoSrc = '/hero-bg.mp4' }) {
       {/* Header / Navbar */}
       <Navbar />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 pt-12 sm:pt-20 lg:pt-24">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 pt-24 sm:pt-32 lg:pt-36">
         {/* Main Headline */}
         <div className="max-w-3xl mb-24 sm:mb-32 lg:mb-40">
           <h1 className="text-5xl sm:text-7xl lg:text-[5.75rem] font-bold tracking-tight leading-[1.04] text-white drop-shadow-md">
@@ -117,7 +117,7 @@ export default function Hero({ videoSrc = '/hero-bg.mp4' }) {
 
               <div>
                 <a
-                  href="#explore"
+                  href="#how-it-works"
                   className="group inline-flex items-center gap-2.5 bg-black/90 hover:bg-black text-white pl-5 pr-2 py-1.5 rounded-full text-xs sm:text-sm font-medium border border-slate-700/60 shadow-lg transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
                 >
                   <span>Explore More</span>

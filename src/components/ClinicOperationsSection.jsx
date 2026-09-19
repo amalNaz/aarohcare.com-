@@ -3,7 +3,7 @@ import clinicDashboardImg from '../assets/clinic-dashboard-screen.jpg'
 
 export default function ClinicOperationsSection() {
   return (
-    <section className="w-full bg-white text-slate-900 pt-16 sm:pt-20 lg:pt-24 pb-8 sm:pb-12 lg:pb-16 overflow-hidden">
+    <section id="products" className="w-full bg-white text-slate-900 pt-16 sm:pt-20 lg:pt-24 pb-8 sm:pb-12 lg:pb-16 overflow-hidden scroll-mt-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Heading */}
         <div className="text-center max-w-3xl mx-auto">

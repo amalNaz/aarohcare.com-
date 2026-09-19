@@ -398,12 +398,13 @@ export default function WhatIfHealthSection() {
 
   return (
     <section
+      id="features"
       ref={containerRef}
-      className="relative w-full h-screen bg-black text-white overflow-hidden select-none z-10"
+      className="relative w-full h-screen bg-black text-white overflow-hidden select-none z-10 scroll-mt-0"
     >
-      {/* Top Header — Anchored at Upper-Left matching reference */}
-      <div className="absolute top-8 left-8 sm:top-12 sm:left-14 lg:top-14 lg:left-20 z-30 pointer-events-none">
-        <h2 className="text-4xl sm:text-5xl lg:text-[4rem] font-bold tracking-tight text-white leading-[1.05]">
+      {/* Top Header — Clear clearance below mobile navbar */}
+      <div className="absolute top-20 sm:top-20 md:top-14 lg:top-16 left-6 sm:left-10 lg:left-16 z-30 pointer-events-none">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[4rem] font-bold tracking-tight text-white leading-[1.08]">
           What If <br />
           Health Was ...
         </h2>
@@ -412,17 +413,17 @@ export default function WhatIfHealthSection() {
       {/* Apex Indicator: Amber Dot & Vertical Connector Line (Only extends DOWNWARDS) */}
       <div
         ref={connectorRef}
-        className="absolute top-[42vh] left-1/2 -translate-x-1/2 flex flex-col items-center pointer-events-none z-20"
+        className="absolute top-[44vh] sm:top-[42vh] md:top-[42vh] lg:top-[40vh] left-1/2 -translate-x-1/2 flex flex-col items-center pointer-events-none z-20"
         style={{ willChange: 'opacity, transform' }}
       >
         {/* Solid Amber Dot centered on the arc path */}
-        <div className="w-2.5 h-2.5 rounded-full bg-[#f59e0b] shadow-[0_0_8px_rgba(245,158,11,0.8)] -translate-y-1/2" />
+        <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#f59e0b] shadow-[0_0_8px_rgba(245,158,11,0.8)] -translate-y-1/2" />
         {/* Crisp Straight Vertical Line extending down into concept text */}
-        <div className="w-[1px] h-32 sm:h-36 bg-[#8e8e93]/75 -mt-0.5" />
+        <div className="w-[1px] h-8 sm:h-10 md:h-12 lg:h-14 bg-[#8e8e93]/75 -mt-0.5" />
       </div>
 
       {/* Center Active Story Card Container (Inside / below the arc apex) */}
-      <div className="absolute top-[calc(42vh+125px)] sm:top-[calc(42vh+135px)] left-1/2 -translate-x-1/2 w-full max-w-lg px-4 text-center z-20 pointer-events-none">
+      <div className="absolute top-[calc(44vh+38px)] sm:top-[calc(42vh+48px)] md:top-[calc(42vh+58px)] lg:top-[calc(40vh+68px)] left-1/2 -translate-x-1/2 w-full max-w-lg px-4 text-center z-20 pointer-events-none">
         {STATES.map((state, index) => (
           <div
             key={state.num}
@@ -431,22 +432,22 @@ export default function WhatIfHealthSection() {
             style={{ willChange: 'opacity, transform' }}
           >
             {/* Active Concept Title */}
-            <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2.5 tracking-tight">
+            <h3 className="text-2xl sm:text-3xl md:text-3xl lg:text-4xl font-bold text-white mb-1.5 sm:mb-2 tracking-tight">
               {state.title}
             </h3>
 
             {/* Active Concept Description */}
-            <p className="text-xs sm:text-sm text-neutral-400 font-normal max-w-xs mx-auto leading-relaxed">
+            <p className="text-[13px] sm:text-sm md:text-base text-neutral-300 font-normal max-w-[300px] sm:max-w-sm md:max-w-md mx-auto leading-relaxed">
               {state.description}
             </p>
           </div>
         ))}
       </div>
 
-      {/* Giant Rotating Orbital Wheel — Center is at (50%, 50%), Top Apex aligns at 42vh */}
+      {/* Giant Rotating Orbital Wheel — Center is at (50%, 50%), Top Apex aligns at top-[44vh]/[40vh] */}
       <div
         ref={wheelRef}
-        className="absolute top-[42vh] left-1/2 -translate-x-1/2 w-[1400px] h-[1400px] sm:w-[1500px] sm:h-[1500px] lg:w-[1550px] lg:h-[1550px] rounded-full border border-neutral-800 pointer-events-none select-none z-10"
+        className="absolute top-[44vh] sm:top-[42vh] md:top-[42vh] lg:top-[40vh] left-1/2 -translate-x-1/2 w-[1050px] h-[1050px] sm:w-[1250px] sm:h-[1250px] md:w-[1450px] md:h-[1450px] lg:w-[1650px] lg:h-[1650px] rounded-full border border-neutral-800 pointer-events-none select-none z-10"
         style={{ willChange: 'transform' }}
       >
         {/* 5 Numbered Orbit Nodes Distributed around 360° at every 72° */}
@@ -458,7 +459,7 @@ export default function WhatIfHealthSection() {
           const dotLeftPercent = 50 + 50 * Math.cos(angleRad)
           const dotTopPercent = 50 + 50 * Math.sin(angleRad)
 
-          // Position the badge center radially outward by 28px
+          // Position the badge center radially outward
           const badgeRadiusPercent = 52.0
           const badgeLeftPercent = 50 + badgeRadiusPercent * Math.cos(angleRad)
           const badgeTopPercent = 50 + badgeRadiusPercent * Math.sin(angleRad)
@@ -468,7 +469,7 @@ export default function WhatIfHealthSection() {
               {/* Orbit Arc Dot (Positioned exactly on the arc circumference) */}
               <div
                 ref={(el) => (nodeDotRefs.current[index] = el)}
-                className="absolute w-2 h-2 rounded-full bg-white/70 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+                className="absolute w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-white/70 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
                 style={{
                   left: `${dotLeftPercent}%`,
                   top: `${dotTopPercent}%`,
@@ -485,7 +486,7 @@ export default function WhatIfHealthSection() {
                     window.__whatIfAnimateToStep(index)
                   }
                 }}
-                className="absolute w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-sans font-bold text-xs sm:text-sm bg-black border border-neutral-700/80 text-white -translate-x-1/2 -translate-y-1/2 cursor-pointer pointer-events-auto shadow-sm focus:outline-none transition-colors duration-200"
+                className="absolute w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center font-sans font-bold text-xs sm:text-xs md:text-sm bg-black border border-neutral-700/80 text-white -translate-x-1/2 -translate-y-1/2 cursor-pointer pointer-events-auto shadow-sm focus:outline-none transition-colors duration-200"
                 style={{
                   left: `${badgeLeftPercent}%`,
                   top: `${badgeTopPercent}%`,

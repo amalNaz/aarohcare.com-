@@ -29,7 +29,7 @@ export default function FoundersSection() {
   ]
 
   return (
-    <section className="w-full bg-[#edf1f5] text-slate-900 pt-16 sm:pt-20 lg:pt-24 pb-14 sm:pb-16 lg:pb-18 overflow-hidden">
+    <section id="about-us" className="w-full bg-white text-slate-900 pt-16 sm:pt-20 lg:pt-24 pb-14 sm:pb-16 lg:pb-18 overflow-hidden scroll-mt-12">
       <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16">
         {/* Section Headline */}
         <div className="text-center max-w-3xl mx-auto mb-16 sm:mb-20 lg:mb-24">

@@ -9,6 +9,7 @@ import HospitalsAndClinicsSection from './components/HospitalsAndClinicsSection'
 import LabFeaturesSection from './components/LabFeaturesSection'
 import FoundersSection from './components/FoundersSection'
 import FAQSection from './components/FAQSection'
+import CTAEnrollmentSection from './components/CTAEnrollmentSection'
 
 export default function App() {
   return (
@@ -42,9 +43,13 @@ export default function App() {
 
       {/* Frequently Asked Questions Section */}
       <FAQSection />
+
+      {/* Early Pilot Enrollment / CTA Section */}
+      <CTAEnrollmentSection />
     </div>
   )
 }
+
 
 
 
