@@ -57,10 +57,14 @@ export default function CTAEnrollmentSection() {
             <div className="relative bg-[#18365c]/80 hover:bg-[#1a3a63]/90 border border-[#2d5584]/60 rounded-full p-1.5 sm:p-2 pl-5 sm:pl-6 pr-1.5 sm:pr-2 flex items-center shadow-[0_10px_35px_-5px_rgba(0,0,0,0.4)] backdrop-blur-xl transition-all duration-300 focus-within:border-sky-400/80 focus-within:ring-4 focus-within:ring-sky-500/20 focus-within:bg-[#1c3e69]/95">
               <Mail className="w-[18px] h-[18px] text-slate-300/80 stroke-[1.7] shrink-0 mr-3" />
               <input
+                id="contact-input"
+                name="contact"
                 type="text"
                 value={contactValue}
                 onChange={(e) => setContactValue(e.target.value)}
                 placeholder="Enter your phone or email"
+                autoComplete="email tel"
+                aria-label="Enter your phone number or email address"
                 required
                 className="w-full bg-transparent text-white placeholder:text-slate-400/85 text-[14.5px] sm:text-[15.5px] font-normal outline-none py-2 pr-3"
               />

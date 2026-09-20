@@ -1,7 +1,7 @@
 import React from 'react'
-import amalImg from '../assets/amal-hisham.jpg'
-import aslamImg from '../assets/muhammed-aslam.jpg'
-import kiranImg from '../assets/kiran-vk.jpg'
+import amalImg from '../assets/amal-hisham.webp'
+import aslamImg from '../assets/muhammed-aslam.webp'
+import kiranImg from '../assets/kiran-vk.webp'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 import { TextAnimate } from '@/registry/magicui/text-animate'
 
@@ -55,15 +55,16 @@ export default function FoundersSection() {
           {founders.map((founder, idx) => (
             <div
               key={idx}
-              className="reveal-stagger-item bg-[#dde3ea] rounded-[28px] sm:rounded-[32px] lg:rounded-[36px] p-4 sm:p-4.5 lg:p-5 pb-7 sm:pb-8 flex flex-col justify-between transition-all duration-300 hover:shadow-lg hover:-translate-y-1 group"
+              className="reveal-stagger-item bg-[#dde3ea] rounded-[28px] sm:rounded-[32px] lg:rounded-[36px] p-4 sm:p-4.5 lg:p-5 pb-7 sm:pb-8 flex flex-col justify-between group cursor-pointer transition-shadow duration-300 md:hover:shadow-lg"
             >
               {/* Photo Box */}
               <div className="relative w-full aspect-[1/1.12] rounded-[22px] sm:rounded-[26px] lg:rounded-[28px] overflow-hidden bg-white shadow-sm">
                 <img
                   src={founder.image}
                   alt={founder.name}
-                  className={`reveal-image w-full h-full object-cover grayscale transition-transform duration-500 group-hover:scale-[1.02] ${founder.imagePosition}`}
+                  className={`w-full h-full object-cover grayscale transition-transform duration-500 ease-out md:group-hover:scale-105 ${founder.imagePosition}`}
                   loading="lazy"
+                  decoding="async"
                 />
               </div>
 

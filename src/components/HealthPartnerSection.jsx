@@ -1,6 +1,6 @@
 import React from 'react'
 import { ArrowUpRight } from 'lucide-react'
-import healthPartnerHandImg from '../assets/health-partner-hand.jpg'
+import healthPartnerHandImg from '../assets/health-partner-hand.webp'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 import { TextAnimate } from '@/registry/magicui/text-animate'
 
@@ -17,6 +17,7 @@ export default function HealthPartnerSection() {
             alt="AarohCare App Live OP Queue Tracking"
             className="reveal-image w-full h-full object-cover object-center pointer-events-none"
             loading="lazy"
+            decoding="async"
           />
         </div>
 

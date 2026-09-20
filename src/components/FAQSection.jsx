@@ -5,7 +5,7 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from '@/components/animate-ui/components/radix/accordion'
-import faqRunningImg from '../assets/faq-running.jpg'
+import faqRunningImg from '../assets/faq-running.webp'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 import { TextAnimate } from '@/registry/magicui/text-animate'
 
@@ -91,8 +91,11 @@ export default function FAQSection() {
               <img
                 src={faqRunningImg}
                 alt="Aarohcare"
+                width={640}
+                height={570}
                 className="w-full h-full object-cover object-center select-none"
                 loading="lazy"
+                decoding="async"
               />
               {/* Centered Aarohcare brand text */}
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none">

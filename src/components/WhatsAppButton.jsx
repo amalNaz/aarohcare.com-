@@ -10,31 +10,28 @@ export default function WhatsAppButton({
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMsg}`
 
   useEffect(() => {
+    let rafId = null
     const handleScroll = () => {
-      setIsScrolling(true)
+      if (rafId) return
+      rafId = requestAnimationFrame(() => {
+        rafId = null
+        setIsScrolling((prev) => (prev ? prev : true))
 
-      if (scrollTimeoutRef.current) {
-        clearTimeout(scrollTimeoutRef.current)
-      }
+        if (scrollTimeoutRef.current) {
+          clearTimeout(scrollTimeoutRef.current)
+        }
 
-      scrollTimeoutRef.current = setTimeout(() => {
-        setIsScrolling(false)
-      }, 350)
+        scrollTimeoutRef.current = setTimeout(() => {
+          setIsScrolling(false)
+        }, 350)
+      })
     }
 
     window.addEventListener('scroll', handleScroll, { passive: true })
 
-    // Also attach to Lenis scroll if available
-    let unbindLenis = null
-    if (typeof window !== 'undefined' && window.__lenis) {
-      unbindLenis = window.__lenis.on('scroll', handleScroll)
-    }
-
     return () => {
+      if (rafId) cancelAnimationFrame(rafId)
       window.removeEventListener('scroll', handleScroll)
-      if (typeof unbindLenis === 'function') {
-        unbindLenis()
-      }
       if (scrollTimeoutRef.current) {
         clearTimeout(scrollTimeoutRef.current)
       }
@@ -44,7 +41,7 @@ export default function WhatsAppButton({
   return (
     <aside
       aria-label="Contact via WhatsApp"
-      className={`fixed bottom-6 right-6 z-50 select-none transition-transform duration-300 ${
+      className={`fixed bottom-6 right-6 z-50 select-none transition-transform duration-300 [bottom:max(1.5rem,env(safe-area-inset-bottom))] [right:max(1.5rem,env(safe-area-inset-right))] ${
         isScrolling ? 'animate-chat-jump' : 'hover:scale-[1.04]'
       }`}
     >

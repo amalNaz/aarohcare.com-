@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect } from 'react'
+import React, { useState, useEffect, useLayoutEffect, useRef, Suspense, lazy } from 'react'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Hero from './components/Hero'
 import ZeroWaitSection from './components/ZeroWaitSection'
@@ -13,8 +13,9 @@ import FAQSection from './components/FAQSection'
 import CTAEnrollmentSection from './components/CTAEnrollmentSection'
 import Footer from './components/Footer'
 import SmoothScroll from './components/SmoothScroll'
-import TermsPage from './pages/TermsPage'
 import WhatsAppButton from './components/WhatsAppButton'
+
+const TermsPage = lazy(() => import('./pages/TermsPage'))
 
 const isTermsRoute = () => {
   if (typeof window === 'undefined') return false
@@ -37,6 +38,8 @@ export default function App() {
   const [currentPage, setCurrentPage] = useState(() => {
     return isTermsRoute() ? 'terms' : 'home'
   })
+  const navTimeoutRef = useRef(null)
+  const pageChangeTimeoutRef = useRef(null)
 
   // Listen to browser forward/back & hash changes
   useEffect(() => {
@@ -53,6 +56,8 @@ export default function App() {
     return () => {
       window.removeEventListener('hashchange', handleLocationChange)
       window.removeEventListener('popstate', handleLocationChange)
+      if (navTimeoutRef.current) clearTimeout(navTimeoutRef.current)
+      if (pageChangeTimeoutRef.current) clearTimeout(pageChangeTimeoutRef.current)
     }
   }, [])
 
@@ -64,7 +69,8 @@ export default function App() {
         window.__lenis.scrollTo(0, { immediate: true })
         window.__lenis.resize()
       }
-      setTimeout(() => {
+      if (pageChangeTimeoutRef.current) clearTimeout(pageChangeTimeoutRef.current)
+      pageChangeTimeoutRef.current = setTimeout(() => {
         window.scrollTo(0, 0)
         if (window.__lenis) {
           window.__lenis.scrollTo(0, { immediate: true })
@@ -72,6 +78,9 @@ export default function App() {
         }
         ScrollTrigger.refresh()
       }, 50)
+    }
+    return () => {
+      if (pageChangeTimeoutRef.current) clearTimeout(pageChangeTimeoutRef.current)
     }
   }, [currentPage])
 
@@ -91,7 +100,8 @@ export default function App() {
       }
       setCurrentPage('home')
 
-      setTimeout(() => {
+      if (navTimeoutRef.current) clearTimeout(navTimeoutRef.current)
+      navTimeoutRef.current = setTimeout(() => {
         if (hashTarget && hashTarget.startsWith('#') && hashTarget !== '#hero') {
           const el = document.querySelector(hashTarget)
           if (el) {
@@ -115,7 +125,9 @@ export default function App() {
     <SmoothScroll>
       <div className="min-h-screen bg-white w-full">
         {currentPage === 'terms' ? (
-          <TermsPage onNavigateHome={(hash) => navigateTo('home', hash)} />
+          <Suspense fallback={<div className="min-h-screen bg-[#f8fafc]" />}>
+            <TermsPage onNavigateHome={(hash) => navigateTo('home', hash)} />
+          </Suspense>
         ) : (
           <>
             {/* Hero Section */}

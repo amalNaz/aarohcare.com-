@@ -40,6 +40,7 @@ export default function WhatIfHealthSection() {
   const sectionRef = useRef(null)
   const pinWrapperRef = useRef(null)
   const headerRef = useRef(null)
+  const orbitContainerRef = useRef(null)
   const wheelRef = useRef(null)
   const connectorRef = useRef(null)
   const contentWrapRef = useRef(null)
@@ -55,23 +56,89 @@ export default function WhatIfHealthSection() {
 
   useEffect(() => {
     const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (isReducedMotion) return
+    if (isReducedMotion) {
+      if (orbitContainerRef.current) gsap.set(orbitContainerRef.current, { opacity: 1, y: 0, scale: 1 })
+      if (wheelRef.current) gsap.set(wheelRef.current, { opacity: 1, scale: 1, rotation: 0 })
+      if (headerRef.current) gsap.set(headerRef.current, { opacity: 1, y: 0 })
+      if (connectorRef.current) gsap.set(connectorRef.current, { opacity: 1 })
+      if (stateCardRefs.current[0]) gsap.set(stateCardRefs.current[0], { opacity: 1, y: 0, pointerEvents: 'auto' })
+      nodeBadgeRefs.current.forEach((badge, idx) => {
+        if (!badge) return
+        if (idx === 0) gsap.set(badge, { opacity: 1, scale: 1, borderColor: '#ffffff', color: '#ffffff', backgroundColor: '#000000' })
+        else gsap.set(badge, { opacity: 0.45, scale: 0.95, borderColor: '#3f3f46', color: '#a1a1aa', backgroundColor: '#000000' })
+      })
+      nodeDotRefs.current.forEach((dot, idx) => {
+        if (!dot) return
+        if (idx === 0) gsap.set(dot, { opacity: 0 })
+        else gsap.set(dot, { opacity: 0.6 })
+      })
+
+      window.__whatIfAnimateToStep = (index) => {
+        stateCardRefs.current.forEach((card, idx) => {
+          if (!card) return
+          if (idx === index) {
+            gsap.set(card, { opacity: 1, y: 0, pointerEvents: 'auto' })
+          } else {
+            gsap.set(card, { opacity: 0, y: 14, pointerEvents: 'none' })
+          }
+        })
+        nodeBadgeRefs.current.forEach((badge, idx) => {
+          if (!badge) return
+          if (idx === index) {
+            gsap.set(badge, { opacity: 1, scale: 1, borderColor: '#ffffff', color: '#ffffff', backgroundColor: '#000000' })
+          } else {
+            gsap.set(badge, { opacity: 0.45, scale: 0.95, borderColor: '#3f3f46', color: '#a1a1aa', backgroundColor: '#000000' })
+          }
+        })
+        nodeDotRefs.current.forEach((dot, idx) => {
+          if (!dot) return
+          if (idx === index) gsap.set(dot, { opacity: 0 })
+          else gsap.set(dot, { opacity: 0.6 })
+        })
+      }
+
+      return () => {
+        delete window.__whatIfAnimateToStep
+      }
+    }
 
     const section = sectionRef.current
     const pinWrapper = pinWrapperRef.current
+    const orbitContainer = orbitContainerRef.current
     const wheel = wheelRef.current
     const connector = connectorRef.current
     const header = headerRef.current
-    if (!section || !pinWrapper || !wheel) return
+    if (!section || !pinWrapper || !wheel || !orbitContainer) return
 
     const ctx = gsap.context(() => {
+      // Responsive pop-up metrics
+      const getMetrics = () => {
+        const width = typeof window !== 'undefined' ? window.innerWidth : 1200
+        const height = typeof window !== 'undefined' ? window.innerHeight : 800
+        const isMobile = width < 768
+        const isTablet = width >= 768 && width < 1024
+        return {
+          yOffset: isMobile ? Math.min(130, height * 0.18) : isTablet ? 180 : 240,
+          scale: isMobile ? 0.95 : isTablet ? 0.94 : 0.93,
+        }
+      }
+
       // 1. Initial State Setup
-      if (connector) gsap.set(connector, { opacity: 1 })
+      gsap.set(orbitContainer, {
+        y: () => getMetrics().yOffset,
+        scale: () => getMetrics().scale,
+        opacity: 0,
+        transformOrigin: '50% 55%',
+      })
+
+      if (wheel) gsap.set(wheel, { opacity: 1, rotation: 0 })
+      if (header) gsap.set(header, { opacity: 0, y: 24 })
+      if (connector) gsap.set(connector, { opacity: 0, scaleY: 0.9 })
 
       stateCardRefs.current.forEach((card, idx) => {
         if (!card) return
         if (idx === 0) {
-          gsap.set(card, { opacity: 1, y: 0, pointerEvents: 'auto' })
+          gsap.set(card, { opacity: 0, y: 14, pointerEvents: 'auto' })
         } else {
           gsap.set(card, { opacity: 0, y: 14, pointerEvents: 'none' })
         }
@@ -79,48 +146,149 @@ export default function WhatIfHealthSection() {
 
       nodeBadgeRefs.current.forEach((badge, idx) => {
         if (!badge) return
-        const dot = nodeDotRefs.current[idx]
         if (idx === 0) {
-          gsap.set(badge, { opacity: 1, scale: 1, borderColor: '#ffffff', color: '#ffffff', backgroundColor: '#000000' })
-          if (dot) gsap.set(dot, { opacity: 0 })
+          gsap.set(badge, { opacity: 0, scale: 0.8, borderColor: '#ffffff', color: '#ffffff', backgroundColor: '#000000' })
         } else {
-          gsap.set(badge, { opacity: 0.45, scale: 0.95, borderColor: '#3f3f46', color: '#a1a1aa', backgroundColor: '#000000' })
-          if (dot) gsap.set(dot, { opacity: 0.6 })
+          gsap.set(badge, { opacity: 0, scale: 0.8, borderColor: '#3f3f46', color: '#a1a1aa', backgroundColor: '#000000' })
         }
       })
 
-      // Section Entrance Animation
-      if (header && wheel) {
-        gsap.fromTo(
+      nodeDotRefs.current.forEach((dot) => {
+        if (dot) gsap.set(dot, { opacity: 0 })
+      })
+
+      // 2. Scroll-Driven Pop-Up Reveal Timeline
+      // Normalized progress 0 -> 1 tied directly to section entering viewport
+      const entranceTimeline = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: 'top 85%',
+          end: 'top top',
+          scrub: 0.4,
+          invalidateOnRefresh: true,
+        },
+      })
+
+      // Orbit container physically rises upward from below, expanding from 0.93-0.95 -> 1.0
+      entranceTimeline.to(
+        orbitContainer,
+        {
+          y: 0,
+          scale: 1,
+          opacity: 1,
+          duration: 1.0,
+          ease: 'power1.out',
+        },
+        0
+      )
+
+      // Center Content remains visually stable in place, gracefully revealing
+      if (header) {
+        entranceTimeline.to(
           header,
-          { opacity: 0, y: 30 },
           {
             opacity: 1,
             y: 0,
-            duration: 1.0,
-            ease: 'cubic-bezier(0.22, 1, 0.36, 1)',
-            scrollTrigger: {
-              trigger: section,
-              start: 'top 85%',
-              toggleActions: 'play none none none',
-            },
-          }
+            duration: 0.45,
+            ease: 'power1.out',
+          },
+          0.05
         )
+      }
 
-        gsap.fromTo(
-          wheel,
-          { opacity: 0, scale: 0.95 },
+      if (stateCardRefs.current[0]) {
+        entranceTimeline.to(
+          stateCardRefs.current[0],
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.45,
+            ease: 'power1.out',
+          },
+          0.2
+        )
+      }
+
+      if (connector) {
+        entranceTimeline.to(
+          connector,
+          {
+            opacity: 1,
+            scaleY: 1,
+            duration: 0.4,
+            ease: 'power1.out',
+          },
+          0.3
+        )
+      }
+
+      // Progressive Node Reveal Choreography
+      // Node 0: Apex Node (State 1 - Active)
+      const apexBadge = nodeBadgeRefs.current[0]
+      if (apexBadge) {
+        entranceTimeline.to(
+          apexBadge,
           {
             opacity: 1,
             scale: 1,
-            duration: 1.1,
-            ease: 'cubic-bezier(0.22, 1, 0.36, 1)',
-            scrollTrigger: {
-              trigger: section,
-              start: 'top 85%',
-              toggleActions: 'play none none none',
-            },
-          }
+            duration: 0.35,
+            ease: 'power1.out',
+          },
+          0.2
+        )
+      }
+
+      // Nodes 1 & 4: Flank Nodes (States 2 & 5)
+      const flankBadges = [nodeBadgeRefs.current[1], nodeBadgeRefs.current[4]].filter(Boolean)
+      const flankDots = [nodeDotRefs.current[1], nodeDotRefs.current[4]].filter(Boolean)
+      if (flankBadges.length > 0) {
+        entranceTimeline.to(
+          flankBadges,
+          {
+            opacity: 0.45,
+            scale: 0.95,
+            duration: 0.35,
+            ease: 'power1.out',
+          },
+          0.4
+        )
+      }
+      if (flankDots.length > 0) {
+        entranceTimeline.to(
+          flankDots,
+          {
+            opacity: 0.6,
+            duration: 0.35,
+            ease: 'power1.out',
+          },
+          0.4
+        )
+      }
+
+      // Nodes 2 & 3: Lower Nodes (States 3 & 4)
+      const lowerBadges = [nodeBadgeRefs.current[2], nodeBadgeRefs.current[3]].filter(Boolean)
+      const lowerDots = [nodeDotRefs.current[2], nodeDotRefs.current[3]].filter(Boolean)
+      if (lowerBadges.length > 0) {
+        entranceTimeline.to(
+          lowerBadges,
+          {
+            opacity: 0.45,
+            scale: 0.95,
+            duration: 0.35,
+            ease: 'power1.out',
+          },
+          0.6
+        )
+      }
+      if (lowerDots.length > 0) {
+        entranceTimeline.to(
+          lowerDots,
+          {
+            opacity: 0.6,
+            duration: 0.35,
+            ease: 'power1.out',
+          },
+          0.6
         )
       }
 
@@ -350,33 +518,33 @@ export default function WhatIfHealthSection() {
       // Filter out micro trackpad noise
       if (Math.abs(e.deltaY) < 6) return
 
-      const now = Date.now()
       const direction = e.deltaY > 0 ? 1 : -1
       const curStep = stepRef.current
 
-      // Forward exit: when at Step 5 (Circle 1 full ring) and scrolling DOWN -> allow scroll to next section
-      if (curStep === 5 && direction === 1 && scrollY >= end - tol) {
+      // Forward exit: when at Step 5 and scrolling DOWN -> allow scroll to next section naturally
+      if (curStep === 5 && direction === 1) {
         return
       }
 
-      // Reverse exit: when at Step 0 (Circle 1 start) and scrolling UP -> allow scroll to previous section
-      if (curStep === 0 && direction === -1 && scrollY <= start + tol) {
+      // Reverse exit: when at Step 0 and scrolling UP -> allow scroll to previous section naturally
+      if (curStep === 0 && direction === -1) {
         return
       }
 
-      // Intercept wheel event inside pinned range
+      const nextStep = curStep + direction
+      if (nextStep < 0 || nextStep > 5) return
+
+      const now = Date.now()
+      // Cooldown prevents one flick from skipping multiple nodes
+      if (now - lastStepTimeRef.current < 450) return
+      if (isSteppingRef.current) return
+
+      // Intercept wheel event only when inside valid stepping range
       e.preventDefault()
       e.stopPropagation()
       if (typeof e.stopImmediatePropagation === 'function') {
         e.stopImmediatePropagation()
       }
-
-      // 450ms cooldown prevents one flick from skipping multiple nodes
-      if (now - lastStepTimeRef.current < 450) return
-      if (isSteppingRef.current) return
-
-      const nextStep = curStep + direction
-      if (nextStep < 0 || nextStep > 5) return
 
       lastStepTimeRef.current = now
       stepTo(nextStep)
@@ -400,17 +568,17 @@ export default function WhatIfHealthSection() {
       const direction = deltaY > 0 ? 1 : -1
       const curStep = stepRef.current
 
-      if (curStep === 5 && direction === 1 && scrollY >= st.end - 16) return
-      if (curStep === 0 && direction === -1 && scrollY <= st.start + 16) return
-
-      e.preventDefault()
-      const now = Date.now()
-      if (now - lastStepTimeRef.current < 450) return
-      if (isSteppingRef.current) return
+      if (curStep === 5 && direction === 1) return
+      if (curStep === 0 && direction === -1) return
 
       const nextStep = curStep + direction
       if (nextStep < 0 || nextStep > 5) return
 
+      const now = Date.now()
+      if (now - lastStepTimeRef.current < 450) return
+      if (isSteppingRef.current) return
+
+      e.preventDefault()
       lastStepTimeRef.current = now
       touchStartY = e.touches[0].clientY
       stepTo(nextStep)
@@ -530,63 +698,70 @@ export default function WhatIfHealthSection() {
           ))}
         </div>
 
-        {/* Giant Rotating Orbital Wheel */}
+        {/* Orbit Pop-Up Motion Container */}
         <div
-          ref={wheelRef}
-          className="absolute top-[44vh] sm:top-[42vh] md:top-[42vh] lg:top-[40vh] left-1/2 -translate-x-1/2 w-[1050px] h-[1050px] sm:w-[1250px] sm:h-[1250px] md:w-[1450px] md:h-[1450px] lg:w-[1650px] lg:h-[1650px] rounded-full border border-neutral-800 pointer-events-none select-none z-10"
-          style={{ willChange: 'transform' }}
+          ref={orbitContainerRef}
+          className="absolute inset-0 pointer-events-none select-none z-10"
+          style={{ willChange: 'transform, opacity' }}
         >
-          {/* 5 Numbered Orbit Nodes Distributed around 360° at every 72° */}
-          {STATES.map((state, index) => {
-            const angleDeg = NODE_BASE_ANGLES[index]
-            const angleRad = (angleDeg - 90) * (Math.PI / 180)
+          {/* Giant Rotating Orbital Wheel */}
+          <div
+            ref={wheelRef}
+            className="absolute top-[44vh] sm:top-[42vh] md:top-[42vh] lg:top-[40vh] left-1/2 -translate-x-1/2 w-[1050px] h-[1050px] sm:w-[1250px] sm:h-[1250px] md:w-[1450px] md:h-[1450px] lg:w-[1650px] lg:h-[1650px] rounded-full border border-neutral-800 pointer-events-none select-none"
+            style={{ willChange: 'transform' }}
+          >
+            {/* 5 Numbered Orbit Nodes Distributed around 360° at every 72° */}
+            {STATES.map((state, index) => {
+              const angleDeg = NODE_BASE_ANGLES[index]
+              const angleRad = (angleDeg - 90) * (Math.PI / 180)
 
-            const dotLeftPercent = 50 + 50 * Math.cos(angleRad)
-            const dotTopPercent = 50 + 50 * Math.sin(angleRad)
+              const dotLeftPercent = 50 + 50 * Math.cos(angleRad)
+              const dotTopPercent = 50 + 50 * Math.sin(angleRad)
 
-            const badgeRadiusPercent = 52.0
-            const badgeLeftPercent = 50 + badgeRadiusPercent * Math.cos(angleRad)
-            const badgeTopPercent = 50 + badgeRadiusPercent * Math.sin(angleRad)
+              const badgeRadiusPercent = 52.0
+              const badgeLeftPercent = 50 + badgeRadiusPercent * Math.cos(angleRad)
+              const badgeTopPercent = 50 + badgeRadiusPercent * Math.sin(angleRad)
 
-            return (
-              <React.Fragment key={state.num}>
-                <div
-                  ref={(el) => (nodeDotRefs.current[index] = el)}
-                  className="absolute w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-white/70 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
-                  style={{
-                    left: `${dotLeftPercent}%`,
-                    top: `${dotTopPercent}%`,
-                    willChange: 'opacity',
-                  }}
-                />
+              return (
+                <React.Fragment key={state.num}>
+                  <div
+                    ref={(el) => (nodeDotRefs.current[index] = el)}
+                    className="absolute w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-white/70 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+                    style={{
+                      left: `${dotLeftPercent}%`,
+                      top: `${dotTopPercent}%`,
+                      willChange: 'opacity',
+                    }}
+                  />
 
-                <button
-                  type="button"
-                  ref={(el) => (nodeBadgeRefs.current[index] = el)}
-                  onClick={() => {
-                    if (typeof window !== 'undefined' && window.__whatIfAnimateToStep) {
-                      window.__whatIfAnimateToStep(index)
-                    }
-                  }}
-                  className="absolute w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center font-sans font-bold text-xs sm:text-xs md:text-sm bg-black border border-neutral-700/80 text-white -translate-x-1/2 -translate-y-1/2 cursor-pointer pointer-events-auto shadow-sm focus:outline-none transition-colors duration-200"
-                  style={{
-                    left: `${badgeLeftPercent}%`,
-                    top: `${badgeTopPercent}%`,
-                    willChange: 'opacity, transform, border-color, color',
-                  }}
-                  aria-label={`Jump to state ${state.num}: ${state.title}`}
-                >
-                  <span
-                    ref={(el) => (badgeTextRefs.current[index] = el)}
-                    className="inline-block pointer-events-none"
-                    style={{ willChange: 'transform' }}
+                  <button
+                    type="button"
+                    ref={(el) => (nodeBadgeRefs.current[index] = el)}
+                    onClick={() => {
+                      if (typeof window !== 'undefined' && window.__whatIfAnimateToStep) {
+                        window.__whatIfAnimateToStep(index)
+                      }
+                    }}
+                    className="absolute w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center font-sans font-bold text-xs sm:text-xs md:text-sm bg-black border border-neutral-700/80 text-white -translate-x-1/2 -translate-y-1/2 cursor-pointer pointer-events-auto shadow-sm focus:outline-none transition-colors duration-200"
+                    style={{
+                      left: `${badgeLeftPercent}%`,
+                      top: `${badgeTopPercent}%`,
+                      willChange: 'opacity, transform, border-color, color',
+                    }}
+                    aria-label={`Jump to state ${state.num}: ${state.title}`}
                   >
-                    {state.num}
-                  </span>
-                </button>
-              </React.Fragment>
-            )
-          })}
+                    <span
+                      ref={(el) => (badgeTextRefs.current[index] = el)}
+                      className="inline-block pointer-events-none"
+                      style={{ willChange: 'transform' }}
+                    >
+                      {state.num}
+                    </span>
+                  </button>
+                </React.Fragment>
+              )
+            })}
+          </div>
         </div>
       </div>
     </section>

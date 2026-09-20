@@ -1,6 +1,6 @@
 import React from 'react'
-import smartOpBookingImg from '../assets/smart op booking.png'
-import liveTokenTrackingImg from '../assets/live token tracking.png'
+import smartOpBookingImg from '../assets/smart-op-booking.webp'
+import liveTokenTrackingImg from '../assets/live-token-tracking.webp'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 import { TextAnimate } from '@/registry/magicui/text-animate'
 
@@ -77,6 +77,7 @@ export default function ZeroWaitSection() {
                 alt={card.alt}
                 className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out"
                 loading="lazy"
+                decoding="async"
                 draggable={false}
               />
 

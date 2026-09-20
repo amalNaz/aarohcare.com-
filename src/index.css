@@ -3,23 +3,28 @@
 @layer base {
   html {
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE / Edge */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(100, 116, 139, 0.25) transparent;
   }
 
   body {
     @apply bg-white text-slate-900 antialiased min-h-screen selection:bg-cyan-600 selection:text-white;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE / Edge */
   }
 
-  /* Hide scrollbar for Chrome, Safari and Opera */
-  html::-webkit-scrollbar,
-  body::-webkit-scrollbar,
-  *::-webkit-scrollbar {
-    display: none;
-    width: 0;
-    height: 0;
+  /* Sleek, subtle custom scrollbar so scrollbar dragging works smoothly */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(100, 116, 139, 0.25);
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(100, 116, 139, 0.5);
   }
 }
 
@@ -65,12 +70,6 @@
   width: max-content;
   will-change: transform;
   animation: marqueeInfinite 30s linear infinite;
-}
-
-@media (hover: hover) {
-  .animate-card-marquee:hover {
-    animation-play-state: paused;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -282,47 +281,46 @@
 }
 
 /* ==========================================================================
-   PREMIUM IPAD SCROLL-TRIGGERED ENTRANCE ANIMATION
-   Easing curve: cubic-bezier(0.22, 1, 0.36, 1) — smooth, elegant, physical
+   PREMIUM IPAD SCROLL-TRIGGERED ENTRANCE & REVERSE EXIT ANIMATION
+   Easing curve: cubic-bezier(0.22, 1, 0.36, 1) — smooth, elegant, GPU-optimized
    ========================================================================== */
 
 .reveal-ipad-showcase {
   opacity: 0;
-  transform: translateY(70px) scale(0.94);
-  filter: blur(2px);
-  transition: opacity 950ms cubic-bezier(0.22, 1, 0.36, 1),
-              transform 950ms cubic-bezier(0.22, 1, 0.36, 1),
-              filter 950ms cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: opacity, transform, filter;
+  transform: translateY(70px) scale(0.95);
+  transition: opacity 750ms cubic-bezier(0.22, 1, 0.36, 1),
+              transform 750ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
 }
 
 .reveal-ipad-showcase .ipad-device-chassis {
   box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.02);
-  transition: box-shadow 950ms cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: box-shadow;
+  transition: box-shadow 750ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .reveal-ipad-showcase .ipad-screen-content {
   opacity: 0;
   transform: translateY(12px);
-  transition: opacity 800ms cubic-bezier(0.22, 1, 0.36, 1) 120ms,
-              transform 800ms cubic-bezier(0.22, 1, 0.36, 1) 120ms;
+  transition: opacity 650ms cubic-bezier(0.22, 1, 0.36, 1),
+              transform 650ms cubic-bezier(0.22, 1, 0.36, 1);
   will-change: opacity, transform;
 }
 
-/* When Triggered: Apply Active Reveal State */
+/* When Triggered: Apply Active Reveal State (Pop Up) */
 .is-revealed.reveal-ipad-showcase,
 .is-revealed .reveal-ipad-showcase,
 .reveal-ipad-showcase.is-revealed {
   opacity: 1;
   transform: translateY(0) scale(1);
-  filter: blur(0);
+  transition: opacity 950ms cubic-bezier(0.22, 1, 0.36, 1),
+              transform 950ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .is-revealed.reveal-ipad-showcase .ipad-device-chassis,
 .is-revealed .reveal-ipad-showcase .ipad-device-chassis,
 .reveal-ipad-showcase.is-revealed .ipad-device-chassis {
   box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 950ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .is-revealed.reveal-ipad-showcase .ipad-screen-content,
@@ -330,16 +328,28 @@
 .reveal-ipad-showcase.is-revealed .ipad-screen-content {
   opacity: 1;
   transform: translateY(0);
+  transition: opacity 800ms cubic-bezier(0.22, 1, 0.36, 1) 120ms,
+              transform 800ms cubic-bezier(0.22, 1, 0.36, 1) 120ms;
 }
 
 /* Tablet Optimizations (<= 1024px) */
 @media (max-width: 1024px) {
   .reveal-ipad-showcase {
-    transform: translateY(50px) scale(0.95);
-    transition-duration: 900ms;
+    transform: translateY(50px) scale(0.96);
+    transition-duration: 700ms;
   }
   .reveal-ipad-showcase .ipad-screen-content {
     transform: translateY(10px);
+    transition-duration: 600ms;
+  }
+  .is-revealed.reveal-ipad-showcase,
+  .is-revealed .reveal-ipad-showcase,
+  .reveal-ipad-showcase.is-revealed {
+    transition-duration: 900ms;
+  }
+  .is-revealed.reveal-ipad-showcase .ipad-screen-content,
+  .is-revealed .reveal-ipad-showcase .ipad-screen-content,
+  .reveal-ipad-showcase.is-revealed .ipad-screen-content {
     transition-duration: 750ms;
     transition-delay: 100ms;
   }
@@ -349,11 +359,20 @@
 @media (max-width: 768px) {
   .reveal-ipad-showcase {
     transform: translateY(38px) scale(0.97);
-    filter: blur(1.5px);
-    transition-duration: 800ms;
+    transition-duration: 650ms;
   }
   .reveal-ipad-showcase .ipad-screen-content {
     transform: translateY(6px);
+    transition-duration: 550ms;
+  }
+  .is-revealed.reveal-ipad-showcase,
+  .is-revealed .reveal-ipad-showcase,
+  .reveal-ipad-showcase.is-revealed {
+    transition-duration: 800ms;
+  }
+  .is-revealed.reveal-ipad-showcase .ipad-screen-content,
+  .is-revealed .reveal-ipad-showcase .ipad-screen-content,
+  .reveal-ipad-showcase.is-revealed .ipad-screen-content {
     transition-duration: 650ms;
     transition-delay: 80ms;
   }
@@ -436,4 +455,27 @@
 
 .animate-icon-wiggle {
   animation: chatIconWiggle 0.75s ease-in-out infinite;
+}
+
+/* ==========================================================================
+   DISABLE HOVER EFFECTS ON MOBILE & TOUCH SCREENS (<= 768px or touch)
+   ========================================================================== */
+@media (hover: none) and (pointer: coarse), (max-width: 768px) {
+  .hover\:-translate-y-1:hover,
+  .hover\:-translate-y-1\.5:hover,
+  .hover\:-translate-y-2:hover,
+  .hover\:scale-105:hover,
+  .hover\:scale-110:hover,
+  .hover\:scale-\[1\.02\]:hover,
+  .hover\:scale-\[1\.012\]:hover,
+  .group:hover .group-hover\:scale-105,
+  .group:hover .group-hover\:scale-110,
+  .group:hover .group-hover\:scale-\[1\.04\],
+  .group:hover .group-hover\:-translate-y-2,
+  .group:hover .group-hover\:-translate-y-1\.5,
+  .reveal-ipad-showcase:hover,
+  .reveal-ipad-showcase .ipad-device-chassis:hover,
+  .reveal-stagger-item:hover {
+    transform: none !important;
+  }
 }

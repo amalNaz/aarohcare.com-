@@ -263,26 +263,44 @@ export default function TermsPage({ onNavigateHome }) {
   }, [])
 
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollY = window.scrollY
-      setShowScrollTop(scrollY > 400)
-
-      const scrollPosition = scrollY + 200
-      for (const section of SECTIONS) {
+    let sectionPositions = []
+    const updatePositions = () => {
+      sectionPositions = SECTIONS.map((section) => {
         const el = document.getElementById(section.id)
-        if (el) {
-          const top = el.offsetTop
-          const height = el.offsetHeight
-          if (scrollPosition >= top && scrollPosition < top + height) {
-            setActiveSection(section.id)
+        return {
+          id: section.id,
+          top: el ? el.offsetTop : 0,
+          height: el ? el.offsetHeight : 0,
+        }
+      })
+    }
+    updatePositions()
+
+    let rafId = null
+    const handleScroll = () => {
+      if (rafId) return
+      rafId = requestAnimationFrame(() => {
+        rafId = null
+        const scrollY = window.scrollY
+        setShowScrollTop((prev) => (scrollY > 400 ? (prev ? prev : true) : (!prev ? prev : false)))
+
+        const scrollPosition = scrollY + 200
+        for (const sec of sectionPositions) {
+          if (scrollPosition >= sec.top && scrollPosition < sec.top + sec.height) {
+            setActiveSection((prev) => (prev !== sec.id ? sec.id : prev))
             break
           }
         }
-      }
+      })
     }
 
     window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
+    window.addEventListener('resize', updatePositions, { passive: true })
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId)
+      window.removeEventListener('scroll', handleScroll)
+      window.removeEventListener('resize', updatePositions)
+    }
   }, [])
 
   const scrollToClause = (id) => {

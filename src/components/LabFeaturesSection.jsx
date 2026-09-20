@@ -1,5 +1,5 @@
 import React from 'react'
-import labDashboardImg from '../assets/lab-command-center.png'
+import labDashboardImg from '../assets/lab-command-center.webp'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 import { TextAnimate } from '@/registry/magicui/text-animate'
 
@@ -69,8 +69,8 @@ export default function LabFeaturesSection() {
 
           {/* RIGHT COLUMN: Realistic Apple-style iPad Mockup */}
           <div className="reveal-image lg:col-span-7 xl:col-span-7 relative w-full pt-4 lg:pt-0">
-            <div className="w-full lg:absolute lg:top-4 xl:top-2 lg:left-0 lg:w-[132%] xl:w-[136%] 2xl:w-[140%]">
-              <div className="relative bg-[#0d1015] p-[8px] sm:p-[10px] lg:p-[12px] rounded-tl-[32px] sm:rounded-tl-[40px] lg:rounded-tl-[48px] rounded-bl-[32px] sm:rounded-bl-[40px] lg:rounded-bl-[48px] rounded-tr-none rounded-br-none border-[3px] border-r-0 border-[#c8aa84] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.6),0_0_0_1px_rgba(200,170,132,0.25)] transition-transform duration-300 hover:scale-[1.004]">
+            <div className="w-full max-w-xl sm:max-w-2xl mx-auto lg:max-w-none lg:mx-0 lg:absolute lg:top-4 xl:top-2 lg:left-0 lg:w-[132%] xl:w-[136%] 2xl:w-[140%]">
+              <div className="relative bg-[#0d1015] p-[8px] sm:p-[10px] lg:p-[12px] rounded-[28px] sm:rounded-[36px] lg:rounded-tr-none lg:rounded-br-none lg:rounded-tl-[48px] lg:rounded-bl-[48px] border-[2.5px] sm:border-[3px] lg:border-r-0 border-[#c8aa84] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.6),0_0_0_1px_rgba(200,170,132,0.25)]">
                 {/* Left Bezel Front Camera & Ambient Sensor */}
                 <div className="absolute left-[3px] sm:left-[4px] lg:left-[4.5px] top-1/2 -translate-y-1/2 flex flex-col items-center gap-1.5 z-20 pointer-events-none">
                   <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[#1a1f26] ring-[0.5px] ring-slate-600/70 flex items-center justify-center">
@@ -80,12 +80,13 @@ export default function LabFeaturesSection() {
                 </div>
 
                 {/* Inner Screen Display Glass */}
-                <div className="relative w-full rounded-tl-[24px] sm:rounded-tl-[30px] lg:rounded-tl-[36px] rounded-bl-[24px] sm:rounded-bl-[30px] lg:rounded-bl-[36px] rounded-tr-none rounded-br-none overflow-hidden bg-white ring-1 ring-black/10 shadow-inner">
+                <div className="relative w-full rounded-[20px] sm:rounded-[28px] lg:rounded-tr-none lg:rounded-br-none lg:rounded-tl-[36px] lg:rounded-bl-[36px] overflow-hidden bg-white ring-1 ring-black/10 shadow-inner">
                   <img
                     src={labDashboardImg}
                     alt="AarohCare Lab Command Center Dashboard"
-                    className="w-full h-auto object-contain select-none block"
+                    className="w-full h-auto object-cover sm:object-contain select-none block"
                     loading="lazy"
+                    decoding="async"
                   />
                   <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.015] to-white/[0.045] pointer-events-none" />
                 </div>

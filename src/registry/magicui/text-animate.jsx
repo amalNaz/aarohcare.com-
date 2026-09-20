@@ -1,5 +1,5 @@
 import React, { Children, isValidElement } from 'react'
-import { motion } from 'motion/react'
+import { motion, useReducedMotion } from 'motion/react'
 import { cn } from '@/utils/cn'
 
 const ANIMATION_VARIANTS = {
@@ -142,6 +142,12 @@ export function TextAnimate({
   amount = 0.2,
   ...props
 }) {
+  const shouldReduceMotion = useReducedMotion()
+  if (shouldReduceMotion) {
+    const Component = as || 'span'
+    return <Component className={className} {...props}>{children}</Component>
+  }
+
   const selectedAnimation = ANIMATION_VARIANTS[animation] || ANIMATION_VARIANTS.slideUp
   const containerVariants = selectedAnimation.container(stagger, delay)
   const itemVariants = selectedAnimation.item(duration)
