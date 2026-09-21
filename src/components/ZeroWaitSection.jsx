@@ -1,6 +1,9 @@
 import React from 'react'
 import smartOpBookingImg from '../assets/smart-op-booking.webp'
 import liveTokenTrackingImg from '../assets/live-token-tracking.webp'
+import digitalLabReportsImg from '../assets/digital-lab-reports.jpg'
+import multiClinicSearchImg from '../assets/multi-clinic-search.jpg'
+import digitalHealthRecordsImg from '../assets/digital-health-records.jpg'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 import { TextAnimate } from '@/registry/magicui/text-animate'
 
@@ -8,7 +11,7 @@ export default function ZeroWaitSection() {
   const containerRef = useScrollReveal({ threshold: 0.1 })
   const baseCards = [
     {
-      id: 'card-a-1',
+      id: 'smart-op-booking',
       title: 'Smart OP Booking',
       description:
         'Reserve verified OPD appointments in under 30 seconds via WhatsApp or mobile browser without dawn queues.',
@@ -16,7 +19,7 @@ export default function ZeroWaitSection() {
       alt: 'Smart OP Booking at clinic',
     },
     {
-      id: 'card-b-1',
+      id: 'live-token-tracking',
       title: 'Live Token Tracking',
       description:
         'Unbroken real-time telemetry syncing doctor consultation intervals directly to your screen with millisecond latency.',
@@ -24,20 +27,28 @@ export default function ZeroWaitSection() {
       alt: 'Live doctor consultation and token tracking',
     },
     {
-      id: 'card-a-2',
-      title: 'Smart OP Booking',
+      id: 'digital-lab-reports',
+      title: 'Digital Lab Reports',
       description:
-        'Reserve verified OPD appointments in under 30 seconds via WhatsApp or mobile browser without dawn queues.',
-      image: smartOpBookingImg,
-      alt: 'Smart OP Booking at clinic',
+        'Download reports straight from the app, with no physical copies or second visits needed.',
+      image: digitalLabReportsImg,
+      alt: 'Digital lab reports in mobile app',
     },
     {
-      id: 'card-b-2',
-      title: 'Live Token Tracking',
+      id: 'multi-clinic-search',
+      title: 'Multi-Clinic Search',
       description:
-        'Unbroken real-time telemetry syncing doctor consultation intervals directly to your screen with millisecond latency.',
-      image: liveTokenTrackingImg,
-      alt: 'Live doctor consultation and token tracking',
+        'Search and compare doctors, hospitals, and diagnostic labs all in one convenient place.',
+      image: multiClinicSearchImg,
+      alt: 'Multi-clinic search and compare',
+    },
+    {
+      id: 'digital-health-records',
+      title: 'Digital Health Records',
+      description:
+        'Lab reports, prescriptions, and complete clinical visit history securely stored in one place.',
+      image: digitalHealthRecordsImg,
+      alt: 'Digital health records on smartphone',
     },
   ]
 
