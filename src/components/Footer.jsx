@@ -194,6 +194,33 @@ Building smarter patient flow management solutions for hospitals, clinics, and l
               </span>
               <span className="font-medium tracking-wide">Live Telemetry Active</span>
             </div>
+
+            {/* Socials */}
+            <div className="mt-6 pt-5 border-t border-neutral-900">
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-neutral-400 mb-3">
+                Socials
+              </h4>
+              <div className="flex items-center gap-3">
+                <a
+                  href="https://www.instagram.com/aarohcare.in?stkn=bXdxYm5xdXliaWF1"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="AarohCare Instagram"
+                  className="w-8 h-8 rounded-full bg-neutral-900 hover:bg-neutral-800 border border-neutral-800/80 hover:border-neutral-700 text-neutral-400 hover:text-white flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95"
+                >
+                  <InstagramIcon className="w-4 h-4" />
+                </a>
+                <a
+                  href="https://www.linkedin.com/company/aarohcare/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="AarohCare LinkedIn"
+                  className="w-8 h-8 rounded-full bg-neutral-900 hover:bg-neutral-800 border border-neutral-800/80 hover:border-neutral-700 text-neutral-400 hover:text-white flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95"
+                >
+                  <LinkedInIcon className="w-4 h-4" />
+                </a>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -203,7 +230,7 @@ Building smarter patient flow management solutions for hospitals, clinics, and l
             © 2026 AarohCare — Aarohacare Technologies Pvt Ltd. All rights reserved.
           </p>
 
-          {/* Legal Links & Social Icons */}
+          {/* Legal Links */}
           <div className="flex flex-wrap items-center justify-center gap-6">
             {legalLinks.map((link) => (
               <a
@@ -215,28 +242,6 @@ Building smarter patient flow management solutions for hospitals, clinics, and l
                 {link.name}
               </a>
             ))}
-
-            {/* Social Icons Divider & Links */}
-            <div className="flex items-center gap-3 border-l border-neutral-800 pl-4 sm:pl-6">
-              <a
-                href="https://www.instagram.com/aarohcare.in?stkn=bXdxYm5xdXliaWF1"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="AarohCare Instagram"
-                className="w-8 h-8 rounded-full bg-neutral-900 hover:bg-neutral-800 text-neutral-400 hover:text-white flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95"
-              >
-                <InstagramIcon className="w-4 h-4" />
-              </a>
-              <a
-                href="https://www.linkedin.com/company/aarohcare/"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="AarohCare LinkedIn"
-                className="w-8 h-8 rounded-full bg-neutral-900 hover:bg-neutral-800 text-neutral-400 hover:text-white flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95"
-              >
-                <LinkedInIcon className="w-4 h-4" />
-              </a>
-            </div>
           </div>
         </div>
       </div>
