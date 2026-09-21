@@ -1,6 +1,6 @@
 import React from 'react'
 import { ArrowUpRight } from 'lucide-react'
-import healthPartnerHandImg from '../assets/health-partner-hand.webp'
+import healthPartnerHandImg from '../assets/health-partner-hand.jpg'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 import { TextAnimate } from '@/registry/magicui/text-animate'
 
@@ -10,15 +10,17 @@ export default function HealthPartnerSection() {
   return (
     <section ref={containerRef} className="w-full bg-white overflow-hidden select-none">
       <div className="w-full grid grid-cols-1 lg:grid-cols-2 min-h-[540px] sm:min-h-[600px] lg:min-h-[660px] xl:min-h-[720px] 2xl:min-h-[780px]">
-        {/* Left Column: Hand with Smartphone Mockup on Dark Curved Backdrop */}
-        <div className="relative w-full h-[400px] sm:h-[500px] lg:h-auto min-h-full bg-[#0a1820] overflow-hidden flex items-center justify-center">
-          <img
-            src={healthPartnerHandImg}
-            alt="AarohCare App Live OP Queue Tracking"
-            className="reveal-image w-full h-full object-cover object-center pointer-events-none"
-            loading="lazy"
-            decoding="async"
-          />
+        {/* Left Column: Hand with Smartphone Mockup on Soft Curved Backdrop */}
+        <div className="group relative w-full aspect-square sm:aspect-[4/3] lg:aspect-auto lg:h-full lg:min-h-full bg-[#d6e6f2] overflow-hidden flex items-center justify-center cursor-pointer">
+          <div className="w-full h-full overflow-hidden transition-transform duration-700 ease-out group-hover:scale-[1.035] group-hover:-translate-y-1 group-active:scale-[1.02] will-change-transform flex items-center justify-center">
+            <img
+              src={healthPartnerHandImg}
+              alt="AarohCare App Live OP Queue Tracking"
+              className="reveal-image w-full h-full object-contain lg:object-cover object-center pointer-events-none"
+              loading="eager"
+              decoding="async"
+            />
+          </div>
         </div>
 
         {/* Right Column: Warm Beige Section with Typography & CTA */}

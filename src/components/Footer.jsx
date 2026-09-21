@@ -1,6 +1,43 @@
 import React from 'react'
 import { Phone, Mail, MapPin } from 'lucide-react'
 import { useScrollReveal } from '../hooks/useScrollReveal'
+import logoImg from '../assets/aarohcare-logo.png'
+
+function InstagramIcon({ className = 'w-4 h-4' }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+    </svg>
+  )
+}
+
+function LinkedInIcon({ className = 'w-4 h-4' }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+      <rect x="2" y="9" width="4" height="12" />
+      <circle cx="4" cy="4" r="2" />
+    </svg>
+  )
+}
 
 export default function Footer({ onNavigate }) {
   const containerRef = useScrollReveal({ threshold: 0.1 })
@@ -14,9 +51,8 @@ export default function Footer({ onNavigate }) {
   ]
 
   const legalLinks = [
-    { name: 'Privacy Policy', href: '#' },
+    { name: 'Privacy Policy', href: '#privacy' },
     { name: 'Terms & Conditions', href: '#terms' },
-    { name: 'Clinical Compliance', href: '#' },
   ]
 
   const handleLinkClick = (e, href) => {
@@ -24,6 +60,14 @@ export default function Footer({ onNavigate }) {
       e.preventDefault()
       if (onNavigate) {
         onNavigate('terms')
+      }
+      return
+    }
+
+    if (href === '#privacy' || href === '/privacy' || href.includes('privacy') || href === '#privacy-policy') {
+      e.preventDefault()
+      if (onNavigate) {
+        onNavigate('privacy')
       }
       return
     }
@@ -58,31 +102,12 @@ export default function Footer({ onNavigate }) {
             <div>
               {/* Brand Logo & Title */}
               <div className="reveal-heading flex items-center gap-3.5 mb-4">
-                {/* Stylized AarohaCare 'A' Logo Icon */}
-                <div className="w-9 h-9 rounded-lg bg-white flex items-center justify-center p-1.5 shadow-sm">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    className="w-full h-full text-blue-600"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path
-                      d="M12 2L3 21h4.5l2-4.5h5l2 4.5H21L12 2z"
-                      fill="#2563eb"
-                      stroke="none"
-                    />
-                    <path
-                      d="M9.5 16.5h5"
-                      stroke="#ffffff"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                    />
-                    <circle cx="12" cy="7" r="1.5" fill="#60a5fa" />
-                  </svg>
-                </div>
+                {/* AarohCare Logo Icon */}
+                <img
+                  src={logoImg}
+                  alt="AarohaCare Logo"
+                  className="w-10 h-10 rounded-lg object-contain shadow-sm shrink-0"
+                />
 
                 <div>
                   <h3 className="text-xl font-bold tracking-tight text-white leading-none">
@@ -96,8 +121,7 @@ export default function Footer({ onNavigate }) {
 
               {/* Mission Paragraph */}
               <p className="reveal-text text-neutral-400 text-sm leading-relaxed max-w-sm">
-                Pioneering digital outpatient pacing across Kerala. Eliminating waiting halls through coordinated token telemetry and smart transit prompts.
-              </p>
+Building smarter patient flow management solutions for hospitals, clinics, and labs—helping reduce waiting time and create a smoother healthcare experience.              </p>
             </div>
 
             {/* Direct Contact Row */}
@@ -179,7 +203,7 @@ export default function Footer({ onNavigate }) {
             © 2026 AarohCare — Aarohacare Technologies Pvt Ltd. All rights reserved.
           </p>
 
-          {/* Legal Links */}
+          {/* Legal Links & Social Icons */}
           <div className="flex flex-wrap items-center justify-center gap-6">
             {legalLinks.map((link) => (
               <a
@@ -191,6 +215,28 @@ export default function Footer({ onNavigate }) {
                 {link.name}
               </a>
             ))}
+
+            {/* Social Icons Divider & Links */}
+            <div className="flex items-center gap-3 border-l border-neutral-800 pl-4 sm:pl-6">
+              <a
+                href="https://www.instagram.com/aarohcare.in?stkn=bXdxYm5xdXliaWF1"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="AarohCare Instagram"
+                className="w-8 h-8 rounded-full bg-neutral-900 hover:bg-neutral-800 text-neutral-400 hover:text-white flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95"
+              >
+                <InstagramIcon className="w-4 h-4" />
+              </a>
+              <a
+                href="https://www.linkedin.com/company/aarohcare/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="AarohCare LinkedIn"
+                className="w-8 h-8 rounded-full bg-neutral-900 hover:bg-neutral-800 text-neutral-400 hover:text-white flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95"
+              >
+                <LinkedInIcon className="w-4 h-4" />
+              </a>
+            </div>
           </div>
         </div>
       </div>

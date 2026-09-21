@@ -17,8 +17,9 @@ import {
   Mail,
   Phone,
   ChevronRight,
-  ArrowUp,
+  FileCheck,
 } from 'lucide-react'
+import logoImg from '../assets/aarohcare-logo.png'
 import { TextAnimate } from '@/registry/magicui/text-animate'
 import Footer from '../components/Footer'
 
@@ -249,7 +250,7 @@ const SECTIONS = [
   },
 ]
 
-export default function TermsPage({ onNavigateHome }) {
+export default function TermsPage({ onNavigateHome, onNavigatePage }) {
   const [activeSection, setActiveSection] = useState('about')
   const [showScrollTop, setShowScrollTop] = useState(false)
 
@@ -339,16 +340,35 @@ export default function TermsPage({ onNavigateHome }) {
             <span>Back to Home</span>
           </button>
 
-          {/* AarohCare Brand Name Only (No Icon) */}
+          {/* AarohCare Brand Logo & Name */}
           <button
             type="button"
             onClick={() => onNavigateHome && onNavigateHome('#hero')}
-            className="cursor-pointer bg-transparent border-none p-0 focus:outline-none"
+            className="flex items-center gap-2.5 cursor-pointer bg-transparent border-none p-0 focus:outline-none group"
           >
-            <span className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 hover:opacity-85 transition-opacity">
+            <img
+              src={logoImg}
+              alt="AarohCare Logo"
+              className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg object-contain shadow-xs shrink-0"
+            />
+            <span className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 group-hover:opacity-85 transition-opacity">
               AarohCare
             </span>
           </button>
+
+          {/* Document Switcher Toggle */}
+          <div className="flex items-center bg-slate-100/90 p-1 rounded-full border border-slate-200/80 text-xs font-semibold">
+            <button
+              type="button"
+              onClick={() => onNavigatePage ? onNavigatePage('privacy') : (window.location.hash = '#privacy')}
+              className="px-3 py-1 text-slate-600 hover:text-slate-900 transition-colors cursor-pointer"
+            >
+              Privacy
+            </button>
+            <span className="px-3 py-1 bg-white text-blue-700 rounded-full shadow-xs">
+              Terms
+            </span>
+          </div>
         </div>
       </header>
 
@@ -510,6 +530,8 @@ export default function TermsPage({ onNavigateHome }) {
       <Footer onNavigate={(page, hash) => {
         if (page === 'home' && onNavigateHome) {
           onNavigateHome(hash)
+        } else if (onNavigatePage) {
+          onNavigatePage(page, hash)
         }
       }} />
     </div>

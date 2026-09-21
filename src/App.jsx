@@ -18,6 +18,7 @@ import MouseTracker from './components/MouseTracker'
 import { scrollToSection } from './utils/scrollNavigation'
 
 const TermsPage = lazy(() => import('./pages/TermsPage'))
+const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage'))
 
 const isTermsRoute = () => {
   if (typeof window === 'undefined') return false
@@ -36,9 +37,28 @@ const isTermsRoute = () => {
   )
 }
 
+const isPrivacyRoute = () => {
+  if (typeof window === 'undefined') return false
+  const hash = window.location.hash.toLowerCase()
+  const path = window.location.pathname.toLowerCase()
+  const search = window.location.search.toLowerCase()
+  return (
+    hash === '#privacy' ||
+    hash === '#privacy-policy' ||
+    hash.startsWith('#/privacy') ||
+    hash.startsWith('#privacy') ||
+    path === '/privacy' ||
+    path === '/privacy-policy' ||
+    path.endsWith('/privacy') ||
+    search.includes('privacy')
+  )
+}
+
 export default function App() {
   const [currentPage, setCurrentPage] = useState(() => {
-    return isTermsRoute() ? 'terms' : 'home'
+    if (isTermsRoute()) return 'terms'
+    if (isPrivacyRoute()) return 'privacy'
+    return 'home'
   })
   const navTimeoutRef = useRef(null)
   const pageChangeTimeoutRef = useRef(null)
@@ -48,6 +68,8 @@ export default function App() {
     const handleLocationChange = () => {
       if (isTermsRoute()) {
         setCurrentPage('terms')
+      } else if (isPrivacyRoute()) {
+        setCurrentPage('privacy')
       } else {
         setCurrentPage('home')
       }
@@ -92,11 +114,16 @@ export default function App() {
         window.location.hash = 'terms'
       }
       setCurrentPage('terms')
+    } else if (page === 'privacy') {
+      if (window.location.hash !== '#privacy') {
+        window.location.hash = 'privacy'
+      }
+      setCurrentPage('privacy')
     } else {
       if (hashTarget && hashTarget.startsWith('#') && hashTarget !== '#hero') {
         window.location.hash = hashTarget
       } else {
-        if (window.location.hash.includes('terms')) {
+        if (window.location.hash.includes('terms') || window.location.hash.includes('privacy')) {
           history.pushState(null, '', window.location.pathname)
         }
       }
@@ -118,7 +145,17 @@ export default function App() {
       <div className="min-h-screen bg-white w-full">
         {currentPage === 'terms' ? (
           <Suspense fallback={<div className="min-h-screen bg-[#f8fafc]" />}>
-            <TermsPage onNavigateHome={(hash) => navigateTo('home', hash)} />
+            <TermsPage
+              onNavigateHome={(hash) => navigateTo('home', hash)}
+              onNavigatePage={navigateTo}
+            />
+          </Suspense>
+        ) : currentPage === 'privacy' ? (
+          <Suspense fallback={<div className="min-h-screen bg-[#f8fafc]" />}>
+            <PrivacyPolicyPage
+              onNavigateHome={(hash) => navigateTo('home', hash)}
+              onNavigatePage={navigateTo}
+            />
           </Suspense>
         ) : (
           <>

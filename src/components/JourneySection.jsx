@@ -58,10 +58,10 @@ export default function JourneySection() {
     <section
       id="how-it-works"
       ref={containerRef}
-      className="w-full bg-white text-slate-900 pt-16 sm:pt-24 pb-24 sm:pb-36 overflow-hidden"
+      className="w-full min-h-screen flex flex-col justify-between bg-white text-slate-900 pt-20 sm:pt-24 lg:pt-28 pb-0 overflow-hidden"
     >
       {/* Main Headline (Full-width with comfortable margin padding) */}
-      <div className="w-full px-6 sm:px-10 lg:px-16 xl:px-20 mb-16 sm:mb-24">
+      <div className="w-full px-6 sm:px-10 lg:px-16 xl:px-20 mb-8 sm:mb-12">
         <TextAnimate
           as="h2"
           animation="slideUp"
@@ -73,8 +73,8 @@ export default function JourneySection() {
         </TextAnimate>
       </div>
 
-      {/* Full-Width 4-Column Grid Track with Dashed Borders */}
-      <div className="w-full border-t border-dashed border-slate-300">
+      {/* Full-Width 4-Column Grid Track with Dashed Borders — Aligned to bottom */}
+      <div className="w-full border-t border-dashed border-slate-300 mt-auto">
         <div className="reveal-group w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
           {steps.map((step, index) => (
             <div

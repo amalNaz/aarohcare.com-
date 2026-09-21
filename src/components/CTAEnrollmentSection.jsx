@@ -85,13 +85,6 @@ export default function CTAEnrollmentSection() {
             )}
           </form>
         </div>
-
-        {/* Bottom Priority Note */}
-        <div className="reveal-meta text-center pt-20 sm:pt-24 lg:pt-28">
-          <p className="text-xs sm:text-[13px] text-slate-400/80 font-normal tracking-wide">
-            Immediate priority for senior citizens, young parents, and partner clinics.
-          </p>
-        </div>
       </div>
     </section>
   )

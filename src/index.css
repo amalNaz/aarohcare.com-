@@ -451,11 +451,15 @@
   }
 }
 
-.animate-chat-jump {
+.animate-chat-jump,
+.hover\:animate-chat-jump:hover,
+.group:hover .group-hover\:animate-chat-jump {
   animation: chatScrollJump 0.75s cubic-bezier(0.28, 0.84, 0.42, 1) infinite;
 }
 
-.animate-icon-wiggle {
+.animate-icon-wiggle,
+.hover\:animate-icon-wiggle:hover,
+.group:hover .group-hover\:animate-icon-wiggle {
   animation: chatIconWiggle 0.75s ease-in-out infinite;
 }
 

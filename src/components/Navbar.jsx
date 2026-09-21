@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { ArrowUpRight } from 'lucide-react'
 import { MotionConfig, motion, AnimatePresence } from 'motion/react'
 import { scrollToSection } from '../utils/scrollNavigation'
+import logoImg from '../assets/aarohcare-logo.png'
 
 const HAMBURGER_VARIANTS = {
   top: {
@@ -204,11 +205,16 @@ export default function Navbar() {
         <a
           href="#hero"
           onClick={(e) => handleNavClick(e, '#hero')}
-          className={`text-xl sm:text-2xl font-bold tracking-tight transition-all duration-200 ${
+          className={`flex items-center gap-2.5 text-xl sm:text-2xl font-bold tracking-tight transition-all duration-200 ${
             mobileMenuOpen || isAtHero ? 'text-white hover:opacity-90' : 'text-slate-900 hover:opacity-85'
           }`}
         >
-          Aarohcare
+          <img
+            src={logoImg}
+            alt="Aarohcare Logo"
+            className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg object-contain shadow-xs shrink-0"
+          />
+          <span>Aarohcare</span>
         </a>
 
         {/* Desktop Navigation Links */}

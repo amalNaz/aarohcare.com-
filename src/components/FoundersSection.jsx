@@ -2,11 +2,9 @@ import React from 'react'
 import amalImg from '../assets/amal-hisham.webp'
 import aslamImg from '../assets/muhammed-aslam.webp'
 import kiranImg from '../assets/kiran-vk.webp'
-import { useScrollReveal } from '../hooks/useScrollReveal'
 import { TextAnimate } from '@/registry/magicui/text-animate'
 
 export default function FoundersSection() {
-  const containerRef = useScrollReveal({ threshold: 0.1 })
   const founders = [
     {
       name: 'Amal Hisham K',
@@ -18,14 +16,14 @@ export default function FoundersSection() {
     {
       name: 'Muhammed Aslam',
       role: 'Co-founder and COO',
-      bio: 'leads operations and hospital/clinic partnerships',
+      bio: 'Leads operations and hospital/clinic partnerships',
       image: aslamImg,
       imagePosition: 'object-[center_15%]',
     },
     {
       name: 'Kiran VK',
       role: 'Co-founder and CMO',
-      bio: 'leads marketing and growth',
+      bio: 'Leads marketing and growth',
       image: kiranImg,
       imagePosition: 'object-[center_25%]',
     },
@@ -34,50 +32,51 @@ export default function FoundersSection() {
   return (
     <section
       id="about-us"
-      ref={containerRef}
-      className="w-full bg-white text-slate-900 pt-16 sm:pt-20 lg:pt-24 pb-14 sm:pb-16 lg:pb-18 overflow-hidden"
+      className="w-full bg-white text-slate-900 pt-20 sm:pt-22 lg:pt-24 pb-12 sm:pb-14 lg:pb-16 overflow-hidden"
     >
       <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16">
         {/* Section Headline */}
-        <div className="text-center max-w-3xl mx-auto mb-16 sm:mb-20 lg:mb-24">
+        <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-10 lg:mb-12">
           <TextAnimate
             as="h2"
             animation="slideUp"
             by="word"
-            className="text-xl sm:text-2xl lg:text-[1.85rem] font-semibold text-[#091e38] tracking-tight leading-[1.35]"
+            className="text-2xl sm:text-3xl lg:text-[2.1rem] font-semibold text-[#091e38] tracking-tight leading-[1.3]"
           >
             AarohCare is a Kerala-born health-tech startup built to end the age-old hospital waiting-room problem.
           </TextAnimate>
         </div>
 
-        {/* 3 Founder Cards Grid */}
-        <div className="reveal-group grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-8 lg:gap-10 max-w-6xl mx-auto">
+        {/* 3 Founder Cards Grid — Always visible, cleanly aligned */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-7 lg:gap-8 max-w-5xl mx-auto">
           {founders.map((founder, idx) => (
             <div
               key={idx}
-              data-cursor-pill="CONNECT ↗"
-              className="reveal-stagger-item bg-[#dde3ea] rounded-[28px] sm:rounded-[32px] lg:rounded-[36px] p-4 sm:p-4.5 lg:p-5 pb-7 sm:pb-8 flex flex-col justify-between group cursor-pointer transition-shadow duration-300 md:hover:shadow-lg"
+              className="bg-[#dde3ea] rounded-[24px] sm:rounded-[28px] lg:rounded-[32px] p-3.5 sm:p-4 lg:p-4.5 pb-6 sm:pb-7 flex flex-col transition-shadow duration-300 shadow-xs hover:shadow-md"
             >
-              {/* Photo Box */}
-              <div className="relative w-full aspect-[1/1.12] rounded-[22px] sm:rounded-[26px] lg:rounded-[28px] overflow-hidden bg-white shadow-sm">
+              {/* Photo Box — Strictly square aspect ratio for identical alignment across all cards */}
+              <div
+                className="relative w-full flex-shrink-0 rounded-[18px] sm:rounded-[22px] lg:rounded-[24px] overflow-hidden bg-slate-200 shadow-xs"
+                style={{ aspectRatio: '1 / 1' }}
+              >
                 <img
                   src={founder.image}
                   alt={founder.name}
-                  className={`w-full h-full object-cover grayscale transition-transform duration-700 ease-out md:group-hover:scale-[1.02] ${founder.imagePosition}`}
-                  loading="lazy"
+                  className={`w-full h-full object-cover grayscale transition-transform duration-700 ease-out hover:scale-[1.02] ${founder.imagePosition}`}
+                  loading="eager"
                   decoding="async"
                 />
               </div>
 
-              {/* Founder Information */}
-              <div className="mt-5 sm:mt-6 px-1.5 space-y-1">
-                <h3 className="text-lg sm:text-xl lg:text-[1.28rem] font-bold text-[#111822] tracking-tight">
+              {/* Founder Information — Aligned cleanly flush with photo box */}
+              <div className="mt-4 sm:mt-5 px-1 space-y-1 text-left">
+                <h3 className="text-lg sm:text-xl lg:text-[1.25rem] font-bold text-[#0f172a] tracking-tight">
                   {founder.name}
                 </h3>
-                <p className="text-xs sm:text-[13px] font-medium text-[#4a5568]">
+                <p className="text-[17px] sm:text-[18px] font-semibold text-slate-800">
                   {founder.role}
                 </p>
-                <p className="text-[11px] sm:text-[12px] text-[#6b778c] font-normal leading-relaxed pt-0.5">
+                <p className="text-[15px] sm:text-[16px] text-slate-600 font-normal leading-relaxed pt-0.5">
                   {founder.bio}
                 </p>
               </div>
