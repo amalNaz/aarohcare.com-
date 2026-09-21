@@ -165,7 +165,7 @@ export default function CTAEnrollmentSection() {
             {status === 'success' && (
               <div className="flex items-center gap-2.5 text-emerald-400 text-xs sm:text-sm font-medium mt-3.5 px-4 animate-fadeIn">
                 <CheckCircle2 className="w-4 h-4 shrink-0" />
-                <span>Thanks! We'll get in touch with you soon.</span>
+                <span>Thank you for your feedback! We’ll get in touch with you soon.</span>
               </div>
             )}
 

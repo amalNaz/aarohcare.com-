@@ -254,7 +254,7 @@ export default async function handler(req, res) {
           })
           return sendResponse(res, 200, {
             success: true,
-            message: "Thanks! We'll get in touch with you soon.",
+            message: "Thank you for your feedback! We’ll get in touch with you soon.",
             devNote: 'Simulated in dev mode (no email credentials set)',
           })
         }
@@ -267,7 +267,7 @@ export default async function handler(req, res) {
 
     return sendResponse(res, 200, {
       success: true,
-      message: "Thanks! We'll get in touch with you soon.",
+      message: "Thank you for your feedback! We’ll get in touch with you soon.",
     })
   } catch (error) {
     console.error('[AarohaCare Backend] Unhandled error:', error)
