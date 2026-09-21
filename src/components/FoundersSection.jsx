@@ -36,14 +36,14 @@ export default function FoundersSection() {
     >
       <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16">
         {/* Section Headline */}
-        <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-10 lg:mb-12">
+        <div className="text-center max-w-4xl mx-auto mb-10 sm:mb-12 lg:mb-14">
           <TextAnimate
             as="h2"
             animation="slideUp"
             by="word"
-            className="text-2xl sm:text-3xl lg:text-[2.1rem] font-semibold text-[#091e38] tracking-tight leading-[1.3]"
+            className="text-3xl sm:text-4xl lg:text-[2.75rem] font-bold text-[#091e38] tracking-tight leading-[1.2] text-center"
           >
-            AarohCare is a Kerala-born health-tech startup built to end the age-old hospital waiting-room problem.
+            Built by People Who Care
           </TextAnimate>
         </div>
 
