@@ -17,7 +17,7 @@ import {
   Mail,
   Phone,
   ChevronRight,
-  FileCheck,
+  ArrowUp,
 } from 'lucide-react'
 import logoImg from '../assets/aarohcare-logo.png'
 import { TextAnimate } from '@/registry/magicui/text-animate'

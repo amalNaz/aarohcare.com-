@@ -178,11 +178,45 @@ export default async function handler(req, res) {
       </div>
     `
 
-    // 5. Send via Resend or Gmail SMTP / Nodemailer
+    // 5. Send via Gmail SMTP (Primary), Resend (Secondary), or FormSubmit (Fallback)
     let emailSent = false
 
-    // Option A: Resend API (Preferred)
-    if (process.env.RESEND_API_KEY) {
+    // Option A: Gmail SMTP / Nodemailer (Official Primary Delivery)
+    const rawSmtpPass = process.env.SMTP_PASS || process.env.GMAIL_APP_PASSWORD || ''
+    const smtpPass = rawSmtpPass.replace(/\s+/g, '')
+
+    if (smtpPass) {
+      try {
+        const nodemailer = await import('nodemailer')
+        const port = parseInt(process.env.SMTP_PORT || '465', 10)
+        const secure = process.env.SMTP_SECURE ? process.env.SMTP_SECURE === 'true' : port === 465
+        const transporter = nodemailer.createTransport({
+          host: process.env.SMTP_HOST || 'smtp.gmail.com',
+          port,
+          secure,
+          auth: {
+            user: process.env.SMTP_USER || process.env.GMAIL_USER || toEmail,
+            pass: smtpPass,
+          },
+        })
+
+        await transporter.sendMail({
+          from: `"AarohaCare" <${process.env.SMTP_USER || process.env.GMAIL_USER || toEmail}>`,
+          to: toEmail,
+          replyTo: type === 'Email' ? sanitizedContact : undefined,
+          subject: subject,
+          text: textContent,
+          html: htmlContent,
+        })
+
+        emailSent = true
+      } catch (err) {
+        console.error('[AarohaCare Backend] Gmail SMTP delivery error:', err.message)
+      }
+    }
+
+    // Option B: Resend API (Fallback if SMTP not present or failed)
+    if (!emailSent && process.env.RESEND_API_KEY) {
       try {
         const resendRes = await fetch('https://api.resend.com/emails', {
           method: 'POST',
@@ -194,6 +228,7 @@ export default async function handler(req, res) {
           body: JSON.stringify({
             from: fromEmail,
             to: [toEmail],
+            reply_to: type === 'Email' ? sanitizedContact : undefined,
             subject: subject,
             text: textContent,
             html: htmlContent,
@@ -208,34 +243,6 @@ export default async function handler(req, res) {
         emailSent = true
       } catch (err) {
         console.error('[AarohaCare Backend] Resend delivery error:', err.message)
-      }
-    }
-
-    // Option B: Gmail SMTP / Nodemailer (Fallback if SMTP credentials provided)
-    if (!emailSent && (process.env.SMTP_PASS || process.env.GMAIL_APP_PASSWORD)) {
-      try {
-        const nodemailer = await import('nodemailer')
-        const transporter = nodemailer.createTransport({
-          host: process.env.SMTP_HOST || 'smtp.gmail.com',
-          port: parseInt(process.env.SMTP_PORT || '465', 10),
-          secure: process.env.SMTP_SECURE === 'true' || true,
-          auth: {
-            user: process.env.SMTP_USER || process.env.GMAIL_USER || toEmail,
-            pass: process.env.SMTP_PASS || process.env.GMAIL_APP_PASSWORD,
-          },
-        })
-
-        await transporter.sendMail({
-          from: process.env.SMTP_FROM || process.env.SMTP_USER || toEmail,
-          to: toEmail,
-          subject: subject,
-          text: textContent,
-          html: htmlContent,
-        })
-
-        emailSent = true
-      } catch (err) {
-        console.error('[AarohaCare Backend] SMTP delivery error:', err.message)
       }
     }
 
@@ -256,6 +263,7 @@ export default async function handler(req, res) {
               _subject: subject,
               _template: 'table',
               _captcha: 'false',
+              _replyto: type === 'Email' ? sanitizedContact : undefined,
               Alert: 'New Pilot Enrollment / Contact Request from AarohaCare website',
               'Contact Information': sanitizedContact,
               Type: type,

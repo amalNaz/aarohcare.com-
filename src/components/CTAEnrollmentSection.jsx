@@ -63,18 +63,12 @@ export default function CTAEnrollmentSection() {
       return
     }
 
-    // 2. Instant Optimistic Feedback — Zero delay for the customer
     const submittedValue = validation.value
-    setContactValue('')
-    setStatus('success')
+    setIsSubmitting(true)
+    setStatus('idle')
     setErrorMessage('')
 
-    if (resetTimeoutRef.current) clearTimeout(resetTimeoutRef.current)
-    resetTimeoutRef.current = setTimeout(() => {
-      setStatus('idle')
-    }, 6000)
-
-    // 3. Send to backend in the background
+    // 2. Submit to backend API
     try {
       const response = await fetch('/api/contact', {
         method: 'POST',
@@ -92,6 +86,16 @@ export default function CTAEnrollmentSection() {
       if (!response.ok) {
         throw new Error(data?.error || 'Something went wrong. Please try again.')
       }
+
+      // Success state
+      setContactValue('')
+      setStatus('success')
+      setErrorMessage('')
+
+      if (resetTimeoutRef.current) clearTimeout(resetTimeoutRef.current)
+      resetTimeoutRef.current = setTimeout(() => {
+        setStatus('idle')
+      }, 6000)
     } catch (err) {
       console.error('Contact submission error:', err)
       setStatus('error')
@@ -100,7 +104,8 @@ export default function CTAEnrollmentSection() {
           ? err.message
           : 'Something went wrong. Please try again.'
       )
-      setContactValue(submittedValue) // Restore value if submission failed
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
