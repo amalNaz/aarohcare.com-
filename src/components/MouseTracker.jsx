@@ -428,7 +428,7 @@ export default function MouseTracker() {
 
           {/* Media Preview Container */}
           <div ref={mediaRef} className="mouse-tracker-media">
-            <img ref={mediaImgRef} src="" alt="" />
+            <img ref={mediaImgRef} src={null} alt="" />
           </div>
         </div>
       </div>

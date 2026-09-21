@@ -54,9 +54,8 @@ export default function CTAEnrollmentSection() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    if (isSubmitting) return
 
-    // 1. Client-side validation
+    // 1. Client-side validation (instant)
     const validation = validateContactInput(contactValue)
     if (!validation.isValid) {
       setStatus('error')
@@ -64,12 +63,19 @@ export default function CTAEnrollmentSection() {
       return
     }
 
-    setIsSubmitting(true)
-    setStatus('idle')
+    // 2. Instant Optimistic Feedback — Zero delay for the customer
+    const submittedValue = validation.value
+    setContactValue('')
+    setStatus('success')
     setErrorMessage('')
 
+    if (resetTimeoutRef.current) clearTimeout(resetTimeoutRef.current)
+    resetTimeoutRef.current = setTimeout(() => {
+      setStatus('idle')
+    }, 6000)
+
+    // 3. Send to backend in the background
     try {
-      // 2. Send to backend endpoint
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
@@ -77,7 +83,7 @@ export default function CTAEnrollmentSection() {
           Accept: 'application/json',
         },
         body: JSON.stringify({
-          contact: validation.value,
+          contact: submittedValue,
         }),
       })
 
@@ -86,21 +92,15 @@ export default function CTAEnrollmentSection() {
       if (!response.ok) {
         throw new Error(data?.error || 'Something went wrong. Please try again.')
       }
-
-      // 3. Success state
-      setStatus('success')
-      setContactValue('')
-
-      if (resetTimeoutRef.current) clearTimeout(resetTimeoutRef.current)
-      resetTimeoutRef.current = setTimeout(() => {
-        setStatus('idle')
-      }, 6000)
     } catch (err) {
       console.error('Contact submission error:', err)
       setStatus('error')
-      setErrorMessage('Something went wrong. Please try again.')
-    } finally {
-      setIsSubmitting(false)
+      setErrorMessage(
+        typeof err.message === 'string' && err.message.includes('valid')
+          ? err.message
+          : 'Something went wrong. Please try again.'
+      )
+      setContactValue(submittedValue) // Restore value if submission failed
     }
   }
 
