@@ -1,0 +1,212 @@
+/* ==========================================================================
+   CUBERTO SIGNATURE MOUSE TRACKER & INTERACTION SYSTEM
+   1:1 match to Cuberto: Solid 9px difference dot -> 64px expanded inverted circle
+   ========================================================================== */
+
+.mouse-tracker-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 99999;
+  overflow: hidden;
+  contain: layout size style;
+}
+
+/* 1. Precision Pointer Dot (Visible only in pill mode to show pointer position) */
+.mouse-tracker-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 6px;
+  height: 6px;
+  margin-top: -3px;
+  margin-left: -3px;
+  border-radius: 9999px;
+  background-color: #0284c7; /* Brand cyan-600 */
+  box-shadow: 0 0 8px rgba(2, 132, 199, 0.6);
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0);
+  will-change: transform, opacity;
+  transition: opacity 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.15s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.mouse-tracker-dot.is-pill {
+  opacity: 0.95;
+  transform: scale(1);
+}
+
+/* 2. Unified Cuberto Cursor / Follower */
+.mouse-tracker-follower {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 9px;
+  height: 9px;
+  margin-top: -4.5px;
+  margin-left: -4.5px;
+  border-radius: 9999px;
+  background-color: #090e17;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+  mix-blend-mode: normal;
+  will-change: transform, width, height, border-radius, background, opacity;
+  transform: translate3d(-100px, -100px, 0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Cursor point turns white in dark/black areas */
+.mouse-tracker-follower.is-dark-area {
+  background-color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 2px #ffffff;
+}
+
+/* Internal content wrapper for deformation / skew */
+.mouse-tracker-follower-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  will-change: transform;
+}
+
+/* 3. Text Label Container (e.g. VIEW, EXPLORE, CONNECT) */
+.mouse-tracker-text {
+  position: absolute;
+  color: #ffffff;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  user-select: none;
+  pointer-events: none;
+}
+
+/* 4. Media / Image Preview Container */
+.mouse-tracker-media {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  overflow: hidden;
+  opacity: 0;
+  transform: scale(0.7);
+  transition: opacity 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+.mouse-tracker-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ==========================================================================
+   INTERACTIVE STATES
+   ========================================================================== */
+
+/* State: Pointer Hover (Links & Buttons) — Sleek Minimalist Hollow Ring (36px, Transparent Center) */
+.mouse-tracker-follower.is-pointer {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: 1.5px solid rgba(9, 14, 23, 0.7);
+  box-shadow: 0 0 10px rgba(9, 14, 23, 0.12);
+  mix-blend-mode: normal;
+}
+
+/* Hollow ring in dark/black areas */
+.mouse-tracker-follower.is-dark-area.is-pointer {
+  background: transparent !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.35);
+}
+
+/* State: Floating Pill Mode (CONNECT ↗ on team cards) */
+.mouse-tracker-follower.is-pill {
+  mix-blend-mode: normal;
+  background-color: #111822; /* Dark charcoal */
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 10px 25px -4px rgba(0, 0, 0, 0.45),
+              0 4px 10px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.mouse-tracker-follower.is-pill .mouse-tracker-text {
+  opacity: 1;
+  transform: scale(1);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+/* State: Media / Image Preview Mode */
+.mouse-tracker-follower.is-media {
+  mix-blend-mode: normal;
+  background-color: #0b1e36;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 20px 45px -8px rgba(0, 0, 0, 0.65);
+}
+
+.mouse-tracker-follower.is-media .mouse-tracker-media {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* State: Hidden (iframes, inputs, or data-cursor-hidden) */
+.mouse-tracker-follower.is-hidden,
+.mouse-tracker-dot.is-hidden {
+  opacity: 0 !important;
+  transform: scale(0) !important;
+  pointer-events: none !important;
+}
+
+/* ==========================================================================
+   TOUCH & MOBILE SUPPRESSION
+   Never display cursor on touch devices or fine pointer absent
+   ========================================================================== */
+@media (hover: none), (pointer: coarse) {
+  .mouse-tracker-container {
+    display: none !important;
+    visibility: hidden !important;
+  }
+}
+
+/* ==========================================================================
+   REDUCED MOTION ACCESSIBILITY
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .mouse-tracker-follower-inner {
+    transform: none !important;
+  }
+  .mouse-tracker-follower,
+  .mouse-tracker-dot {
+    transition: none !important;
+  }
+}

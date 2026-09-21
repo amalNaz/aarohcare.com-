@@ -14,6 +14,8 @@ import CTAEnrollmentSection from './components/CTAEnrollmentSection'
 import Footer from './components/Footer'
 import SmoothScroll from './components/SmoothScroll'
 import WhatsAppButton from './components/WhatsAppButton'
+import MouseTracker from './components/MouseTracker'
+import { scrollToSection } from './utils/scrollNavigation'
 
 const TermsPage = lazy(() => import('./pages/TermsPage'))
 
@@ -103,19 +105,9 @@ export default function App() {
       if (navTimeoutRef.current) clearTimeout(navTimeoutRef.current)
       navTimeoutRef.current = setTimeout(() => {
         if (hashTarget && hashTarget.startsWith('#') && hashTarget !== '#hero') {
-          const el = document.querySelector(hashTarget)
-          if (el) {
-            if (window.__lenis) {
-              window.__lenis.scrollTo(el, { offset: 0, duration: 1.2 })
-            } else {
-              el.scrollIntoView({ behavior: 'smooth' })
-            }
-            return
-          }
-        }
-        window.scrollTo(0, 0)
-        if (window.__lenis) {
-          window.__lenis.scrollTo(0, { immediate: true })
+          scrollToSection(hashTarget, { updateHash: false })
+        } else {
+          scrollToSection('#hero', { updateHash: false })
         }
       }, 100)
     }
@@ -170,6 +162,9 @@ export default function App() {
 
         {/* Global Floating WhatsApp Chat Pill Widget */}
         <WhatsAppButton />
+
+        {/* Cuberto-Inspired Global Mouse Interaction Layer */}
+        <MouseTracker />
       </div>
     </SmoothScroll>
   )

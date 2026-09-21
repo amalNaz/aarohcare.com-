@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import Lenis from 'lenis'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { scrollToSection } from '../utils/scrollNavigation'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -59,15 +60,7 @@ export default function SmoothScroll({ children }) {
       const element = document.querySelector(href)
       if (element) {
         e.preventDefault()
-        if (lenis) {
-          lenis.scrollTo(element, {
-            offset: 0,
-            duration: 1.2,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-          })
-        } else {
-          element.scrollIntoView({ behavior: 'smooth' })
-        }
+        scrollToSection(href)
       }
     }
 

@@ -58,7 +58,7 @@ export default function JourneySection() {
     <section
       id="how-it-works"
       ref={containerRef}
-      className="w-full bg-white text-slate-900 pt-16 sm:pt-24 pb-24 sm:pb-36 overflow-hidden scroll-mt-12"
+      className="w-full bg-white text-slate-900 pt-16 sm:pt-24 pb-24 sm:pb-36 overflow-hidden"
     >
       {/* Main Headline (Full-width with comfortable margin padding) */}
       <div className="w-full px-6 sm:px-10 lg:px-16 xl:px-20 mb-16 sm:mb-24">

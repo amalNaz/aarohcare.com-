@@ -79,7 +79,7 @@ export default function FAQSection() {
     <section
       id="faq"
       ref={containerRef}
-      className="w-full bg-[#f4f4f4] text-slate-900 py-16 sm:py-20 lg:py-28 relative scroll-mt-12"
+      className="w-full bg-[#f4f4f4] text-slate-900 py-16 sm:py-20 lg:py-28 relative"
     >
       <div className="max-w-6xl xl:max-w-7xl 2xl:max-w-[1360px] mx-auto px-6 sm:px-8 lg:px-12 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 xl:gap-16 items-start">

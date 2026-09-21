@@ -49,6 +49,7 @@ export default function WhatsAppButton({
         href={whatsappUrl}
         target="_blank"
         rel="noopener noreferrer"
+        data-cursor-magnetic
         className="flex items-center gap-2.5 bg-[#18181b]/95 hover:bg-[#222226] text-white border border-neutral-700/80 hover:border-neutral-600 rounded-full pl-4 sm:pl-4.5 pr-1.5 py-1.5 shadow-[0_10px_30px_-5px_rgba(0,0,0,0.5),0_0_20px_rgba(37,211,102,0.25)] hover:shadow-[0_12px_35px_-5px_rgba(0,0,0,0.6),0_0_25px_rgba(37,211,102,0.45)] backdrop-blur-md transition-all duration-300 active:scale-[0.98] group cursor-pointer"
         aria-label="Chat with AarohCare on WhatsApp"
       >

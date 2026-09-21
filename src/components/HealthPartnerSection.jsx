@@ -44,6 +44,7 @@ export default function HealthPartnerSection() {
             <div className="reveal-btn mt-8 sm:mt-10 lg:mt-12">
               <a
                 href="#how-it-works"
+                data-cursor-magnetic
                 className="group inline-flex items-center gap-3.5 bg-black hover:bg-neutral-900 text-white pl-6 pr-2 py-2 rounded-full text-xs sm:text-sm font-semibold tracking-wide shadow-md hover:shadow-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
               >
                 <span>Explore More</span>

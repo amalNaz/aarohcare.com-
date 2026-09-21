@@ -35,7 +35,7 @@ export default function FoundersSection() {
     <section
       id="about-us"
       ref={containerRef}
-      className="w-full bg-white text-slate-900 pt-16 sm:pt-20 lg:pt-24 pb-14 sm:pb-16 lg:pb-18 overflow-hidden scroll-mt-12"
+      className="w-full bg-white text-slate-900 pt-16 sm:pt-20 lg:pt-24 pb-14 sm:pb-16 lg:pb-18 overflow-hidden"
     >
       <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16">
         {/* Section Headline */}
@@ -55,6 +55,7 @@ export default function FoundersSection() {
           {founders.map((founder, idx) => (
             <div
               key={idx}
+              data-cursor-pill="CONNECT ↗"
               className="reveal-stagger-item bg-[#dde3ea] rounded-[28px] sm:rounded-[32px] lg:rounded-[36px] p-4 sm:p-4.5 lg:p-5 pb-7 sm:pb-8 flex flex-col justify-between group cursor-pointer transition-shadow duration-300 md:hover:shadow-lg"
             >
               {/* Photo Box */}
@@ -62,7 +63,7 @@ export default function FoundersSection() {
                 <img
                   src={founder.image}
                   alt={founder.name}
-                  className={`w-full h-full object-cover grayscale transition-transform duration-500 ease-out md:group-hover:scale-105 ${founder.imagePosition}`}
+                  className={`w-full h-full object-cover grayscale transition-transform duration-700 ease-out md:group-hover:scale-[1.02] ${founder.imagePosition}`}
                   loading="lazy"
                   decoding="async"
                 />

@@ -23,7 +23,7 @@ export default function CTAEnrollmentSection() {
     <section
       id="contact"
       ref={containerRef}
-      className="w-full bg-gradient-to-b from-[#0d2746] via-[#081f38] to-[#051526] text-white pt-20 sm:pt-24 lg:pt-28 pb-14 sm:pb-16 lg:pb-20 relative overflow-hidden scroll-mt-12"
+      className="w-full bg-gradient-to-b from-[#0d2746] via-[#081f38] to-[#051526] text-white pt-20 sm:pt-24 lg:pt-28 pb-14 sm:pb-16 lg:pb-20 relative overflow-hidden"
     >
       {/* Ambient background glow highlights */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-sky-600/10 rounded-full blur-3xl pointer-events-none" />
@@ -70,6 +70,7 @@ export default function CTAEnrollmentSection() {
               />
               <button
                 type="submit"
+                data-cursor-magnetic
                 className="bg-white hover:bg-slate-100 text-[#092240] font-semibold text-[14px] sm:text-[15px] px-7 sm:px-9 py-2.5 sm:py-3.5 rounded-full transition-all duration-200 shadow-md shrink-0 cursor-pointer active:scale-[0.98]"
               >
                 Contact Us

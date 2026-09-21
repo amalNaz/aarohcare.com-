@@ -176,7 +176,7 @@ export default function Footer({ onNavigate }) {
         {/* Bottom Bar Divider */}
         <div className="reveal-meta border-t border-neutral-800/80 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-neutral-400">
           <p className="text-center md:text-left">
-            © 2025 AarohCare — Aarohacare Technologies Pvt Ltd. All rights reserved.
+            © 2026 AarohCare — Aarohacare Technologies Pvt Ltd. All rights reserved.
           </p>
 
           {/* Legal Links */}

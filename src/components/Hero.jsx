@@ -43,7 +43,7 @@ export default function Hero({ videoSrc = '/hero-bg.mp4' }) {
       {/* Header / Navbar */}
       <Navbar />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 pt-24 sm:pt-32 lg:pt-36">
+      <div className="relative z-10 w-full px-5 pt-24 sm:pt-32 lg:pt-36">
         {/* Main Headline */}
         <div className="max-w-3xl mb-24 sm:mb-32 lg:mb-40">
           <TextAnimate
@@ -130,6 +130,7 @@ export default function Hero({ videoSrc = '/hero-bg.mp4' }) {
               <div className="reveal-btn">
                 <a
                   href="#how-it-works"
+                  data-cursor-magnetic
                   className="group inline-flex items-center gap-2.5 bg-black/90 hover:bg-black text-white pl-5 pr-2 py-1.5 rounded-full text-xs sm:text-sm font-medium border border-slate-700/60 shadow-lg transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
                 >
                   <span>Explore More</span>

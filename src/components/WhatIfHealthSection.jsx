@@ -640,7 +640,7 @@ export default function WhatIfHealthSection() {
     <section
       id="features"
       ref={sectionRef}
-      className="relative w-full bg-black scroll-mt-0"
+      className="relative w-full bg-black"
     >
       {/* Inner Pinned Container — GSAP pins this container inside the outer section */}
       <div

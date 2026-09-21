@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { ArrowUpRight } from 'lucide-react'
 import { MotionConfig, motion, AnimatePresence } from 'motion/react'
+import { scrollToSection } from '../utils/scrollNavigation'
 
 const HAMBURGER_VARIANTS = {
   top: {
@@ -122,12 +123,17 @@ export default function Navbar() {
             // On mobile: ALWAYS popped up / visible
             setIsVisible((prev) => (prev ? prev : true))
           } else {
-            // On desktop: show on scroll-up, hide on scroll-down
-            if (currentScrollY < lastScrollY.current - 4) {
+            // During programmatic navigation, keep navbar visible
+            if (window.__isNavigating) {
               setIsVisible((prev) => (prev ? prev : true))
-            } else if (currentScrollY > lastScrollY.current + 6) {
-              setIsVisible((prev) => (!prev ? prev : false))
-              setMobileMenuOpen(false)
+            } else {
+              // On desktop: show on scroll-up, hide on scroll-down
+              if (currentScrollY < lastScrollY.current - 4) {
+                setIsVisible((prev) => (prev ? prev : true))
+              } else if (currentScrollY > lastScrollY.current + 6) {
+                setIsVisible((prev) => (!prev ? prev : false))
+                setMobileMenuOpen(false)
+              }
             }
           }
         }
@@ -164,24 +170,13 @@ export default function Navbar() {
   }, [mobileMenuOpen])
 
   const handleNavClick = (e, href) => {
-    e.preventDefault()
+    if (e && typeof e.preventDefault === 'function') {
+      e.preventDefault()
+    }
     setMobileMenuOpen(false)
-    if (href === '#' || href === '#hero') {
-      if (typeof window !== 'undefined' && window.__lenis) {
-        window.__lenis.scrollTo(0, { duration: 1.2 })
-      } else {
-        window.scrollTo({ top: 0, behavior: 'smooth' })
-      }
-      return
-    }
-    const targetElement = document.querySelector(href)
-    if (targetElement) {
-      if (typeof window !== 'undefined' && window.__lenis) {
-        window.__lenis.scrollTo(targetElement, { offset: 0, duration: 1.2 })
-      } else {
-        targetElement.scrollIntoView({ behavior: 'smooth' })
-      }
-    }
+    document.body.style.overflow = ''
+    setIsVisible(true)
+    scrollToSection(href)
   }
 
   return (
@@ -201,7 +196,7 @@ export default function Navbar() {
       }`}
     >
       <div
-        className={`max-w-7xl w-full mx-auto px-6 sm:px-10 lg:px-16 flex items-center justify-between shrink-0 ${
+        className={`w-full px-5 flex items-center justify-between shrink-0 ${
           mobileMenuOpen ? 'py-4 border-b border-white/10' : ''
         }`}
       >
@@ -281,7 +276,7 @@ export default function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -6 }}
             transition={{ duration: 0.22, ease: 'easeOut' }}
-            className="w-full max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 flex-1 flex flex-col py-6 overflow-y-auto"
+            className="w-full px-5 flex-1 flex flex-col py-6 overflow-y-auto"
           >
             <div className="w-full flex flex-col">
               {/* Category Header */}

@@ -57,7 +57,7 @@ export default function ClinicOperationsSection() {
     <section
       id="products"
       ref={containerRef}
-      className="w-full bg-white text-slate-900 pt-16 sm:pt-20 lg:pt-24 pb-8 sm:pb-12 lg:pb-16 overflow-hidden scroll-mt-12"
+      className="w-full bg-white text-slate-900 pt-16 sm:pt-20 lg:pt-24 pb-8 sm:pb-12 lg:pb-16 overflow-hidden"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Heading */}
