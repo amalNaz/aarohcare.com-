@@ -1,5 +1,5 @@
 import React, { useRef, useState, useCallback, useEffect } from 'react'
-import clinicDashboardImg from '../assets/clinic-dashboard-screen.webp'
+import clinicDashboardImg from '../assets/clinic-dashboard-screen.png'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 import { TextAnimate } from '@/registry/magicui/text-animate'
 
