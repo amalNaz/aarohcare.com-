@@ -8,28 +8,28 @@ gsap.registerPlugin(ScrollTrigger)
 const STATES = [
   {
     num: '1',
-    title: 'Instant Booking',
-    description: 'Book your OPD appointment in under 30 seconds.',
+    title: 'Less waiting',
+    description: 'Shorter queues and faster turnaround with real-time updates.',
   },
   {
     num: '2',
-    title: 'Convenient Timing',
-    description: 'Choose an OPD time that works best for you.',
+    title: 'More predictable',
+    description: 'Clear appointment slots and timelines so patients know what to expect, when.',
   },
   {
     num: '3',
-    title: 'Live Token Tracking',
-    description: 'Track your token status and know when to arrive.',
+    title: 'More connected',
+    description: 'Clinics, labs, and patients linked on one platform instead of scattered calls and paperwork.',
   },
   {
     num: '4',
-    title: 'Smart Arrival Alerts',
-    description: 'Get notified when it’s the right time to reach.',
+    title: 'More human',
+    description: 'Care and communication that still feels personal, not robotic, despite the tech.',
   },
   {
     num: '5',
-    title: 'Less Waiting',
-    description: 'Spend less time waiting and more time getting care.',
+    title: 'Built around your time',
+    description: "Scheduling and access designed to fit into the patient's life, not the other way around.",
   },
 ]
 
@@ -655,7 +655,7 @@ export default function WhatIfHealthSection() {
         >
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[4rem] font-bold tracking-tight text-white leading-[1.08]">
             What If <br />
-            Health Was ...
+            Healthcare Was ...
           </h2>
         </div>
 
