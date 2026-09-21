@@ -348,45 +348,53 @@ export default function PrivacyPolicyPage({ onNavigateHome, onNavigatePage }) {
     <div className="min-h-screen bg-[#f8fafc] text-slate-900 flex flex-col justify-between selection:bg-blue-500/20 selection:text-blue-900">
       {/* Top Clean Navigation Header */}
       <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200/80 shadow-xs">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-          {/* Back to Home Button */}
-          <button
-            type="button"
-            onClick={() => onNavigateHome && onNavigateHome()}
-            className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-700 hover:text-blue-600 bg-slate-100 hover:bg-blue-50 px-3.5 py-1.5 rounded-full transition-all duration-200 cursor-pointer group"
-          >
-            <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
-            <span>Back to Home</span>
-          </button>
-
-          {/* AarohCare Brand Logo & Name */}
-          <button
-            type="button"
-            onClick={() => onNavigateHome && onNavigateHome('#hero')}
-            className="flex items-center gap-2.5 cursor-pointer bg-transparent border-none p-0 focus:outline-none group"
-          >
-            <img
-              src={logoImg}
-              alt="AarohCare Logo"
-              className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg object-contain shadow-xs shrink-0"
-            />
-            <span className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 group-hover:opacity-85 transition-opacity">
-              AarohCare
-            </span>
-          </button>
-
-          {/* Document Switcher Toggle */}
-          <div className="flex items-center bg-slate-100/90 p-1 rounded-full border border-slate-200/80 text-xs font-semibold">
-            <span className="px-3 py-1 bg-white text-blue-700 rounded-full shadow-xs">
-              Privacy Policy
-            </span>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between relative">
+          {/* Left: Back to Home Arrow Button */}
+          <div className="flex items-center shrink-0 z-10">
             <button
               type="button"
-              onClick={() => onNavigatePage ? onNavigatePage('terms') : (window.location.hash = '#terms')}
-              className="px-3 py-1 text-slate-600 hover:text-slate-900 transition-colors cursor-pointer"
+              onClick={() => onNavigateHome && onNavigateHome()}
+              aria-label="Back to Home"
+              title="Back to Home"
+              className="inline-flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 text-slate-700 hover:text-blue-600 bg-slate-100 hover:bg-blue-50 rounded-full transition-all duration-200 cursor-pointer border border-slate-200/80 shadow-2xs hover:shadow-xs group shrink-0 active:scale-95"
             >
-              Terms
+              <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 transition-transform group-hover:-translate-x-0.5" />
             </button>
+          </div>
+
+          {/* Center: AarohCare Brand Logo & Name */}
+          <div className="absolute left-1/2 -translate-x-1/2 flex items-center pointer-events-auto">
+            <button
+              type="button"
+              onClick={() => onNavigateHome && onNavigateHome('#hero')}
+              className="flex items-center gap-2 sm:gap-2.5 cursor-pointer bg-transparent border-none p-0 focus:outline-none group whitespace-nowrap"
+            >
+              <img
+                src={logoImg}
+                alt="AarohCare Logo"
+                className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg object-contain shadow-xs shrink-0"
+              />
+              <span className="text-lg sm:text-xl md:text-2xl font-bold tracking-tight text-slate-900 group-hover:opacity-85 transition-opacity">
+                AarohCare
+              </span>
+            </button>
+          </div>
+
+          {/* Right: Document Switcher Toggle */}
+          <div className="flex items-center shrink-0 z-10">
+            <div className="flex items-center bg-slate-100/90 p-1 rounded-full border border-slate-200/80 text-xs font-semibold">
+              <span className="px-2.5 sm:px-3 py-1 bg-white text-blue-700 rounded-full shadow-xs whitespace-nowrap">
+                <span className="hidden sm:inline">Privacy Policy</span>
+                <span className="sm:hidden">Privacy</span>
+              </span>
+              <button
+                type="button"
+                onClick={() => onNavigatePage ? onNavigatePage('terms') : (window.location.hash = '#terms')}
+                className="px-2.5 sm:px-3 py-1 text-slate-600 hover:text-slate-900 transition-colors cursor-pointer whitespace-nowrap"
+              >
+                Terms
+              </button>
+            </div>
           </div>
         </div>
       </header>
