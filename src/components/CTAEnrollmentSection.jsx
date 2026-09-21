@@ -6,16 +6,42 @@ import { TextAnimate } from '@/registry/magicui/text-animate'
 export default function CTAEnrollmentSection() {
   const [contactValue, setContactValue] = useState('')
   const [submitted, setSubmitted] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const containerRef = useScrollReveal({ threshold: 0.15 })
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    if (contactValue.trim()) {
+    const value = contactValue.trim()
+    if (!value || isSubmitting) return
+
+    setIsSubmitting(true)
+
+    try {
+      await fetch('https://formsubmit.co/ajax/aarohcare.in@gmail.com', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          _subject: 'New User Alert: A new user has shared their contact details through the AarohCare website.',
+          _template: 'table',
+          _captcha: 'false',
+          Alert: 'New User Alert: A new user has shared their contact details through the AarohCare website.',
+          'Contact Information': value,
+          'Submission Details': 'New User Submission: A new user has submitted their details through the AarohCare website. The submitted information has been sent to aarohcare.in@gmail.com.',
+          'Submitted At': new Date().toLocaleString(),
+        }),
+      })
+    } catch (err) {
+      console.warn('Submission request handled:', err)
+    } finally {
+      setIsSubmitting(false)
       setSubmitted(true)
       setTimeout(() => {
         setSubmitted(false)
         setContactValue('')
-      }, 4000)
+      }, 6000)
     }
   }
 
@@ -70,17 +96,20 @@ export default function CTAEnrollmentSection() {
               />
               <button
                 type="submit"
+                disabled={isSubmitting}
                 data-cursor-magnetic
-                className="bg-white hover:bg-slate-100 text-[#092240] font-semibold text-[14px] sm:text-[15px] px-7 sm:px-9 py-2.5 sm:py-3.5 rounded-full transition-all duration-200 shadow-md shrink-0 cursor-pointer active:scale-[0.98]"
+                className="bg-white hover:bg-slate-100 disabled:opacity-75 text-[#092240] font-semibold text-[14px] sm:text-[15px] px-7 sm:px-9 py-2.5 sm:py-3.5 rounded-full transition-all duration-200 shadow-md shrink-0 cursor-pointer active:scale-[0.98]"
               >
-                Contact Us
+                {isSubmitting ? 'Sending...' : 'Contact Us'}
               </button>
             </div>
 
             {submitted && (
-              <div className="flex items-center gap-2 text-emerald-400 text-sm font-medium mt-3 px-4 animate-fadeIn">
-                <CheckCircle2 className="w-4 h-4 shrink-0" />
-                <span>Thank you! We'll reach out when AarohCare launches near you.</span>
+              <div className="flex items-start gap-2.5 text-emerald-400 text-xs sm:text-sm font-medium mt-3.5 px-4 animate-fadeIn">
+                <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5" />
+                <span>
+                  New User Submission: A new user has submitted their details through the AarohCare website. The submitted information has been sent to aarohcare.in@gmail.com.
+                </span>
               </div>
             )}
           </form>

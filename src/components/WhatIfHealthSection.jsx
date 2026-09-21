@@ -8,28 +8,28 @@ gsap.registerPlugin(ScrollTrigger)
 const STATES = [
   {
     num: '1',
-    title: 'Instant',
-    description: 'What once took months, now happens in moments.',
+    title: 'Instant Booking',
+    description: 'Book your OPD appointment in under 30 seconds.',
   },
   {
     num: '2',
-    title: 'Predictive',
-    description: 'So you never had to wait for symptoms.',
+    title: 'Convenient Timing',
+    description: 'Choose an OPD time that works best for you.',
   },
   {
     num: '3',
-    title: 'Accessible',
-    description: 'No longer limited by geographical location and availability.',
+    title: 'Live Token Tracking',
+    description: 'Track your token status and know when to arrive.',
   },
   {
     num: '4',
-    title: 'Intelligent',
-    description: 'Where data tells your story — and changes your outcome.',
+    title: 'Smart Arrival Alerts',
+    description: 'Get notified when it’s the right time to reach.',
   },
   {
     num: '5',
-    title: 'Designed for you',
-    description: "Because you're not a checkbox or a protocol.",
+    title: 'Less Waiting',
+    description: 'Spend less time waiting and more time getting care.',
   },
 ]
 
