@@ -211,10 +211,13 @@ export default function Navbar() {
         >
           <img
             src={logoImg}
-            alt="Aarohcare Logo"
+            alt="AarohCare logo"
+            width={32}
+            height={32}
+            decoding="async"
             className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg object-contain shadow-xs shrink-0"
           />
-          <span>Aarohcare</span>
+          <span>AarohCare</span>
         </a>
 
         {/* Desktop Navigation Links */}

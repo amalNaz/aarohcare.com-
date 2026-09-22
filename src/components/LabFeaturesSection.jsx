@@ -84,7 +84,9 @@ export default function LabFeaturesSection() {
                   <img
                     src={labDashboardImg}
                     alt="AarohCare Lab Command Center Dashboard"
-                    className="w-full h-auto object-cover sm:object-contain select-none block"
+                    width={1024}
+                    height={571}
+                    className="w-full h-auto aspect-[1024/571] object-cover sm:object-contain select-none block"
                     loading="lazy"
                     decoding="async"
                   />

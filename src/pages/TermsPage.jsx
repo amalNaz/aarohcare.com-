@@ -349,7 +349,10 @@ export default function TermsPage({ onNavigateHome, onNavigatePage }) {
             >
               <img
                 src={logoImg}
-                alt="AarohCare Logo"
+                alt="AarohCare logo"
+                width={32}
+                height={32}
+                decoding="async"
                 className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg object-contain shadow-xs shrink-0"
               />
               <span className="text-base sm:text-xl font-bold tracking-tight text-slate-900 group-hover:text-blue-600 transition-colors truncate">

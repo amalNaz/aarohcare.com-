@@ -7,7 +7,7 @@ export default function JourneySection() {
   const steps = [
     {
       title: 'Smart OP Booking',
-      description: 'Book verified OPD appointments in under 30 seconds via AarohaCare App.',
+      description: 'Book verified OPD appointments in under 30 seconds via AarohCare App.',
       icon: (
         <svg className="w-9 h-9 sm:w-10 sm:h-10 stroke-[1.6]" viewBox="0 0 24 24" fill="none" stroke="currentColor">
           <path

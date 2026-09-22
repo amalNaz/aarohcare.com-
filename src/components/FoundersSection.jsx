@@ -12,6 +12,7 @@ export default function FoundersSection() {
       bio: 'Leads product vision and company direction',
       image: amalImg,
       imagePosition: 'object-[center_20%]',
+      alt: 'Amal Hisham K, Founder and CEO of AarohCare',
     },
     {
       name: 'Muhammed Aslam',
@@ -19,6 +20,7 @@ export default function FoundersSection() {
       bio: 'Leads operations and hospital/clinic partnerships',
       image: aslamImg,
       imagePosition: 'object-[center_15%]',
+      alt: 'Muhammed Aslam, COO of AarohCare',
     },
     {
       name: 'Kiran VK',
@@ -26,6 +28,7 @@ export default function FoundersSection() {
       bio: 'Leads marketing and growth',
       image: kiranImg,
       imagePosition: 'object-[center_25%]',
+      alt: 'Kiran VK, CMO of AarohCare',
     },
   ]
 
@@ -61,9 +64,11 @@ export default function FoundersSection() {
               >
                 <img
                   src={founder.image}
-                  alt={founder.name}
+                  alt={founder.alt}
+                  width={400}
+                  height={400}
                   className={`w-full h-full object-cover grayscale transition-transform duration-700 ease-out hover:scale-[1.02] ${founder.imagePosition}`}
-                  loading="eager"
+                  loading="lazy"
                   decoding="async"
                 />
               </div>

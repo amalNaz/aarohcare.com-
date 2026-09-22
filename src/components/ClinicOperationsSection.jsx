@@ -128,7 +128,9 @@ export default function ClinicOperationsSection() {
                   <img
                     src={clinicDashboardImg}
                     alt="AarohCare Clinic Queue Management Dashboard"
-                    className="w-full h-auto object-cover select-none block"
+                    width={1024}
+                    height={504}
+                    className="w-full h-auto aspect-[1024/504] object-cover select-none block"
                     loading="lazy"
                     decoding="async"
                   />

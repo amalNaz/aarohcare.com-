@@ -16,7 +16,7 @@ export default function ZeroWaitSection() {
       description:
         'Reserve verified OPD appointments in under 30 seconds via WhatsApp or mobile browser without dawn queues.',
       image: smartOpBookingImg,
-      alt: 'Smart OP Booking at clinic',
+      alt: 'Smart OP appointment booking on mobile phone',
     },
     {
       id: 'live-token-tracking',
@@ -24,7 +24,7 @@ export default function ZeroWaitSection() {
       description:
         'Unbroken real-time telemetry syncing doctor consultation intervals directly to your screen with millisecond latency.',
       image: liveTokenTrackingImg,
-      alt: 'Live doctor consultation and token tracking',
+      alt: 'Live token queue and doctor consultation tracking on mobile screen',
     },
     {
       id: 'digital-lab-reports',
@@ -32,7 +32,7 @@ export default function ZeroWaitSection() {
       description:
         'Download reports straight from the app, with no physical copies or second visits needed.',
       image: digitalLabReportsImg,
-      alt: 'Digital lab reports in mobile app',
+      alt: 'Digital diagnostic lab reports displayed on smartphone',
     },
     {
       id: 'multi-clinic-search',
@@ -40,7 +40,7 @@ export default function ZeroWaitSection() {
       description:
         'Search and compare doctors, hospitals, and diagnostic labs all in one convenient place.',
       image: multiClinicSearchImg,
-      alt: 'Multi-clinic search and compare',
+      alt: 'Clinic and doctor search directory interface on mobile',
     },
     {
       id: 'digital-health-records',
@@ -48,7 +48,7 @@ export default function ZeroWaitSection() {
       description:
         'Lab reports, prescriptions, and complete clinical visit history securely stored in one place.',
       image: digitalHealthRecordsImg,
-      alt: 'Digital health records on smartphone',
+      alt: 'Digital medical records and clinical history on smartphone',
     },
   ]
 
@@ -86,6 +86,8 @@ export default function ZeroWaitSection() {
               <img
                 src={card.image}
                 alt={card.alt}
+                width={480}
+                height={600}
                 className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out"
                 loading="lazy"
                 decoding="async"

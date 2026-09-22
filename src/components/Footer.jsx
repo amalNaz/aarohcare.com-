@@ -105,13 +105,16 @@ export default function Footer({ onNavigate }) {
                 {/* AarohCare Logo Icon */}
                 <img
                   src={logoImg}
-                  alt="AarohaCare Logo"
+                  alt="AarohCare logo"
+                  width={40}
+                  height={40}
+                  decoding="async"
                   className="w-10 h-10 rounded-lg object-contain shadow-sm shrink-0"
                 />
 
                 <div>
                   <h3 className="text-xl font-bold tracking-tight text-white leading-none">
-                    AarohaCare
+                    AarohCare
                   </h3>
                   <p className="text-[10px] font-semibold uppercase tracking-wider text-neutral-400 mt-1">
                     Technologies Pvt Ltd
@@ -227,7 +230,7 @@ Building smarter patient flow management solutions for hospitals, clinics, and l
         {/* Bottom Bar Divider */}
         <div className="reveal-meta border-t border-neutral-800/80 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-neutral-400">
           <p className="text-center md:text-left">
-            © 2026 AarohCare — Aarohacare Technologies Pvt Ltd. All rights reserved.
+            © 2026 AarohCare — AarohCare Technologies Pvt Ltd. All rights reserved.
           </p>
 
           {/* Legal Links */}

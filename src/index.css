@@ -91,7 +91,6 @@
   transform: translateY(48px);
   transition: opacity 850ms cubic-bezier(0.22, 1, 0.36, 1),
               transform 850ms cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: opacity, transform;
 }
 
 .reveal-text {
@@ -99,7 +98,6 @@
   transform: translateY(26px);
   transition: opacity 800ms cubic-bezier(0.22, 1, 0.36, 1) 100ms,
               transform 800ms cubic-bezier(0.22, 1, 0.36, 1) 100ms;
-  will-change: opacity, transform;
 }
 
 .reveal-meta {
@@ -107,7 +105,6 @@
   transform: translateY(16px);
   transition: opacity 750ms cubic-bezier(0.22, 1, 0.36, 1) 180ms,
               transform 750ms cubic-bezier(0.22, 1, 0.36, 1) 180ms;
-  will-change: opacity, transform;
 }
 
 .reveal-btn {
@@ -115,7 +112,6 @@
   transform: translateY(16px);
   transition: opacity 750ms cubic-bezier(0.22, 1, 0.36, 1) 220ms,
               transform 750ms cubic-bezier(0.22, 1, 0.36, 1) 220ms;
-  will-change: opacity, transform;
 }
 
 .reveal-image {
@@ -123,7 +119,6 @@
   transform: scale(1.03);
   transition: opacity 1000ms cubic-bezier(0.22, 1, 0.36, 1),
               transform 1000ms cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: opacity, transform;
 }
 
 .reveal-stagger-item {
@@ -131,7 +126,6 @@
   transform: translateY(28px);
   transition: opacity 750ms cubic-bezier(0.22, 1, 0.36, 1),
               transform 750ms cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: opacity, transform;
 }
 
 /* When Triggered: Apply Active Reveal State */
@@ -292,7 +286,6 @@
   transform: translateY(70px) scale(0.95);
   transition: opacity 750ms cubic-bezier(0.22, 1, 0.36, 1),
               transform 750ms cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: opacity, transform;
 }
 
 .reveal-ipad-showcase .ipad-device-chassis {
@@ -305,7 +298,6 @@
   transform: translateY(12px);
   transition: opacity 650ms cubic-bezier(0.22, 1, 0.36, 1),
               transform 650ms cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: opacity, transform;
 }
 
 /* When Triggered: Apply Active Reveal State (Pop Up) */

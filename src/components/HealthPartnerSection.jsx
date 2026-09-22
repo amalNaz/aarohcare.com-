@@ -16,8 +16,10 @@ export default function HealthPartnerSection() {
             <img
               src={healthPartnerHandImg}
               alt="AarohCare App Live OP Queue Tracking"
+              width={1024}
+              height={1024}
               className="reveal-image w-full h-full object-contain lg:object-cover object-center pointer-events-none"
-              loading="eager"
+              loading="lazy"
               decoding="async"
             />
           </div>

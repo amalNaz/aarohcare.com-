@@ -261,7 +261,7 @@ const SECTIONS = [
           <Building2 className="w-4 h-4 text-slate-400 mt-0.5 shrink-0" />
           <div>
             <p className="font-semibold text-slate-800">Registered Business Address</p>
-            <p className="text-slate-500 mt-0.5">Aarohacare Technologies Pvt Ltd, Kerala, India</p>
+            <p className="text-slate-500 mt-0.5">AarohCare Technologies Pvt Ltd, Kerala, India</p>
           </div>
         </div>
       </div>
@@ -368,7 +368,10 @@ export default function PrivacyPolicyPage({ onNavigateHome, onNavigatePage }) {
             >
               <img
                 src={logoImg}
-                alt="AarohCare Logo"
+                alt="AarohCare logo"
+                width={32}
+                height={32}
+                decoding="async"
                 className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg object-contain shadow-xs shrink-0"
               />
               <span className="text-base sm:text-xl font-bold tracking-tight text-slate-900 group-hover:text-blue-600 transition-colors truncate">

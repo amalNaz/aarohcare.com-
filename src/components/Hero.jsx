@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { ArrowUpRight } from 'lucide-react'
 import Navbar from './Navbar'
 import { useScrollReveal } from '../hooks/useScrollReveal'
@@ -8,15 +8,45 @@ export default function Hero({ videoSrc = '/hero-bg.mp4' }) {
   const videoRef = useRef(null)
   const containerRef = useScrollReveal({ threshold: 0.05 })
 
+  // Check if viewport is desktop (>= 768px) and user does not prefer reduced motion
+  const [canPlayVideo, setCanPlayVideo] = useState(() => {
+    if (typeof window === 'undefined') return false
+    const isDesktop = window.matchMedia('(min-width: 768px)').matches
+    const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    return isDesktop && !isReducedMotion
+  })
+
   useEffect(() => {
-    if (videoRef.current) {
+    if (typeof window === 'undefined') return
+
+    const desktopMedia = window.matchMedia('(min-width: 768px)')
+    const reducedMotionMedia = window.matchMedia('(prefers-reduced-motion: reduce)')
+
+    const updateVideoEligibility = () => {
+      const isEligible = desktopMedia.matches && !reducedMotionMedia.matches
+      setCanPlayVideo(isEligible)
+    }
+
+    desktopMedia.addEventListener('change', updateVideoEligibility)
+    reducedMotionMedia.addEventListener('change', updateVideoEligibility)
+
+    return () => {
+      desktopMedia.removeEventListener('change', updateVideoEligibility)
+      reducedMotionMedia.removeEventListener('change', updateVideoEligibility)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (canPlayVideo && videoRef.current) {
       videoRef.current.defaultMuted = true
       videoRef.current.muted = true
       videoRef.current.play().catch((err) => {
         console.warn('Hero background video autoplay prevented:', err)
       })
+    } else if (!canPlayVideo && videoRef.current) {
+      videoRef.current.pause()
     }
-  }, [videoSrc])
+  }, [canPlayVideo, videoSrc])
 
   return (
     <section
@@ -28,13 +58,16 @@ export default function Hero({ videoSrc = '/hero-bg.mp4' }) {
       <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-0">
         <video
           ref={videoRef}
-          autoPlay
+          poster="/hero-poster.webp"
+          autoPlay={canPlayVideo}
           loop
           muted
           playsInline
           className="w-full h-full object-cover object-center"
         >
-          <source src={videoSrc} type="video/mp4" />
+          {canPlayVideo && (
+            <source src={videoSrc} type="video/mp4" media="(min-width: 768px)" />
+          )}
         </video>
         {/* Subtle dark gradient overlay to ensure text contrast and legibility */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#010a14]/50 via-[#010a14]/20 to-[#010a14]/85 pointer-events-none" />

@@ -90,7 +90,7 @@ export default function FAQSection() {
             <div className="reveal-image relative w-full aspect-[1.12/1] sm:aspect-[1.1/1] lg:h-[480px] xl:h-[530px] rounded-[10px] sm:rounded-[12px] overflow-hidden bg-slate-900 shadow-sm">
               <img
                 src={faqRunningImg}
-                alt="Aarohcare"
+                alt="Person running on an outdoor track"
                 width={640}
                 height={570}
                 className="w-full h-full object-cover object-center select-none"
@@ -100,7 +100,7 @@ export default function FAQSection() {
               {/* Centered Aarohcare brand text */}
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                 <span className="text-white text-2xl sm:text-3xl lg:text-[1.85rem] font-medium tracking-tight drop-shadow-sm">
-                  Aarohcare
+                  AarohCare
                 </span>
               </div>
             </div>
