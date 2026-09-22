@@ -396,29 +396,6 @@ export default function PrivacyPolicyPage({ onNavigateHome, onNavigatePage }) {
         </div>
       </header>
 
-      {/* Mobile Horizontal Quick-Jump Pill Bar */}
-      <div className="lg:hidden sticky top-14 sm:top-16 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 px-3.5 sm:px-4 py-2.5 overflow-x-auto no-scrollbar shadow-xs">
-        <div className="flex items-center gap-1.5 w-max">
-          {SECTIONS.map((sec) => {
-            const isActive = activeSection === sec.id
-            return (
-              <button
-                key={sec.id}
-                type="button"
-                onClick={() => scrollToClause(sec.id)}
-                className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap transition-all duration-150 cursor-pointer ${
-                  isActive
-                    ? 'bg-blue-600 text-white shadow-xs'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                }`}
-              >
-                {sec.number}. {sec.title}
-              </button>
-            )
-          })}
-        </div>
-      </div>
-
       {/* Main Container */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-14 lg:py-16">
         {/* Page Title & Meta Header */}
