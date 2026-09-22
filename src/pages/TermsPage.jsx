@@ -328,42 +328,39 @@ export default function TermsPage({ onNavigateHome, onNavigatePage }) {
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-900 flex flex-col justify-between selection:bg-blue-500/20 selection:text-blue-900">
       {/* Top Clean Navigation Header */}
-      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200/80 shadow-xs">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between relative">
-          {/* Left: Back to Home Arrow Button */}
-          <div className="flex items-center shrink-0 z-10">
+      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs">
+        <div className="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-2 sm:gap-4">
+          {/* Left: Back to Home Arrow Button + Brand Logo & Name */}
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
             <button
               type="button"
               onClick={() => onNavigateHome && onNavigateHome()}
               aria-label="Back to Home"
               title="Back to Home"
-              className="inline-flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 text-slate-700 hover:text-blue-600 bg-slate-100 hover:bg-blue-50 rounded-full transition-all duration-200 cursor-pointer border border-slate-200/80 shadow-2xs hover:shadow-xs group shrink-0 active:scale-95"
+              className="inline-flex items-center justify-center w-8.5 h-8.5 sm:w-10 sm:h-10 text-slate-700 hover:text-blue-600 bg-slate-100 hover:bg-blue-50 rounded-full transition-all duration-200 cursor-pointer border border-slate-200/80 shadow-2xs hover:shadow-xs group shrink-0 active:scale-95"
             >
               <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 transition-transform group-hover:-translate-x-0.5" />
             </button>
-          </div>
 
-          {/* Center: AarohCare Brand Logo & Name */}
-          <div className="absolute left-1/2 -translate-x-1/2 flex items-center pointer-events-auto">
             <button
               type="button"
               onClick={() => onNavigateHome && onNavigateHome('#hero')}
-              className="flex items-center gap-2 sm:gap-2.5 cursor-pointer bg-transparent border-none p-0 focus:outline-none group whitespace-nowrap"
+              className="flex items-center gap-2 cursor-pointer bg-transparent border-none p-0 focus:outline-none group min-w-0"
             >
               <img
                 src={logoImg}
                 alt="AarohCare Logo"
                 className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg object-contain shadow-xs shrink-0"
               />
-              <span className="text-lg sm:text-xl md:text-2xl font-bold tracking-tight text-slate-900 group-hover:opacity-85 transition-opacity">
+              <span className="text-base sm:text-xl font-bold tracking-tight text-slate-900 group-hover:text-blue-600 transition-colors truncate">
                 AarohCare
               </span>
             </button>
           </div>
 
           {/* Right: Document Switcher Toggle */}
-          <div className="flex items-center shrink-0 z-10">
-            <div className="flex items-center bg-slate-100/90 p-1 rounded-full border border-slate-200/80 text-xs font-semibold">
+          <div className="flex items-center shrink-0">
+            <div className="flex items-center bg-slate-100/90 p-0.5 sm:p-1 rounded-full border border-slate-200/80 text-[11px] sm:text-xs font-semibold">
               <button
                 type="button"
                 onClick={() => onNavigatePage ? onNavigatePage('privacy') : (window.location.hash = '#privacy')}
@@ -381,7 +378,7 @@ export default function TermsPage({ onNavigateHome, onNavigatePage }) {
       </header>
 
       {/* Hero Banner with Dark Blue Gradient */}
-      <section className="w-full bg-[#051326] text-white pt-14 sm:pt-16 pb-14 sm:pb-18 relative overflow-hidden">
+      <section className="w-full bg-[#051326] text-white pt-10 sm:pt-16 pb-12 sm:pb-18 relative overflow-hidden">
         {/* Ambient Glows */}
         <div className="absolute -top-24 -right-24 w-96 h-96 bg-blue-600/20 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-cyan-600/15 rounded-full blur-3xl pointer-events-none" />
@@ -389,7 +386,7 @@ export default function TermsPage({ onNavigateHome, onNavigatePage }) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-3xl">
             {/* Breadcrumb pill */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-950/90 border border-blue-800/60 text-xs font-medium text-blue-200 mb-6 backdrop-blur-md shadow-xs">
+            <div className="inline-flex items-center gap-2 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-blue-950/90 border border-blue-800/60 text-xs font-medium text-blue-200 mb-4 sm:mb-6 backdrop-blur-md shadow-xs">
               <FileText className="w-3.5 h-3.5 text-blue-400" />
               <span>Official Agreement</span>
               <span className="text-blue-500">•</span>
@@ -401,12 +398,12 @@ export default function TermsPage({ onNavigateHome, onNavigatePage }) {
               as="h1"
               animation="slideUp"
               by="word"
-              className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white leading-tight mb-4"
+              className="text-2xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white leading-tight mb-3 sm:mb-4"
             >
               AarohCare — Terms & Conditions
             </TextAnimate>
 
-            <p className="text-slate-300 text-sm sm:text-base lg:text-lg leading-relaxed max-w-2xl font-normal">
+            <p className="text-slate-300 text-xs sm:text-base lg:text-lg leading-relaxed max-w-2xl font-normal">
               Please read these terms and conditions carefully before using the AarohCare digital OP token booking and live queue telemetry platform.
             </p>
           </div>
@@ -414,7 +411,7 @@ export default function TermsPage({ onNavigateHome, onNavigatePage }) {
       </section>
 
       {/* Mobile Horizontal Quick-Jump Pill Bar */}
-      <div className="lg:hidden sticky top-16 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 px-4 py-2.5 overflow-x-auto no-scrollbar shadow-xs">
+      <div className="lg:hidden sticky top-14 sm:top-16 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 px-3.5 sm:px-4 py-2.5 overflow-x-auto no-scrollbar shadow-xs">
         <div className="flex items-center gap-1.5 w-max">
           {SECTIONS.map((sec) => {
             const isActive = activeSection === sec.id
@@ -423,7 +420,7 @@ export default function TermsPage({ onNavigateHome, onNavigatePage }) {
                 key={sec.id}
                 type="button"
                 onClick={() => scrollToClause(sec.id)}
-                className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap transition-all duration-150 ${
+                className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap transition-all duration-150 cursor-pointer ${
                   isActive
                     ? 'bg-blue-600 text-white shadow-xs'
                     : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
@@ -437,7 +434,7 @@ export default function TermsPage({ onNavigateHome, onNavigatePage }) {
       </div>
 
       {/* Main Content Layout */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 lg:py-16 w-full flex-grow">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-14 lg:py-16 w-full flex-grow">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
           {/* Left Column: Sticky Table of Contents (Desktop) */}
           <aside className="hidden lg:block lg:col-span-4 lg:sticky lg:top-24 space-y-6">
@@ -496,18 +493,18 @@ export default function TermsPage({ onNavigateHome, onNavigatePage }) {
                 <article
                   key={section.id}
                   id={section.id}
-                  className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200/90 shadow-xs hover:border-slate-300 transition-colors duration-200 scroll-mt-28"
+                  className="bg-white rounded-2xl p-5 sm:p-8 border border-slate-200/90 shadow-xs hover:border-slate-300 transition-colors duration-200 scroll-mt-28"
                 >
                   {/* Clause Header */}
-                  <div className="flex items-start gap-4 mb-4 pb-3 border-b border-slate-100">
-                    <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 mt-0.5 border border-blue-100/80">
-                      <IconComponent className="w-5 h-5" />
+                  <div className="flex items-start sm:items-center gap-3 sm:gap-4 mb-4 pb-3 border-b border-slate-100">
+                    <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 mt-0.5 sm:mt-0 border border-blue-100/80">
+                      <IconComponent className="w-4 h-4 sm:w-5 sm:h-5" />
                     </div>
-                    <div>
+                    <div className="min-w-0 flex-1">
                       <div className="text-[11px] font-bold uppercase tracking-wider text-blue-600 font-mono">
                         Clause {section.number}
                       </div>
-                      <h2 className="text-lg sm:text-xl font-bold tracking-tight text-slate-900 mt-0.5">
+                      <h2 className="text-base sm:text-xl font-bold tracking-tight text-slate-900 mt-0.5 leading-snug">
                         {section.title}
                       </h2>
                     </div>
@@ -522,15 +519,15 @@ export default function TermsPage({ onNavigateHome, onNavigatePage }) {
         </div>
       </main>
 
-      {/* Floating Back to Top Button */}
+      {/* Floating Back to Top Button (Positioned cleanly above WhatsApp widget) */}
       {showScrollTop && (
         <button
           type="button"
           onClick={scrollToTop}
           title="Back to Top"
-          className="fixed bottom-6 right-6 z-40 w-11 h-11 rounded-full bg-slate-900 text-white flex items-center justify-center shadow-lg hover:bg-blue-600 transition-all duration-200 cursor-pointer animate-in fade-in zoom-in"
+          className="fixed bottom-20 sm:bottom-22 right-4 sm:right-6 z-40 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 text-white flex items-center justify-center shadow-lg hover:bg-blue-600 transition-all duration-200 cursor-pointer animate-in fade-in zoom-in"
         >
-          <ArrowUp className="w-5 h-5" />
+          <ArrowUp className="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
       )}
 

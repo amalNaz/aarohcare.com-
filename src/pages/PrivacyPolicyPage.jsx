@@ -347,42 +347,39 @@ export default function PrivacyPolicyPage({ onNavigateHome, onNavigatePage }) {
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-900 flex flex-col justify-between selection:bg-blue-500/20 selection:text-blue-900">
       {/* Top Clean Navigation Header */}
-      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200/80 shadow-xs">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between relative">
-          {/* Left: Back to Home Arrow Button */}
-          <div className="flex items-center shrink-0 z-10">
+      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs">
+        <div className="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-2 sm:gap-4">
+          {/* Left: Back to Home Arrow Button + Brand Logo & Name */}
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
             <button
               type="button"
               onClick={() => onNavigateHome && onNavigateHome()}
               aria-label="Back to Home"
               title="Back to Home"
-              className="inline-flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 text-slate-700 hover:text-blue-600 bg-slate-100 hover:bg-blue-50 rounded-full transition-all duration-200 cursor-pointer border border-slate-200/80 shadow-2xs hover:shadow-xs group shrink-0 active:scale-95"
+              className="inline-flex items-center justify-center w-8.5 h-8.5 sm:w-10 sm:h-10 text-slate-700 hover:text-blue-600 bg-slate-100 hover:bg-blue-50 rounded-full transition-all duration-200 cursor-pointer border border-slate-200/80 shadow-2xs hover:shadow-xs group shrink-0 active:scale-95"
             >
               <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 transition-transform group-hover:-translate-x-0.5" />
             </button>
-          </div>
 
-          {/* Center: AarohCare Brand Logo & Name */}
-          <div className="absolute left-1/2 -translate-x-1/2 flex items-center pointer-events-auto">
             <button
               type="button"
               onClick={() => onNavigateHome && onNavigateHome('#hero')}
-              className="flex items-center gap-2 sm:gap-2.5 cursor-pointer bg-transparent border-none p-0 focus:outline-none group whitespace-nowrap"
+              className="flex items-center gap-2 cursor-pointer bg-transparent border-none p-0 focus:outline-none group min-w-0"
             >
               <img
                 src={logoImg}
                 alt="AarohCare Logo"
                 className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg object-contain shadow-xs shrink-0"
               />
-              <span className="text-lg sm:text-xl md:text-2xl font-bold tracking-tight text-slate-900 group-hover:opacity-85 transition-opacity">
+              <span className="text-base sm:text-xl font-bold tracking-tight text-slate-900 group-hover:text-blue-600 transition-colors truncate">
                 AarohCare
               </span>
             </button>
           </div>
 
           {/* Right: Document Switcher Toggle */}
-          <div className="flex items-center shrink-0 z-10">
-            <div className="flex items-center bg-slate-100/90 p-1 rounded-full border border-slate-200/80 text-xs font-semibold">
+          <div className="flex items-center shrink-0">
+            <div className="flex items-center bg-slate-100/90 p-0.5 sm:p-1 rounded-full border border-slate-200/80 text-[11px] sm:text-xs font-semibold">
               <span className="px-2.5 sm:px-3 py-1 bg-white text-blue-700 rounded-full shadow-xs whitespace-nowrap">
                 <span className="hidden sm:inline">Privacy Policy</span>
                 <span className="sm:hidden">Privacy</span>
@@ -399,11 +396,34 @@ export default function PrivacyPolicyPage({ onNavigateHome, onNavigatePage }) {
         </div>
       </header>
 
+      {/* Mobile Horizontal Quick-Jump Pill Bar */}
+      <div className="lg:hidden sticky top-14 sm:top-16 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 px-3.5 sm:px-4 py-2.5 overflow-x-auto no-scrollbar shadow-xs">
+        <div className="flex items-center gap-1.5 w-max">
+          {SECTIONS.map((sec) => {
+            const isActive = activeSection === sec.id
+            return (
+              <button
+                key={sec.id}
+                type="button"
+                onClick={() => scrollToClause(sec.id)}
+                className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap transition-all duration-150 cursor-pointer ${
+                  isActive
+                    ? 'bg-blue-600 text-white shadow-xs'
+                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                }`}
+              >
+                {sec.number}. {sec.title}
+              </button>
+            )
+          })}
+        </div>
+      </div>
+
       {/* Main Container */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 lg:py-16">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-14 lg:py-16">
         {/* Page Title & Meta Header */}
-        <div className="max-w-3xl mb-12 sm:mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold tracking-wide uppercase mb-4 border border-blue-200/60">
+        <div className="max-w-3xl mb-8 sm:mb-12 lg:mb-16">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold tracking-wide uppercase mb-3 sm:mb-4 border border-blue-200/60">
             <Shield className="w-3.5 h-3.5" />
             <span>Official Legal Document</span>
           </div>
@@ -417,21 +437,25 @@ export default function PrivacyPolicyPage({ onNavigateHome, onNavigatePage }) {
             Privacy Policy
           </TextAnimate>
 
-          <p className="mt-4 text-sm sm:text-base text-slate-600 leading-relaxed max-w-2xl">
-            AAROHCARE — PRIVACY POLICY
+          <p className="mt-2 sm:mt-3 text-xs sm:text-sm font-semibold tracking-wider text-slate-500 uppercase">
+            AarohCare — Privacy Policy
           </p>
 
-          <div className="mt-4 flex flex-wrap items-center gap-3 sm:gap-4 text-xs sm:text-sm text-slate-500">
-            <span className="font-medium text-slate-700">Last Updated: September 2026</span>
-            <span>•</span>
-            <span>Applicable to all AarohCare Users & Patients</span>
-            <span>•</span>
+          <div className="mt-4 flex flex-wrap items-center gap-2 sm:gap-3 text-xs sm:text-sm text-slate-600">
+            <span className="inline-flex items-center gap-1.5 font-medium bg-slate-100/90 text-slate-700 px-2.5 py-1 rounded-md">
+              <span>Last Updated:</span>
+              <span className="font-semibold text-slate-900">September 2026</span>
+            </span>
+            <span className="hidden sm:inline text-slate-300">•</span>
+            <span className="text-slate-500">Applicable to all AarohCare Users & Patients</span>
+            <span className="hidden sm:inline text-slate-300">•</span>
             <button
               type="button"
               onClick={() => onNavigatePage ? onNavigatePage('terms') : (window.location.hash = '#terms')}
-              className="text-blue-600 hover:underline font-medium cursor-pointer"
+              className="text-blue-600 hover:text-blue-700 hover:underline font-semibold cursor-pointer inline-flex items-center gap-1"
             >
-              View Terms & Conditions
+              <span>View Terms & Conditions</span>
+              <span aria-hidden="true">→</span>
             </button>
           </div>
         </div>
@@ -483,29 +507,29 @@ export default function PrivacyPolicyPage({ onNavigateHome, onNavigatePage }) {
                 <article
                   key={sec.id}
                   id={sec.id}
-                  className={`bg-white rounded-2xl p-6 sm:p-8 border transition-all duration-300 shadow-xs ${
+                  className={`bg-white rounded-2xl p-5 sm:p-8 border transition-all duration-300 shadow-xs scroll-mt-28 ${
                     isActive
                       ? 'border-blue-300 ring-2 ring-blue-500/10'
                       : 'border-slate-200/90 hover:border-slate-300'
                   }`}
                 >
-                  <div className="flex items-center gap-3 mb-5">
-                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
-                      isActive ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-700'
+                  <div className="flex items-start sm:items-center gap-3 mb-4 sm:mb-5">
+                    <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center shrink-0 mt-0.5 sm:mt-0 ${
+                      isActive ? 'bg-blue-600 text-white shadow-xs' : 'bg-slate-100 text-slate-700'
                     }`}>
-                      <Icon className="w-4 h-4" />
+                      <Icon className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
                     </div>
-                    <div>
+                    <div className="min-w-0 flex-1">
                       <div className="text-[11px] font-mono font-semibold text-blue-600 tracking-wider uppercase">
                         Section {sec.number}
                       </div>
-                      <h2 className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">
+                      <h2 className="text-base sm:text-xl font-bold text-slate-900 tracking-tight leading-snug">
                         {sec.title}
                       </h2>
                     </div>
                   </div>
 
-                  <div className="pt-2 border-t border-slate-100">
+                  <div className="pt-3 border-t border-slate-100">
                     {sec.content}
                   </div>
                 </article>
@@ -513,7 +537,7 @@ export default function PrivacyPolicyPage({ onNavigateHome, onNavigatePage }) {
             })}
 
             {/* App Consent Box */}
-            <div className="p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-slate-900 to-blue-950 text-white shadow-md">
+            <div className="p-5 sm:p-8 rounded-2xl bg-gradient-to-br from-slate-900 to-blue-950 text-white shadow-md">
               <div className="flex items-center gap-2.5 text-blue-400 text-xs font-bold uppercase tracking-wider mb-2">
                 <Shield className="w-4 h-4" />
                 <span>App Consent</span>
@@ -542,13 +566,13 @@ export default function PrivacyPolicyPage({ onNavigateHome, onNavigatePage }) {
         </div>
       </main>
 
-      {/* Floating Scroll to Top Button */}
+      {/* Floating Scroll to Top Button (Positioned cleanly above WhatsApp widget) */}
       {showScrollTop && (
         <button
           type="button"
           onClick={scrollToTop}
           aria-label="Scroll to top"
-          className="fixed bottom-6 right-6 z-40 w-11 h-11 rounded-full bg-white text-slate-800 shadow-lg border border-slate-200 flex items-center justify-center hover:bg-slate-50 transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer"
+          className="fixed bottom-20 sm:bottom-22 right-4 sm:right-6 z-40 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white text-slate-800 shadow-lg border border-slate-200 flex items-center justify-center hover:bg-slate-50 transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer"
         >
           <ArrowUp className="w-4 h-4" />
         </button>
