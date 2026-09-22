@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+Allow: /favicon.ico
+Allow: /*.png
+Allow: /site.webmanifest
+
+User-agent: Googlebot-Image
+Allow: /favicon.ico
+Allow: /*.png
+Allow: /*.ico
+
+Sitemap: https://aarohcare.com/sitemap.xml
