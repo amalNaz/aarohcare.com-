@@ -3,10 +3,21 @@
 // In-memory rate limiting map (IP -> array of timestamps)
 const rateLimitMap = new Map()
 const RATE_LIMIT_WINDOW_MS = 5 * 60 * 1000 // 5 minutes
-const MAX_REQUESTS_PER_WINDOW = 5
+const MAX_REQUESTS_PER_WINDOW = 30
 
 function isRateLimited(clientIp) {
   if (!clientIp) return false
+  // Never rate-limit localhost development environments
+  if (
+    clientIp === '127.0.0.1' ||
+    clientIp === '::1' ||
+    clientIp === '::ffff:127.0.0.1' ||
+    clientIp === 'localhost' ||
+    clientIp === 'unknown'
+  ) {
+    return false
+  }
+
   const now = Date.now()
   const timestamps = rateLimitMap.get(clientIp) || []
   const validTimestamps = timestamps.filter((t) => now - t < RATE_LIMIT_WINDOW_MS)

@@ -228,7 +228,7 @@ const SECTIONS = [
           </a>
 
           <a
-            href="https://wa.me/919072043356?text=Hi%20AarohCare%2C%20I%20have%20a%20question%20regarding%20the%20Terms%20and%20Conditions."
+            href="https://wa.me/916282829412?text=Hi%20AarohCare%2C%20I%20have%20a%20question%20regarding%20the%20Terms%20and%20Conditions."
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-3 p-3.5 rounded-xl bg-slate-50 hover:bg-emerald-50/70 border border-slate-200/80 hover:border-emerald-200 transition-all duration-200 group"
@@ -241,7 +241,7 @@ const SECTIONS = [
                 <span>WhatsApp / Call</span>
                 <span className="text-[9px] bg-emerald-100 text-emerald-700 px-1 rounded font-bold">LIVE</span>
               </p>
-              <p className="text-xs sm:text-sm font-semibold text-slate-800">+91 9072043356</p>
+              <p className="text-xs sm:text-sm font-semibold text-slate-800">+91 6282829412</p>
             </div>
           </a>
         </div>

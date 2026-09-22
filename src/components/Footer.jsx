@@ -130,14 +130,14 @@ Building smarter patient flow management solutions for hospitals, clinics, and l
             {/* Direct Contact Row */}
             <div className="reveal-meta flex flex-wrap items-center gap-y-2 gap-x-3 text-xs sm:text-sm text-neutral-300 font-medium mt-6 pt-2">
               <a
-                href="https://wa.me/919072043356?text=Hi%20AarohCare%2C%20I%20would%20like%20to%20connect%20with%20your%20team."
+                href="https://wa.me/916282829412?text=Hi%20AarohCare%2C%20I%20would%20like%20to%20connect%20with%20your%20team."
                 target="_blank"
                 rel="noopener noreferrer"
                 title="Chat on WhatsApp"
                 className="inline-flex items-center gap-1.5 hover:text-emerald-400 transition-colors duration-200 group"
               >
                 <Phone className="w-3.5 h-3.5 text-neutral-400 group-hover:text-emerald-400 transition-colors" />
-                <span>+91 9072043356</span>
+                <span>+91 6282829412</span>
                 <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-mono font-normal">WhatsApp</span>
               </a>
               <span className="text-neutral-600 select-none">•</span>

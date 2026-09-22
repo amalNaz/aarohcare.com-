@@ -1,7 +1,7 @@
 import React from 'react'
 
 export default function WhatsAppButton({
-  phoneNumber = '919072043356',
+  phoneNumber = '916282829412',
   message = 'Hi AarohCare, I would like to know more about your services.',
 }) {
   const encodedMsg = encodeURIComponent(message)

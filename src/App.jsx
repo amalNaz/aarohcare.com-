@@ -194,7 +194,7 @@ export default function App() {
               <WhatIfHealthSection />
             </Suspense>
 
-            {/* Your Health Partner We Imagined. (Beige Split Section) */}
+            {/* Your Health Partner We Imagined. (Split Showcase Section) */}
             <HealthPartnerSection />
 
             {/* Clinic Side Operations Management Section */}

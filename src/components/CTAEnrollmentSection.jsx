@@ -68,26 +68,92 @@ export default function CTAEnrollmentSection() {
     setStatus('idle')
     setErrorMessage('')
 
-    // 2. Submit to backend API
-    try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-        body: JSON.stringify({
-          contact: submittedValue,
-        }),
-      })
+    let sent = false
+    let lastError = ''
 
-      const data = await response.json().catch(() => ({}))
-
-      if (!response.ok) {
-        throw new Error(data?.error || 'Something went wrong. Please try again.')
+    // 1. Web3Forms (Dedicated Zero-Backend Form Service)
+    const web3FormsKey = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY || '5a3abe64-e0b3-4a57-abad-a830c0511578'
+    if (web3FormsKey) {
+      try {
+        const res = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+          body: JSON.stringify({
+            access_key: web3FormsKey,
+            subject: 'New AarohCare Pilot Enrollment Request',
+            from_name: 'AarohCare Website',
+            contact: submittedValue,
+            source: 'AarohCare Website Lead',
+            replyto: submittedValue.includes('@') ? submittedValue : undefined,
+          }),
+        })
+        const data = await res.json().catch(() => ({}))
+        if (res.ok && data?.success) {
+          sent = true
+        } else if (data?.message) {
+          lastError = data.message
+        }
+      } catch (err) {
+        console.warn('Web3Forms delivery attempt:', err)
       }
+    }
 
-      // Success state
+    // 2. Direct Backend Handler (Vite dev server / Vercel with Gmail SMTP)
+    if (!sent) {
+      try {
+        const response = await fetch('/api/contact', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+          body: JSON.stringify({
+            contact: submittedValue,
+          }),
+        })
+
+        const data = await response.json().catch(() => ({}))
+        if (response.ok && data?.success) {
+          sent = true
+        } else if (data?.error) {
+          lastError = data.error
+        }
+      } catch (err) {
+        console.warn('API contact route delivery attempt:', err)
+      }
+    }
+
+    // 3. FormSubmit Service Fallback (Zero-backend direct delivery to aarohcare.in@gmail.com)
+    if (!sent) {
+      try {
+        const formSubmitRes = await fetch('https://formsubmit.co/ajax/aarohcare.in@gmail.com', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+          body: JSON.stringify({
+            _subject: 'New AarohCare Pilot Enrollment Request',
+            _template: 'table',
+            _captcha: 'false',
+            Contact: submittedValue,
+            Source: 'AarohCare Website',
+          }),
+        })
+
+        const data = await formSubmitRes.json().catch(() => ({}))
+        if (formSubmitRes.ok && (data.success === 'true' || data.success === true || data.message?.includes('Activation'))) {
+          sent = true
+        }
+      } catch (err) {
+        console.warn('FormSubmit delivery attempt:', err)
+      }
+    }
+
+    if (sent) {
       setContactValue('')
       setStatus('success')
       setErrorMessage('')
@@ -95,18 +161,15 @@ export default function CTAEnrollmentSection() {
       if (resetTimeoutRef.current) clearTimeout(resetTimeoutRef.current)
       resetTimeoutRef.current = setTimeout(() => {
         setStatus('idle')
-      }, 6000)
-    } catch (err) {
-      console.error('Contact submission error:', err)
+      }, 7000)
+    } else {
       setStatus('error')
       setErrorMessage(
-        typeof err.message === 'string' && err.message.includes('valid')
-          ? err.message
-          : 'Something went wrong. Please try again.'
+        lastError || 'Unable to submit right now. Please reach out to us directly on WhatsApp (+91 6282829412) or try again.'
       )
-    } finally {
-      setIsSubmitting(false)
     }
+
+    setIsSubmitting(false)
   }
 
   return (
@@ -170,14 +233,24 @@ export default function CTAEnrollmentSection() {
             {status === 'success' && (
               <div className="flex items-center gap-2.5 text-emerald-400 text-xs sm:text-sm font-medium mt-3.5 px-4 animate-fadeIn">
                 <CheckCircle2 className="w-4 h-4 shrink-0" />
-                <span>Thank you for your feedback! We’ll get in touch with you soon.</span>
+                <span>Thank you! We've received your request and will get in touch with you soon.</span>
               </div>
             )}
 
             {status === 'error' && errorMessage && (
-              <div className="flex items-center gap-2.5 text-rose-400 text-xs sm:text-sm font-medium mt-3.5 px-4 animate-fadeIn">
-                <AlertCircle className="w-4 h-4 shrink-0" />
-                <span>{errorMessage}</span>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 text-rose-400 text-xs sm:text-sm font-medium mt-3.5 px-4 animate-fadeIn">
+                <div className="flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 shrink-0" />
+                  <span>{errorMessage}</span>
+                </div>
+                <a
+                  href="https://wa.me/916282829412?text=Hi%20AarohCare%2C%20I%20would%20like%20to%20connect%20with%20your%20team."
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline text-emerald-400 hover:text-emerald-300 ml-6 sm:ml-0 whitespace-nowrap"
+                >
+                  Chat on WhatsApp ↗
+                </a>
               </div>
             )}
           </form>

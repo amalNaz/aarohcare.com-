@@ -14,7 +14,7 @@ const ANIMATION_VARIANTS = {
       },
     }),
     item: (duration) => ({
-      hidden: { y: '100%', opacity: 0 },
+      hidden: { y: '130%', opacity: 0 },
       show: {
         y: '0%',
         opacity: 1,
@@ -36,7 +36,7 @@ const ANIMATION_VARIANTS = {
       },
     }),
     item: (duration) => ({
-      hidden: { y: '-100%', opacity: 0 },
+      hidden: { y: '-130%', opacity: 0 },
       show: {
         y: '0%',
         opacity: 1,
@@ -160,7 +160,11 @@ export function TextAnimate({
       if (by === 'character') {
         const chars = node.split('')
         return chars.map((char, i) => (
-          <span key={`${keyPrefix}-c-${i}`} className="inline-block overflow-hidden align-top">
+          <span
+            key={`${keyPrefix}-c-${i}`}
+            className="inline-block overflow-hidden align-top"
+            style={{ paddingTop: '0.05em', marginTop: '-0.05em', paddingBottom: '0.35em', marginBottom: '-0.35em' }}
+          >
             <motion.span variants={itemVariants} className={cn('inline-block', segmentClassName)}>
               {char === ' ' ? '\u00A0' : char}
             </motion.span>
@@ -172,7 +176,10 @@ export function TextAnimate({
       const words = node.split(/\s+/).filter(Boolean)
       return words.map((word, i) => (
         <React.Fragment key={`${keyPrefix}-w-${i}`}>
-          <span className="inline-block overflow-hidden align-top">
+          <span
+            className="inline-block overflow-hidden align-top"
+            style={{ paddingTop: '0.05em', marginTop: '-0.05em', paddingBottom: '0.35em', marginBottom: '-0.35em' }}
+          >
             <motion.span variants={itemVariants} className={cn('inline-block', segmentClassName)}>
               {word}
             </motion.span>
